@@ -1,0 +1,34 @@
+# Build
+public/js/esm/
+public/js/system/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.tmp
+*~$*.docx
+
+
+# Mac
+.DS_Store
+._*
+
+
+# Editeurs
+_notes/
+**/_notes*/
+dwsync.xml
+*.sublime-project
+*.sublime-workspace
+.idea/
+*.bak
+oracle.sqlite
+.vscode/
+
+
+# NodeJS
+node_modules/
+npm-debug.log
+flow-typed/
