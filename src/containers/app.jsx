@@ -8,7 +8,7 @@ import { withRouter } from "react-router-dom";
 export const mapStateToProps = (state: Map) => {
     return {
         xmlFiles: state.get("xmlFiles"),
-        csvFiles: state.get("csvFiles"),
+        corrections: state.get("corrections"),
     };
 };
 

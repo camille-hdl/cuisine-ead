@@ -3,10 +3,12 @@ import React from "react";
 import Dropzone from "react-dropzone";
 import { concat, groupBy, partialRight, includes, forEach } from "ramda";
 import { readXml } from "../lib/xml.js";
-type Props = {
-    onDrop: (files: Array<any>) => void,
-    onRejected: (files: Array<any>) => void,
-};
+import PaperSheet from "./material/paper-sheet.jsx";
+import type { List, Map } from "immutable";
+import FileList from "./material/file-list.jsx";
+import BigIcon from "./material/big-icon.jsx";
+import Grid from "./material/grid.jsx";
+import Typography from "@material-ui/core/Typography";
 
 const xmlTypes = ["application/xml", "text/xml"];
 const csvTypes = [
@@ -20,14 +22,19 @@ const csvTypes = [
 const isXml = partialRight(includes, [xmlTypes]);
 const isCsv = partialRight(includes, [csvTypes]);
 /**
- * Trie les fichiers en fonction de leur type
+ * Returns "csv" or "xml" depending on the file's mime type
  */
 const getType = (file: { type: string }) => (isXml(file.type) ? "xml" : isCsv(file.type) ? "csv" : "other");
 const acceptedTypes = concat(xmlTypes, csvTypes);
 
+type Props = {
+    xmlFiles: List,
+    corrections: Map,
+    addXmlFile: (info: AddXmlFileData) => void,
+    removeXmlFile: (hash: string) => void,
+};
 export default class UploadFiles extends React.PureComponent<Props> {
     render() {
-        console.log(this.props);
         return (
             <div>
                 <Dropzone
@@ -37,7 +44,6 @@ export default class UploadFiles extends React.PureComponent<Props> {
                         const { xml, csv, other } = groupBy(getType, accepted);
                         forEach(file => {
                             readXml(file, ({ doc, encoding, string, hash }) => {
-                                console.log("??");
                                 this.props.addXmlFile({
                                     filename: file.name,
                                     doc: doc,
@@ -49,10 +55,25 @@ export default class UploadFiles extends React.PureComponent<Props> {
                         }, xml);
                     }}
                 >
-                    <div style={{ height: "100px" }}>{"Ajouter des fichiers xml ou csv"}</div>
+                    <Grid>
+                        <PaperSheet xs={12}>
+                            <BigIcon icon={"arrow_downward"} />
+                            <Typography variant="body1" align={"center"} style={{ opacity: 0.5 }}>
+                                {"Déposer des fichiers"}
+                            </Typography>
+                        </PaperSheet>
+                        {this.props.xmlFiles.size > 0 ? (
+                            <PaperSheet xs={6}>
+                                <FileList
+                                    xmlFiles={this.props.xmlFiles}
+                                    onRemove={xmlFile => {
+                                        this.props.removeXmlFile(xmlFile.get("hash"));
+                                    }}
+                                />
+                            </PaperSheet>
+                        ) : null}
+                    </Grid>
                 </Dropzone>
-                <hr />
-                {`${this.props.xmlFiles.size} files`}
             </div>
         );
     }

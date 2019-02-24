@@ -1,6 +1,6 @@
 //@flow
 import xxhash from "xxhash-wasm";
-
+import { head, last } from "ramda";
 const jschardet = window && window.jschardet ? window.jschardet : null;
 if (!jschardet) throw "jschardet missing";
 
@@ -21,7 +21,7 @@ const getWASMInstance = (callback: (instance: any) => void) => {
 /**
  * Returns a TextDecoder for the detected charset.
  * If we get `windows-1255` as an input, we assume an error in jschardet
- * and pretends it's `windows-1252` instead.  
+ * and pretends it's `windows-1252` instead.
  * If no decoder is available, it defaults to `iso-8859-1`
  */
 export const getDecoder = (encoding: string) => {
@@ -40,7 +40,7 @@ export const getDecoder = (encoding: string) => {
 };
 
 /**
- * Given a text `File`, it  
+ * Given a text `File`, it
  * * detects it's charset with jschardet
  * * decodes it to utf-8 if necessary
  * * parses it to a DOM document
@@ -60,16 +60,14 @@ export const readXml = (file: any, loadCallback: (doc: any) => void) => {
         const info = jschardet.detect(str);
         const decoder = getDecoder(info.encoding);
         const xmlString = decoder.decode(buffer);
-        getWASMInstance(
-            hasher => {
-                loadCallback({
-                    doc: parser.parseFromString(xmlString, "application/xml"),
-                    encoding: info.encoding,
-                    string: xmlString,
-                    hash: hasher.h64(xmlString),
-                });
-            }
-        );
+        getWASMInstance(hasher => {
+            loadCallback({
+                doc: parser.parseFromString(xmlString, "application/xml"),
+                encoding: info.encoding,
+                string: xmlString,
+                hash: hasher.h64(xmlString),
+            });
+        });
     };
     reader.readAsArrayBuffer(file);
 };

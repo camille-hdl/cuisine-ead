@@ -14,7 +14,7 @@ function MenuBar() {
         <AppBar position="static" color="default">
             <Toolbar>
                 <Typography variant="h6" color="inherit">
-                    {"Bricolage EAD"}
+                    {"EAD Cuisine 🍲"}
                 </Typography>
             </Toolbar>
         </AppBar>
