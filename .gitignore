@@ -1,6 +1,8 @@
 # Build
 public/js/esm/
 public/js/system/
+public/js/vendor/
+
 
 # Windows
 Thumbs.db

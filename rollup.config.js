@@ -7,9 +7,21 @@ import builtins from "rollup-plugin-node-builtins";
 import globals from "rollup-plugin-node-globals";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
+import clear from "rollup-plugin-clear";
+import copy from 'rollup-plugin-cpy';
+
+const outputDir = "./public/js/";
 
 const getPluginsConfig = (prod, mini) => {
     const sortie = [
+        clear({
+            targets: [outputDir + "esm", outputDir + "system"],
+            watch: true,
+        }),
+        copy({
+            files: ["./node_modules/jschardet/dist/jschardet.min.js"],
+            dest: outputDir + "vendor",
+        }),
         nodeResolve({
             jsnext: true,
             browser: true,
@@ -29,6 +41,8 @@ const getPluginsConfig = (prod, mini) => {
                     "Component",
                     "createFactory",
                     "PureComponent",
+                    "lazy",
+                    "Suspense",
                 ],
                 "./node_modules/react-dom/index.js": ["findDOMNode"],
                 "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS"],
@@ -38,6 +52,8 @@ const getPluginsConfig = (prod, mini) => {
                 "./node_modules/rxjs/Subject.js": ["Subject"],
                 "./node_modules/process/browser.js": ["nextTick"],
                 "./node_modules/events/events.js": ["EventEmitter"],
+                "./node_modules/@material-ui/core/styles/index.js": ["withStyles"],
+                "./node_modules/react-is/index.js": ["isValidElementType"],
             },
         }),
         babel({
@@ -47,7 +63,14 @@ const getPluginsConfig = (prod, mini) => {
         builtins(),
     ];
     if (!prod) {
-        sortie.push(serve("public"), livereload());
+        sortie.push(
+            serve({
+                contentBase: "public",
+                openPage: "/",
+                historyApiFallback: true,
+            }),
+            livereload()
+        );
     }
     if (mini) {
         sortie.push(
@@ -74,7 +97,7 @@ const getPluginsConfig = (prod, mini) => {
                 output: {
                     comments: !prod,
                 },
-                sourcemap: false,
+                sourcemap: true,
             })
         );
     }
@@ -85,19 +108,17 @@ export default CLIArgs => {
     const prod = !!CLIArgs.prod;
     const mini = !!CLIArgs.mini;
     const bundle = {
-        input: ["./src/index.js"],
+        input: ["./src/index.jsx"],
         output: [
             {
-                dir: "./public/js/system/",
+                dir: outputDir + "system/",
                 format: "system",
             },
             {
-                dir: "./public/js/esm/",
+                dir: outputDir + "esm/",
                 format: "es",
             },
         ],
-        experimentalCodeSplitting: true,
-        experimentalDynamicImport: true,
         watch: {
             include: ["./src/**"],
         },
