@@ -2,6 +2,7 @@
 public/js/esm/
 public/js/system/
 public/js/vendor/
+public/js/*.js
 
 package-lock.json
 
