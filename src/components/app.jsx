@@ -19,12 +19,18 @@ type RouteProps = {
 };
 export type Props = {
     xmlFiles: List,
+    pipeline: List,
     corrections: Map,
+    previewXmlFile: Map | null,
+    previewXmlString: string | null,
+    pipelineFn: (doc: any) => any,
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
+    setPipeline: (p: List) => void,
+    setPreviewHash: (h: string) => void,
 } & RouteProps;
-const UploadFiles = lazy(() => import("./upload-files.jsx"));
 
+const UploadFiles = lazy(() => import("./upload-files.jsx"));
 const AsyncUploadFiles = function AsyncUploadFiles(props) {
     return (
         <Suspense fallback={<LoadingComponent />}>
@@ -32,14 +38,26 @@ const AsyncUploadFiles = function AsyncUploadFiles(props) {
         </Suspense>
     );
 };
+const SelectRecipes = lazy(() => import("./select-recipes.jsx"));
+const AsyncSelectRecipes = props => {
+    return (
+        <Suspense fallback={<LoadingComponent />}>
+            <SelectRecipes {...props} />
+        </Suspense>
+    );
+};
 const getUploadFilesProps = (props: Props) => {
     const { xmlFiles, corrections, addXmlFile, removeXmlFile } = props;
     return { xmlFiles, corrections, addXmlFile, removeXmlFile };
 };
+const getSelectRecipesProps = (props: Props) => {
+    const { pipeline, setPipeline, setPreviewHash, previewXmlFile, previewXmlString } = props;
+    return { pipeline, setPipeline, setPreviewHash, previewXmlFile, previewXmlString };
+};
 
 const stepByPathName = {
     "/upload": 0,
-    "/traitements": 1,
+    "/recettes": 1,
     "/resultat": 2,
 };
 const getActiveStepByRoute = (pathName: string): number => {
@@ -61,6 +79,10 @@ export default function App(props: Props) {
                 <Route
                     path="/upload"
                     render={routeProps => <AsyncUploadFiles {...getUploadFilesProps(props)} {...routeProps} />}
+                />
+                <Route
+                    path="/recettes"
+                    render={routeProps => <AsyncSelectRecipes {...getSelectRecipesProps(props)} {...routeProps} />}
                 />
             </Switch>
         </>

@@ -9,6 +9,8 @@ import FileList from "./material/file-list.jsx";
 import BigIcon from "./material/big-icon.jsx";
 import Grid from "./material/grid.jsx";
 import Typography from "@material-ui/core/Typography";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@material-ui/core/Link";
 
 const xmlTypes = ["application/xml", "text/xml"];
 const csvTypes = [
@@ -33,10 +35,22 @@ type Props = {
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
 };
+
+const NextStepLink = props => <RouterLink to="/recettes" {...props} />;
 export default class UploadFiles extends React.PureComponent<Props> {
     render() {
         return (
             <div>
+                <Grid container spacing={24}>
+                    <Grid item xs={6} />
+                    <PaperSheet xs={6}>
+                        {this.props.xmlFiles.size > 0 ? (
+                            <Typography>
+                                <Link component={NextStepLink}>Recettes</Link>
+                            </Typography>
+                        ) : null}
+                    </PaperSheet>
+                </Grid>
                 <Dropzone
                     className={"dropzone"}
                     accept={acceptedTypes}
@@ -55,13 +69,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                         }, xml);
                     }}
                 >
-                    <Grid>
-                        <PaperSheet xs={12}>
-                            <BigIcon icon={"arrow_downward"} />
-                            <Typography variant="body1" align={"center"} style={{ opacity: 0.5 }}>
-                                {"Déposer des fichiers"}
-                            </Typography>
-                        </PaperSheet>
+                    <Grid container spacing={24}>
                         {this.props.xmlFiles.size > 0 ? (
                             <PaperSheet xs={6}>
                                 <FileList
@@ -72,6 +80,12 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                 />
                             </PaperSheet>
                         ) : null}
+                        <PaperSheet xs={this.props.xmlFiles.size > 0 ? 6 : 12}>
+                            <BigIcon icon={"arrow_downward"} />
+                            <Typography variant="body1" align={"center"} style={{ opacity: 0.5 }}>
+                                {"Déposer des fichiers"}
+                            </Typography>
+                        </PaperSheet>
                     </Grid>
                 </Dropzone>
             </div>

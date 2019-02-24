@@ -43,6 +43,8 @@ const getPluginsConfig = (prod, mini) => {
                     "PureComponent",
                     "lazy",
                     "Suspense",
+                    "useState",
+                    "useEffect",
                 ],
                 "./node_modules/react-dom/index.js": ["findDOMNode"],
                 "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS"],

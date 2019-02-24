@@ -13,7 +13,6 @@ import Icon from "@material-ui/core/Icon";
 import { List as ImmutableList, Map } from "immutable";
 import { map, head } from "ramda";
 import { xpathFilter } from "../../lib/xml.js";
-import Badge from "@material-ui/core/Badge";
 
 const styles = theme => ({
     root: {
@@ -54,20 +53,11 @@ const getTitleProper = (doc: any): string => {
 class FileList extends React.PureComponent<Props> {
     render() {
         const { classes } = this.props;
-        const heading = (
-            <Typography variant="h6" className={classes.title}>
-                Fichiers
-            </Typography>
-        );
         return (
             <div className={classes.root}>
-                {this.props.xmlFiles.size > 0 ? (
-                    <Badge color={"primary"} badgeContent={this.props.xmlFiles.size} className={classes.margin}>
-                        {heading}
-                    </Badge>
-                ) : (
-                    heading
-                )}
+                <Typography variant="h6" className={classes.title}>
+                    Fichiers
+                </Typography>
                 <div className={classes.demo}>
                     <List dense={false}>
                         {map(
