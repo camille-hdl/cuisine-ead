@@ -1,2 +1,5 @@
-/js/sw.js
+/js/esm/sw.js
+    Cache-Control: no-cache
+
+/js/system/sw.js
     Cache-Control: no-cache
