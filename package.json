@@ -47,7 +47,8 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^4.0.1",
-    "rollup-pluginutils": "^2.3.3"
+    "rollup-pluginutils": "^2.3.3",
+    "workbox-cli": "^3.6.3"
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
