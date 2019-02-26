@@ -17,6 +17,7 @@ export const getInitialState = () => {
         corrections: [],
         pipeline: [],
         previewHash: null,
+        previewEnabled: false,
     };
 };
 

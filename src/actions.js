@@ -7,6 +7,7 @@ export const REMOVE_XML_FILE = "REMOVE_XML_FILE";
 export const UPDATE_CORRECTIONS = "UPDATE_CORRECTIONS";
 export const SET_PIPELINE = "SET_PIPELINE";
 export const SET_PREVIEW_HASH = "SET_PREVIEW_HASH";
+export const TOGGLE_PREVIEW = "TOGGLE_PREVIEW";
 
 export const addXmlFile = (data: AddXmlFileData) => {
     return { type: ADD_XML_FILE, data: data };
@@ -25,4 +26,8 @@ export const setPipeline = (data: List) => {
 
 export const setPreviewHash = (data: string) => {
     return { type: SET_PREVIEW_HASH, data: data };
+};
+
+export const togglePreview = (data: boolean) => {
+    return { type: TOGGLE_PREVIEW, data: data };
 };

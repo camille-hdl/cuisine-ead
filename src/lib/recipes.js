@@ -56,9 +56,7 @@ export const supprimerLabelsVides = (doc: any): any => {
 
 export const remplacePlageSeparator = (doc: any): any => {
     // d'abord les c level != piece et file
-    const messages = [];
     let elems = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]/did/unitid|//archdesc/did/unitid');
-    messages.push(["Remplacer '-' par ' à ' dans", elems.length, "unitid de level haut"].join(" "));
     each(elems, elem => {
         elem.innerHTML = "" + elem.innerHTML.replace("-", " à ");
     });
@@ -66,7 +64,7 @@ export const remplacePlageSeparator = (doc: any): any => {
     // ensuite, on gère les piece et level.
     // si on trouve une cote avec un dernier element 1-2, on teste si le unitid 1-1 existe
     // s'il n'existe pas, on est sur une plage
-    elems = filter(xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'), c => {
+    elems = filter(c => {
         const temp = trim(c.innerHTML).split(" ");
         const tempArticle = last(temp).split("-");
         if (tempArticle.length > 1 && !isNaN(tempArticle[0]) && !isNaN(tempArticle[1])) {
@@ -81,8 +79,7 @@ export const remplacePlageSeparator = (doc: any): any => {
             }
         }
         return false;
-    });
-    messages.push(["Remplacer '-' par ' à ' dans", elems.length, "unitid de level bas"].join(" "));
+    }, xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'));
     each(elems, elem => {
         elem.innerHTML = "" + elem.innerHTML.replace("-", " à ");
     });
@@ -93,7 +90,7 @@ export const remplaceExtensionSeparator = (doc: any): any => {
     // d'abord les c level != piece et file
 
     const messages = [];
-    const elems = filter(xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'), c => {
+    const elems = filter(c => {
         const temp = trim(c.innerHTML).split(" ");
         const tempArticle = last(temp).split("-");
         if (tempArticle.length > 1 && !isNaN(tempArticle[0]) && !isNaN(tempArticle[1])) {
@@ -110,7 +107,7 @@ export const remplaceExtensionSeparator = (doc: any): any => {
             }
         }
         return false;
-    });
+    }, xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'));
     messages.push(["Remplacer '-' par '/' dans", elems.length, "unitid de level bas"].join(" "));
     each(elems, elem => {
         elem.innerHTML = "" + elem.innerHTML.replace("-", "/");
@@ -257,9 +254,9 @@ export const supprimerInternal = (doc: any): any => {
 
 export const completerDidVides = (doc: any): any => {
     const messages = [];
-    const dids = filter(xpathFilter(doc, "//did"), el => {
+    const dids = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
-    });
+    }, xpathFilter(doc, "//did"));
     each(dids, element => {
         // créer un unitid avec le cumul des unitid enfants c directs
         const unitId = doc.createElement("unitid");
@@ -275,9 +272,9 @@ export const completerDidVides = (doc: any): any => {
 
 export const supprimerControlaccessVides = (doc: any): any => {
     const messages = [];
-    const controlaccesses = filter(xpathFilter(doc, "//controlaccess"), el => {
+    const controlaccesses = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
-    });
+    }, xpathFilter(doc, "//controlaccess"));
     each(controlaccesses, element => element.remove());
     messages.push(["supprimer", controlaccesses.length, "controlaccess vides"].join(" "));
     return doc;
@@ -447,7 +444,7 @@ export const getRecipes = () => {
         { key: "nettoyer_type", fn: nettoyerAttrType },
         { key: "ajouter_altrender", fn: ajouterAltRender },
         { key: "capitalize_persname", fn: capitalizePersname },
-        { key: "correction_controlaccess", fn: correctionControlAccess },
+        // { key: "correction_controlaccess", fn: correctionControlAccess },
         { key: "supprimer_whitespace", fn: supprimeWhitespace },
         { key: "remplacer_windows", fn: remplacerCharWindows },
         { key: "supprimer_controlaccess", fn: supprimeControlAccess },

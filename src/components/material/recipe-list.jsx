@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import { List as ImmutableList, Map } from "immutable";
 import { map } from "ramda";
 import Switch from "@material-ui/core/Switch";
+import { getLabel } from "../../lib/recipes-lib.js";
 
 const styles = theme => ({
     root: {
@@ -17,9 +18,6 @@ const styles = theme => ({
     },
     list: {
         backgroundColor: theme.palette.background.paper,
-    },
-    title: {
-        margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,
     },
     margin: {
         margin: theme.spacing.unit * 2,
@@ -57,20 +55,14 @@ class RecipeList extends React.PureComponent<Props> {
     };
     render() {
         const { classes, availableRecipes } = this.props;
-        const heading = (
-            <Typography variant="h6" className={classes.title}>
-                Recettes
-            </Typography>
-        );
         return (
             <div className={classes.root}>
-                {heading}
                 <div className={classes.list}>
                     <List dense={false}>
                         {map(
                             recipe => (
-                                <ListItem key={recipe.key}>
-                                    <ListItemText primary={recipe.key} />
+                                <ListItem key={recipe.key} button={true} onClick={this.handleToggle(recipe.key)}>
+                                    <ListItemText primary={getLabel(recipe.key)} />
                                     <ListItemSecondaryAction>
                                         <Switch
                                             onChange={this.handleToggle(recipe.key)}

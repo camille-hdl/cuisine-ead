@@ -1,6 +1,13 @@
 //@flow
 import { Map, fromJS } from "immutable";
-import { ADD_XML_FILE, UPDATE_CORRECTIONS, REMOVE_XML_FILE, SET_PIPELINE, SET_PREVIEW_HASH } from "../actions.js";
+import {
+    ADD_XML_FILE,
+    UPDATE_CORRECTIONS,
+    REMOVE_XML_FILE,
+    SET_PIPELINE,
+    SET_PREVIEW_HASH,
+    TOGGLE_PREVIEW,
+} from "../actions.js";
 import type { AddXmlFileData } from "../types.js";
 
 const addXmlFileReducer = (state: Map, data: AddXmlFileData): Map => {
@@ -30,6 +37,7 @@ const reducersMap: { [actionType: string]: Reducer } = {
     [REMOVE_XML_FILE]: removeXmlFileReducer,
     [SET_PIPELINE]: setPipelineReducer,
     [SET_PREVIEW_HASH]: (state: Map, data: string) => state.set("previewHash", data),
+    [TOGGLE_PREVIEW]: (state: Map, data: boolean) => state.set("previewEnabled", data),
 };
 export default function App(state: Map, action: { type: string, data: AddXmlFileData | any }) {
     return typeof reducersMap[action.type] === "function" ? reducersMap[action.type](state, action.data) : state;

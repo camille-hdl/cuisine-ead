@@ -11,10 +11,10 @@ const styles = {
 };
 function MenuBar() {
     return (
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="primary">
             <Toolbar>
                 <Typography variant="h6" color="inherit">
-                    {"EAD Cuisine 🍲"}
+                    {"Cuisine EAD 🍲"}
                 </Typography>
             </Toolbar>
         </AppBar>

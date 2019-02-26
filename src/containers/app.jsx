@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import App from "../components/app.jsx";
 import type { Map, List } from "immutable";
 import { withRouter } from "react-router-dom";
-import { previewXmlFileSelector, pipelineFnSelector, previewXmlStringSelector } from "./selectors.js";
+import { previewXmlFileSliceSelector, pipelineFnSelector, previewXmlStringSelector } from "./selectors.js";
 
 export const mapStateToProps = (state: Map) => {
     return {
@@ -12,8 +12,9 @@ export const mapStateToProps = (state: Map) => {
         pipeline: state.get("pipeline"),
         pipelineFn: pipelineFnSelector(state),
         corrections: state.get("corrections"),
-        previewXmlFile: previewXmlFileSelector(state),
+        previewXmlFile: previewXmlFileSliceSelector(state),
         previewXmlString: previewXmlStringSelector(state),
+        previewEnabled: state.get("previewEnabled"),
     };
 };
 
