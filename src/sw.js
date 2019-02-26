@@ -12,6 +12,15 @@
  */
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+
+/**
+ * The workboxSW.precacheAndRoute() method efficiently caches and responds to
+ * requests for URLs in the manifest.
+ * See https://goo.gl/S9QRab
+ */
+workbox.precaching.suppressWarnings();
+workbox.precaching.precacheAndRoute([]);
+
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 workbox.routing.registerRoute(
     /^https:\/\/fonts\.googleapis\.com/,
@@ -36,10 +45,3 @@ workbox.routing.registerRoute(
         ],
     })
 );
-/**
- * The workboxSW.precacheAndRoute() method efficiently caches and responds to
- * requests for URLs in the manifest.
- * See https://goo.gl/S9QRab
- */
-workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute([]);

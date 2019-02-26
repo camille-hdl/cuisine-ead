@@ -5,7 +5,11 @@
   "main": "public/index.html",
   "scripts": {
     "test": "",
-    "build": "rollup -c --prod --mini",
+    "build": "run-s buildrollup workbox",
+    "buildrollup": "rollup -c --prod --mini",
+    "workboxesm": "workbox injectManifest workbox-config-esm.js",
+    "workboxsystem": "workbox injectManifest workbox-config-system.js",
+    "workbox": "run-p workboxesm workboxsystem",
     "watch": "rollup -c -w"
   },
   "devDependencies": {
@@ -29,6 +33,7 @@
     "eslint-plugin-react": "^7.12.2",
     "flow-bin": "^0.89.0",
     "jest": "^24.1.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "1.16.4",
     "rollup": "1.0.1",
     "rollup-plugin-babel": "^4.3.2",
@@ -42,7 +47,6 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^4.0.1",
-    "rollup-plugin-workbox": "^2.0.0",
     "rollup-pluginutils": "^2.3.3"
   },
   "dependencies": {

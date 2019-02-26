@@ -9,7 +9,6 @@ import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-cpy";
-import workbox from "rollup-plugin-workbox";
 
 const outputDir = "./public/js/";
 
@@ -75,17 +74,6 @@ const getPluginsConfig = (prod, mini) => {
             livereload()
         );
     }
-    sortie.push(
-        workbox({
-            mode: "injectManifest",
-            workboxConfig: {
-                swSrc: "./src/sw.js",
-                globDirectory: "public",
-                globPatterns: ["**/*.{html,json,js,css}"],
-                swDest: outputDir + "sw.js",
-            },
-        })
-    );
     if (mini) {
         sortie.push(
             terser({
