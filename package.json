@@ -1,10 +1,11 @@
 {
-  "name": "ead-tinker",
+  "name": "cuisine-ead",
   "version": "0.1.0",
   "description": "",
   "main": "public/index.html",
   "scripts": {
-    "test": "start-server-and-test serve http://localhost:5000 cypress:run",
+    "test": "run-s build testci",
+    "testci": "start-server-and-test serve http://localhost:5000 cypress:run",
     "build": "run-s buildrollup workbox",
     "buildrollup": "rollup -c --prod --mini",
     "workboxesm": "workbox injectManifest workbox-config-esm.js",

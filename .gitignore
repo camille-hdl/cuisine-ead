@@ -4,7 +4,6 @@ public/js/system/
 public/js/vendor/
 public/js/*.js
 
-package-lock.json
 
 # Windows
 Thumbs.db

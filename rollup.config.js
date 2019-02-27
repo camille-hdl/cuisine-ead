@@ -5,8 +5,6 @@ import { terser } from "rollup-plugin-terser";
 import replace from "rollup-plugin-replace";
 import builtins from "rollup-plugin-node-builtins";
 import globals from "rollup-plugin-node-globals";
-import serve from "rollup-plugin-serve";
-import livereload from "rollup-plugin-livereload";
 import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-cpy";
 
