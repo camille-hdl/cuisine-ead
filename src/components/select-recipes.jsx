@@ -33,8 +33,8 @@ type Props = {
     setPipeline: (p: List) => void,
     setPreviewHash: (h: string) => void,
 };
-const PreviousStepLink = props => <RouterLink to="/upload" {...props} />;
-const NextStepLink = props => <RouterLink to="/resultats" {...props} />;
+const PreviousStepLink = props => <RouterLink to="/upload" {...props} data-cy="prev-step-link" />;
+const NextStepLink = props => <RouterLink to="/resultats" {...props} data-cy="next-step-link" />;
 
 /**
  * Pick which operation to add to the pipeline and preview the changes on a file
@@ -57,6 +57,7 @@ export default function SelectRecipes(props: Props) {
                     <>
                         <div>
                             <IconButton
+                                data-cy="preview-exit"
                                 onClick={() => {
                                     props.togglePreview(!props.previewEnabled);
                                 }}
@@ -75,7 +76,7 @@ export default function SelectRecipes(props: Props) {
                 {props.previewXmlFile && props.pipeline.size > 0 ? (
                     props.previewEnabled ? (
                         <>
-                            <Typography variant="subtitle1">
+                            <Typography variant="subtitle1" data-cy="preview-warning">
                                 <strong>
                                     {
                                         "La comparaison ne montre que les ~600 premières lignes pour éviter de bloquer votre navigateur 🐌"
@@ -111,6 +112,7 @@ export default function SelectRecipes(props: Props) {
                     <FormControlLabel
                         control={
                             <Switch
+                                data-cy="toggle-preview"
                                 checked={props.previewEnabled}
                                 onChange={() => {
                                     props.togglePreview(!props.previewEnabled);

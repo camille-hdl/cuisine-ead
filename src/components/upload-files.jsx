@@ -39,7 +39,7 @@ type Props = {
     removeXmlFile: (hash: string) => void,
 };
 
-const NextStepLink = props => <RouterLink to="/recettes" {...props} />;
+const NextStepLink = props => <RouterLink to="/recettes" {...props} data-cy="next-step-link" />;
 /**
  * Add xml files
  */
@@ -62,46 +62,48 @@ export default class UploadFiles extends React.PureComponent<Props> {
                     </PaperSheet>
                 </Grid>
                 <ErrorCatcher>
-                    <Dropzone
-                        className={"dropzone"}
-                        accept={acceptedTypes}
-                        onDrop={(accepted: Array<any>) => {
-                            const { xml, csv, other } = groupBy(getType, accepted);
-                            if (xml) {
-                                forEach(file => {
-                                    readXml(file, ({ doc, encoding, string, hash }) => {
-                                        this.props.addXmlFile({
-                                            filename: file.name,
-                                            doc: doc,
-                                            encoding: encoding,
-                                            string: string,
-                                            hash: hash,
+                    <div data-cy="file-uploader">
+                        <Dropzone
+                            className={"dropzone"}
+                            accept={acceptedTypes}
+                            onDrop={(accepted: Array<any>) => {
+                                const { xml, csv, other } = groupBy(getType, accepted);
+                                if (xml) {
+                                    forEach(file => {
+                                        readXml(file, ({ doc, encoding, string, hash }) => {
+                                            this.props.addXmlFile({
+                                                filename: file.name,
+                                                doc: doc,
+                                                encoding: encoding,
+                                                string: string,
+                                                hash: hash,
+                                            });
                                         });
-                                    });
-                                }, xml);
-                            }
-                        }}
-                    >
-                        <Grid container spacing={24}>
-                            <PaperSheet xs={12}>
-                                <Typography variant="h3" align={"center"} style={{ opacity: 0.5 }}>
-                                    {"Déposer des fichiers xml-ead"}
-                                </Typography>
-                                {this.props.xmlFiles.size > 0 ? (
-                                    <PaperSheet xs={12}>
-                                        <FileList
-                                            xmlFiles={this.props.xmlFiles}
-                                            onRemove={xmlFile => {
-                                                this.props.removeXmlFile(xmlFile.get("hash"));
-                                            }}
-                                        />
-                                    </PaperSheet>
-                                ) : (
-                                    <BigIcon icon={"arrow_downward"} />
-                                )}
-                            </PaperSheet>
-                        </Grid>
-                    </Dropzone>
+                                    }, xml);
+                                }
+                            }}
+                        >
+                            <Grid container spacing={24}>
+                                <PaperSheet xs={12}>
+                                    <Typography variant="h3" align={"center"} style={{ opacity: 0.5 }}>
+                                        {"Déposer des fichiers xml-ead"}
+                                    </Typography>
+                                    {this.props.xmlFiles.size > 0 ? (
+                                        <PaperSheet xs={12} data-cy="file-list">
+                                            <FileList
+                                                xmlFiles={this.props.xmlFiles}
+                                                onRemove={xmlFile => {
+                                                    this.props.removeXmlFile(xmlFile.get("hash"));
+                                                }}
+                                            />
+                                        </PaperSheet>
+                                    ) : (
+                                        <BigIcon icon={"arrow_downward"} />
+                                    )}
+                                </PaperSheet>
+                            </Grid>
+                        </Dropzone>
+                    </div>
                 </ErrorCatcher>
             </div>
         );

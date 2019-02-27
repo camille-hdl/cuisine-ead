@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/css' href='ead.css'?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink">
+ <eadheader dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511">
+  <eadid xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/IR/FRAN_IR_001885">FRAN_IR_001885</eadid>
+  <filedesc>
+   <titlestmt>
+    <titleproper>Fonds Saint-Exupery (1911-1944)</titleproper>
+    <subtitle>Repertoire numerique detaille de la sous-serie 153 AP (153AP/1-153AP/2)</subtitle>
+    <author>Par Chantal de Tourtier-Bonazzi, 1979, revu et complete par Ariane Ducrot, Sandrine Lacombe et Segolene de Dainville-Barbiche, 1999-2010</author>
+   </titlestmt>
+   <publicationstmt>
+    <publisher>Archives Nationales</publisher>
+    <date calendar="gregorian" era="ce" normal="1979-01-01/2010-12-31">1979-2010</date>
+   </publicationstmt>
+  </filedesc>
+  <profiledesc>
+   <creation>Cet instrument de recherche a ete encode en 2012 par l'entreprise Numen dans le cadre du chantier de dematerialisation des instruments de recherche des Archives Nationales sur la base d'une DTD conforme a la DTD EAD (encoded archival description) et creee par le service de dematerialisation des instruments de recherche des Archives Nationales</creation>
+  </profiledesc>
+ </eadheader>
+ <archdesc level="fonds">
+ <did>
+  <unitid type="cote-groupee">153AP/1-153AP/2</unitid>
+   <unittitle>Fonds Saint-Exupery</unittitle>
+   <unitdate calendar="gregorian" era="ce" normal="1911-01-01/1944-12-31">1911-1944</unitdate>
+   <origination>
+    <persname authfilenumber="FRAN_NP_050585">Saint-Exupery, Antoine de (1900-1944)</persname>
+   </origination>
+   <physdesc>2 cartons.</physdesc>
+   <physloc>Pierrefitte</physloc>
+  </did>
+  <accessrestrict>
+   <p>La consultation est libre, sous reserve du reglement de la salle de lecture des Archives
+    nationales. Les documents cotes 153AP/1, dossiers 1 et 2, ne peuvent etre consultes que sous
+    forme de reproductions : photocopies, microfilms ou images numeriques.</p>
+  </accessrestrict>
+  <userestrict>
+   <p>Avertissement : l'oeuvre d'Antoine de Saint-Exupery, pour quelque utilisation qu'en fera le
+    lecteur, citation, edition, reproduction, meme partielle, est encore soumise a la legislation
+    sur le droit d'auteur. </p>
+   <p>Les reproductions sont soumises a l'autorisation de la Fondation Saint-Exupery.</p>
+  </userestrict>
+  <acqinfo>
+   <p>Dons de la comtesse de Saint-Exupery, mere de Saint-Exupery, 1959 (entree n_1538), de Melle Simone de Saint-Exupery, sa soeur, 1967 (entree n_2044) et de M. Frederic d'Agay, petit-neveu de Saint-Exupery, 1984 (entree du 26 avril 1984).</p>
+  </acqinfo>
+  <scopecontent>
+   <p>Pres de 200 lettres de Saint-Exupery constituent l'essentiel de ce fonds. Les premieres remontent a son enfance, la derniere est ecrite l'annee de sa mort. La majorite a pour destinataire la comtesse de Saint-Exupery, sa mere. Certaines sont illustrees de dessins. L'ensemble de cette correspondance a ete photocopie par les Archives nationales, qui en conservent aussi les originaux, a l'exception de certains documents signales dans l'inventaire.</p>
+   <p>Une partie des archives repertoriees ici et de nombreux documents provenant de collections particulieres ont ete presentes par les Archives nationales dans l'exposition 
+    <emph render="italic">Antoine de Saint-Exupery, 1900-1944</emph>, organisee a l'occasion du quarantieme anniversaire de sa disparition (hotel de Rohan, novembre 1984-fevrier 1985)_; catalogue, XVI-164 p., 625 numeros, illustrations. Le catalogue et les pieces exposees ont ete microfilmes (639 Mi 1 et 2). 
+   </p>
+  </scopecontent>
+  <relatedmaterial>
+   <p>Un complement a ce fonds existe sous forme de microfilm_: 14 lettres a un ami, octobre 1917-aout 1918 (132Mi/3, dossier 12).</p>
+  </relatedmaterial>
+  <dsc>
+  <c id="d_1" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_1">
+   <did>
+    <unitid type="cote-de-consultation">153AP/1</unitid>
+     <unittitle>Lettres et documents originaux.</unittitle>
+     <unitdate calendar="gregorian" era="ce" normal="1911-01-01/1956-12-31">1911-1956</unitdate>
+    </did>
+    <accessrestrict>
+     <p>Les dossiers 1 et 2 sont consultables sous forme d'images numeriques, de microfilm (132Mi/2,
+      dossier 5 et 132Mi/3, dossier 12) ou de photocopies (153AP/2, dossiers 1 et 2)_; le dossier 3
+      et le dossier 4 le sont par extraits.</p>
+    </accessrestrict>
+    <acqinfo>
+     <p>Dossiers 1 et 2 : entree du 6 mai 1959.</p>
+     <p>Dossier 3 : entree du 26 avril 1984.</p>
+     <p>Dossier 4 : entree du 6 mai 1959.</p>
+    </acqinfo>
+    <arrangement>
+     <p>Un inventaire detaille (a la piece), avec les images numeriques associees, est disponible en
+      salle de lecture des Archives nationales. Se renseigner aupres de la presidence de salle.</p>
+    </arrangement>
+    <scopecontent>
+     <p>Dossier 1. 186 lettres adressees par Antoine de Saint-Exupery a sa mere et a sa soeur
+      Gabrielle. 1911-1944.</p>
+     <p>Dossier 2. Poesies de jeunesse. 1 facsicule. 1921 et s. d.</p>
+     <p>Dossier 3. 2 lettres de sa mere et passeport. 1940.</p>
+     <p>Dossier 4. Pieces diverses et coupures de jounraux. 29 pieces. 1939-1956.</p>
+    </scopecontent>
+    
+    
+    <c id="d_1_3" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_1_3">
+    <did>
+     <unitid type="cote-de-consultation">153AP/1</unitid>
+      <unitid>Dossier 3</unitid>
+      <unittitle>Lettres de sa mere et passeport.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1940-01-01/1940-12-31">1940</unitdate>
+     </did>
+     <scopecontent>
+      <p>Deux lettres de sa mere a Saint-Exupery, 16 fevrier [1940] et [1940]. Passeport de
+       Saint-Exupery, 19-21 avril 1940.<list>
+        <item>Lettre de Marie de Saint-Exupery a son fils Antoine. Vallauris, hopital
+         complementaire, 16 fevrier 1940. 1 page.</item>
+        <item>Lettre de Marie de Saint-Exupery a son fils Antoine. Vallauris, [Hopital de Vallauris,
+         1940]. 2 pages. </item>
+        <item>Passeport d'Antoine de Saint-Exupery. Delivre a Paris, le 19 avril 1940.</item>
+       </list>
+      </p>
+     </scopecontent>
+     <daogrp>
+      <daoloc href="http://www.siv.archives-nationales.culture.gouv.fr/siv/media/FRAN_IR_001885/d_1_3/FRAN_0108_0669_L"/>
+     </daogrp>
+    </c>
+    <c id="d_1_4" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_1_4">
+    <did>
+     <unitid type="cote-de-consultation">153AP/1</unitid>
+      <unitid>Dossier 4</unitid>
+      <unittitle>Pieces diverses, coupures de journaux.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1939-01-01/1956-12-31">1939-1956 et
+       s.d.</unitdate>
+      <physdesc>29 pieces.</physdesc>
+     </did>
+     <acqinfo>
+      <p>Dossier integre en 2009, entre le 6 mai 1959.</p>
+     </acqinfo>
+     <scopecontent>
+      <p>
+       <list>
+        <item>Piece 1. Lettre de Press Alliance Inc. a Antoine de Saint-Exupery. Paris, 27 juillet
+         1939. </item>
+        <item>Piece 2. Enveloppe a en-tete de la Societe Anonyme des Avions Caudron, adressee au
+         Centre Mobilisateur de Toulouse contenant la ettre de la Societe anonyme des Avions Caudron
+         a Antoine de Saint-Exupery. Issy, 15 septembre 1939.</item>
+        <item>Piece 3. Enveloppe a en-tete de la Societe Anonyme des Avions Caudron, adressee au
+         Centre Mobilisateur de Toulouse contenant la lettre de la Societe anonyme des Avions
+         Caudron a Antoine de Saint-Exupery. Issy, 15 septembre 1939.</item>
+        <item>Piece 4. Lettre de la Societe anonyme des Avions Caudron a Antoine de Saint-Exupery.
+         Issy, 15 septembre 1939.</item>
+        <item>Piece 5. Avis d'impots sur les revenus et taxes accessoires, 30 septembre 1939.</item>
+        <item>Piece 6. Lettre de la Societe anonyme des Avions Caudron a Antoine de Saint-Exupery.
+         Issy-les-Moulineaux, 14 novembre 1939.</item>
+        <item>Piece 7. Lettre de rappel de facture du Confiseur Rebattet a Antoine de Saint-Exupery.
+         Paris, 18 janvier 1940.</item>
+        <item>Piece 8. Lettre de declaration de salaire de Air France a Antoine de Saint-Exupery.
+         Paris, 31 janvier 1940.</item>
+        <item>Piece 9. Reseau telephonique de Paris: formulaire de transfert d'une installation
+         telephonique au nom de Consuelo de Saint-Exupery. Paris, [1er janvier 1940].</item>
+        <item>Piece 10. Lettre de rappel de loyer de Remo Orefice a Antoine de Saint-Exupery. Paris,
+         29 mars 1940.</item>
+        <item>Piece 11. Formulaire imprime de declaration a l'entree du territoire francais.
+         Feignes, 21 avril 1940.</item>
+        <item>Piece 12. Lettre de Nelly de Vogue a Madame de Saint-Exupery donnant des
+         renseignements sur la disparition d'A. de Saint-Exupery. Sans lieu, 10 novembre
+         1944.</item>
+        <item>Piece 13. Poeme de Paul Creyssel envoye de Fresnes "_Pour Antoine de Saint-Exupery_".
+         Fresnes, 16 juin 1946.</item>
+        <item>Piece 14. Enveloppe adressee a Madame P. d'Agay, par Edmond Gregoire. Zellik
+         (Belgique), 1947, contenant la lettre d'Edmond Gregoire a Gabrielle d'Agay, 7 janvier
+         1947.</item>
+        <item>Piece 15. Lettre d'Edmond Gregoire a Gabrielle d'Agay, 7 janvier 1947.</item>
+        <item>Piece 16. Lettre de Marcel Jarry, avoue a Gabrielle d'Agay. Paris, 3 octobre
+         1947.</item>
+        <item>Piece 17. Telegramme "_anonyme_" adresse a Gabrielle d'Agay. Luxembourg, 27 mai
+         1948.</item>
+        <item>Piece 18. Article "_Le Petit Prince d'Antoine de Saint-Exupery_", extrait de <emph render="italic">La Liberation</emph>. 16 juin 1946.</item>
+        <item>Pieces 19-20. Feuillet "_Argus de la presse_". Article "_A Bangui, le groupe de
+         Saint-Ex photographie la brousse_", extrait du magazine <emph render="italic">Decollage</emph>, 26 juillet 1946.</item>
+        <item>Piece 21. Article "_Der kleine Prinz_", extrait de <emph render="italic">Neue Zurcher
+          Zeitung</emph>. 13 avril 1951.</item>
+        <item>Piece 22. Article "_Die Briefe der beiden Gartner_", extrait de <emph render="italic">Nurtinger Zeitung</emph>. 12 aout 1954.</item>
+        <item>Piece 23. Article "_Hommage a Saint-Exupery_", extrait du <emph render="italic">Courrier</emph>. Chalon-sur-Saone, 30 octobre 1954.</item>
+        <item>Piece 24. Article "_Ecrivain, homme d'action, amoureux... Saint-Exupery est presente a
+         la Bibliotheque Nationale_", extrait de <emph render="italic">La Republique</emph>. Toulon,
+         31 octobre 1954.</item>
+        <item>Piece 25. Article "_Nouvelles de Paris_". Bruxelles, 7 novembre 1954.</item>
+        <item>Piece 26. Article "_Inaugurant une nouvelle collection Saint-Exupery revit par
+         l'image_", extrait de <emph render="italic">La renaissance de Loir-et-Cher</emph>. Blois,
+         13 novembre 1954.</item>
+        <item>Piece 27. Article du journal <emph render="italic">Spectateur</emph>. 15 avril ou 15
+         aout</item>
+        <item>.</item>
+        <item>Piece 28. Article "_Respect de l'Homme par Antoine de Saint-Exupery_". Sans lieu, sans
+         date.</item>
+        <item>Piece 29.Article "_"_Saint-Exupery en quete d'une morale_" signe Lucien Guissard, dans
+         le journal <emph render="italic">La Croix</emph> du 4 et 5 mars 1956  </item>
+       </list>
+      </p>
+     </scopecontent>
+     <daogrp>
+      <daoloc href="http://www.siv.archives-nationales.culture.gouv.fr/siv/media/FRAN_IR_001885/d_1_4/FRAN_0108_0684_L"/>
+     </daogrp>
+    </c>
+   </c>
+   <c id="d_2" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2">
+   <did>
+    <unitid type="cote-de-consultation">153AP/2</unitid>
+     <unittitle>Photocopies de lettres et catalogue de vente.</unittitle>
+     <unitdate calendar="gregorian" era="ce" normal="1701-01-01/1944-12-31">XVIIIe siecle, 1900-1944 et s.d.</unitdate>
+    </did>
+    <acqinfo>
+     <p>Entree n_2044 du 3 fevrier 1967. Les documents originaux correspondant aux dossiers 3-5 et 7 ne sont pas conserves aux Archives nationales.</p>
+    </acqinfo>
+    <c id="d_2_1" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_1">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 1</unitid>
+      <unittitle>Lettres de Saint-Exupery.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1911-01-01/1944-12-31">1911-[1944] et s. d.</unitdate>
+      <physdesc>184 pieces.</physdesc>
+     </did>
+     <scopecontent>
+      <p>
+       <emph render="bold">1re partie. Lettres 1-68. Annees 1911-1921.</emph>
+      </p>
+      <p>"_Lettres d'Antoine de Saint-Exupery_". Registre relie en demi-chagrin rouge, contenant les photocopies des 68 premieres lettres conservees dans le dossier 1 de 153AP/1, avec quelques commentaires dactylographies. </p>
+      <p> </p>
+      <p>
+       <emph render="bold">2e partie. Lettres 69-184. Annees [1921-1944]. </emph>
+      </p>
+      <p>"_Lettres d'Antoine de Saint-Exupery_". Registre relie en demi-chagrin rouge, contenant les photocopies des 116 dernieres lettres conservees dans le dossier 1 de 153AP/1, avec quelques commentaires dactylographies.</p>
+     </scopecontent>
+    </c>
+    <c id="d_2_2" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_2">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 2</unitid>
+      <unittitle>Poesies de jeunesse.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1921-01-01/1921-12-31">1921 et s. d.</unitdate>
+     </did>
+     <scopecontent>
+      <p>Photocopies des poesies conservees dans le dossier 2 de 153AP/1.</p>
+     </scopecontent>
+    </c>
+    <c id="d_2_3" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_3">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 3</unitid>
+      <unittitle>Billets de Saint-Exupery a sa femme.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1939-01-01/1940-12-31">S. d. [1939-1940]</unitdate>
+      <physdesc>2 pieces.</physdesc>
+     </did>
+    </c>
+    <c id="d_2_4" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_4">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 4</unitid>
+      <unittitle>Documents personnels de Saint-Exupery.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1900-01-01/1944-12-31">1900-1944</unitdate>
+      <physdesc>9 pieces</physdesc>
+     </did>
+     <scopecontent>
+      <p>1. Certificat de bapteme, Lyon, 30 juin 1900 (extrait du 30 juin 1964).</p>
+      <p>2-3. Telegrammes de Saint-Exupery, 1933 et s. d.</p>
+      <p>4-5. Passeports, 1934, 1940.</p>
+      <p>6. Carte de la Societe francaise des fils de la Revolution americaine au nom du comte de Saint-Exupery, 1939.</p>
+      <p>7. Lettre du ministre de l'Information au commandant du groupe aerien 2/33, lui demandant d'insister aupres de Saint-Exupery pour qu'il redige un message destine aux Etats-Unis, 24 mai 1940.</p>
+      <p>8. Page du registre ou figure l'annonce de la disparition de Saint-Exupery le 31 juillet 1944.</p>
+     </scopecontent>
+    </c>
+    <c id="d_2_5" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_5">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 5</unitid>
+      <unittitle>Papiers de famille.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1701-01-01/1800-12-31">XVIIIe siecle</unitdate>
+      <physdesc>3 pieces</physdesc>
+     </did>
+     <scopecontent>
+      <p>1. Note genealogique sur des Saint-Exupery etablis en Quercy au XVIe siecle. </p>
+      <p>2-3. Actes relatifs a Georges Alexandre Cesaree de Saint-Exupery, 1757 et 1776.</p>
+     </scopecontent>
+    </c>
+    <c id="d_2_6" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_6">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 6</unitid>
+      <unittitle>Catalogue de la vente de [...] " lettres et dessins d'Antoine de Saint-Exupery ", Drouot Rive-gauche.</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1976-05-20/1976-05-20">20 mai 1976</unitdate>
+     </did>
+     <scopecontent>
+      <p>Lots 42-74 bis a signaler_: lettres et dessins adresses en 1942-1943 par Saint-Exupery a Silvia Reinhardt, nee Hamilton.</p>
+      <p>
+       <emph render="italic">Catalogue conserve dans le dossier du fonds au departement des archives privees.</emph>
+      </p>
+     </scopecontent>
+    </c>
+    <c id="d_2_7" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_7">
+    <did>
+     <unitid type="cote-de-consultation">153AP/2</unitid>
+      <unitid>Dossier 7</unitid>
+      <unittitle>Lettre de Saint-Exupery a Curtice Hitchcock, son editeur aux Etats-Unis, pour obtenir un visa. [Montreal].</unittitle>
+      <unitdate calendar="gregorian" era="ce" normal="1942-05-01/1942-05-31">mai 1942</unitdate>
+      <physdesc>10 p.</physdesc>
+     </did>
+    </c>
+   </c>
+  </dsc>
+ </archdesc>
+</ead>

@@ -30,7 +30,7 @@ const genNewFilename = (oldFilename: string): string => {
     const debut = take(temp.length - 1, temp);
     return [[debut.join("."), "_resu"].join(""), extension].join(".");
 };
-const PreviousStepLink = props => <RouterLink to="/recettes" {...props} />;
+const PreviousStepLink = props => <RouterLink to="/recettes" {...props} data-cy="prev-step-link" />;
 
 /**
  * Download the files after having applied the pipeline to it
@@ -60,7 +60,7 @@ export default class Resultats extends React.PureComponent<Props> {
                         </ErrorCatcher>
                     </PaperSheet>
                     <PaperSheet xs={12} style={{ textAlign: "center" }}>
-                        <Typography onClick={this.download} variant="h3">
+                        <Typography onClick={this.download} variant="h3" data-cy="download-link">
                             {"Télécharger 🎁"}
                         </Typography>
                         <IconButton onClick={this.download}>

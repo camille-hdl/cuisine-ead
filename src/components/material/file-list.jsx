@@ -58,6 +58,7 @@ class FileList extends React.PureComponent<Props> {
                                         </Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
+                                        data-cy="file-list-text"
                                         primary={getTitleProper(xmlFile.get("doc")) || xmlFile.get("filename")}
                                         secondary={`${xmlFile.get("filename")} - ${xmlFile.get("encoding")}`}
                                     />

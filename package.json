@@ -11,7 +11,10 @@
     "workboxsystem": "workbox injectManifest workbox-config-system.js",
     "workbox": "run-p workboxesm workboxsystem",
     "watch": "rollup -c -w",
-    "serve": "serve"
+    "serve": "serve",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:install": "cypress install"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",

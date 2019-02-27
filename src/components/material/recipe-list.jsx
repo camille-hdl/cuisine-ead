@@ -62,7 +62,7 @@ class RecipeList extends React.PureComponent<Props> {
                         {map(
                             recipe => (
                                 <ListItem key={recipe.key} button={true} onClick={this.handleToggle(recipe.key)}>
-                                    <ListItemText primary={getLabel(recipe.key)} />
+                                    <ListItemText data-cy={"recipe-key"} primary={getLabel(recipe.key)} />
                                     <ListItemSecondaryAction>
                                         <Switch
                                             onChange={this.handleToggle(recipe.key)}

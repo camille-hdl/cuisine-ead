@@ -20,7 +20,7 @@ const styles = {
     description: {
         flexGrow: 1,
         maxWidth: 300,
-        margin: "auto"
+        margin: "auto",
     },
 };
 const UploadLink = props => <RouterLink to="/upload" {...props} />;
@@ -38,7 +38,9 @@ function StartButton(props: { hasXmlFiles: boolean, classes: any }) {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <OutlinedButton linkComponent={UploadLink}>{hasXmlFiles ? "Fichiers" : "Démarrer →"}</OutlinedButton>
+                <OutlinedButton data-cy={"start-button"} linkComponent={UploadLink}>
+                    {hasXmlFiles ? "Fichiers" : "Démarrer →"}
+                </OutlinedButton>
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="subtitle1" className={classes.description}>
