@@ -4,7 +4,7 @@
   "description": "",
   "main": "public/index.html",
   "scripts": {
-    "test": "cypress run",
+    "test": "start-server-and-test serve http://localhost:5000 cypress:run",
     "build": "run-s buildrollup workbox",
     "buildrollup": "rollup -c --prod --mini",
     "workboxesm": "workbox injectManifest workbox-config-esm.js",
@@ -51,6 +51,7 @@
     "rollup-plugin-terser": "^4.0.1",
     "rollup-pluginutils": "^2.3.3",
     "serve": "^10.1.2",
+    "start-server-and-test": "^1.7.11",
     "workbox-cli": "^3.6.3"
   },
   "dependencies": {

@@ -3,5 +3,6 @@ node_js:
   - "node"
   - "lts/*"
 cache:
+  npm: true
   directories:
-    - "node_modules"
+    - ~/.cache
