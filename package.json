@@ -10,7 +10,8 @@
     "workboxesm": "workbox injectManifest workbox-config-esm.js",
     "workboxsystem": "workbox injectManifest workbox-config-system.js",
     "workbox": "run-p workboxesm workboxsystem",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "serve": "serve"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
@@ -48,6 +49,7 @@
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^4.0.1",
     "rollup-pluginutils": "^2.3.3",
+    "serve": "^10.1.2",
     "workbox-cli": "^3.6.3"
   },
   "dependencies": {

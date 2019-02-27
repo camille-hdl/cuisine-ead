@@ -3,12 +3,18 @@
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <title>Ead Tinker</title>
-        <meta name="description" content="" />
+        <title>Cuisine EAD</title>
+        <meta name="description" content="Modifications systématiques de fichiers xml-EAD" />
+        <script>
+            if (navigator && navigator.serviceWorker) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/js/esm/sw.js", {scope: '/'});
+                });
+            }
+        </script>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-        <!-- <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script> -->
         <script src="/js/vendor/jschardet.min.js"></script>
     </head>
     <body>
@@ -17,11 +23,6 @@
                 window.esDynamicImport = true;
                 // this will throw if dynamic import is not supported
                 import("/js/esm/index.js");
-                if (navigator && navigator.serviceWorker) {
-                    window.addEventListener("load", () => {
-                        navigator.serviceWorker.register("/js/esm/sw.js");
-                    });
-                }
             })();
         </script>
 
@@ -31,7 +32,7 @@
             if (!window.esDynamicImport) {
                 if (navigator && navigator.serviceWorker) {
                     window.addEventListener("load", () => {
-                        navigator.serviceWorker.register("/js/system/sw.js");
+                        navigator.serviceWorker.register("/js/system/sw.js", {scope: '/'});
                     });
                 }
                 // get the nomodule scripts and load (or inline) them
