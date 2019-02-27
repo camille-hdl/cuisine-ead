@@ -1,4 +1,6 @@
 # Cuisine EAD 🍲
+[![Build Status](https://travis-ci.org/camille-hdl/cuisine-ead.svg?branch=master)](https://travis-ci.org/camille-hdl/cuisine-ead) 
+
 
 * [Temporary website](https://stupefied-shirley-df465c.netlify.com)
 
