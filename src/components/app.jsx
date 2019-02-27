@@ -6,8 +6,6 @@ import { List } from "immutable";
 import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
 import type { AddXmlFileData } from "../types.js";
-import Grid from "./material/grid.jsx";
-import PaperSheet from "./material/paper-sheet.jsx";
 import StartButton from "./material/start-button.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 

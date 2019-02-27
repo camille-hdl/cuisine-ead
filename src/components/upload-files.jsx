@@ -40,6 +40,9 @@ type Props = {
 };
 
 const NextStepLink = props => <RouterLink to="/recettes" {...props} />;
+/**
+ * Add xml files
+ */
 export default class UploadFiles extends React.PureComponent<Props> {
     render() {
         return (
@@ -47,11 +50,15 @@ export default class UploadFiles extends React.PureComponent<Props> {
                 <Grid container spacing={24}>
                     <PaperSheet xs={12}>
                         <ErrorCatcher>
-                            <AppStepper activeStep={0} />
+                            <AppStepper activeStep={0}>
+                                <OutlinedButton
+                                    linkComponent={NextStepLink}
+                                    style={{ visibility: this.props.xmlFiles.size > 0 ? "visible" : "hidden" }}
+                                >
+                                    {"Recettes →"}
+                                </OutlinedButton>
+                            </AppStepper>
                         </ErrorCatcher>
-                        <OutlinedButton style={{ visibility: this.props.xmlFiles.size > 0 ? "visible" : "hidden" }}>
-                            <Link component={NextStepLink}>{"Recettes →"}</Link>
-                        </OutlinedButton>
                     </PaperSheet>
                 </Grid>
                 <ErrorCatcher>
@@ -60,35 +67,38 @@ export default class UploadFiles extends React.PureComponent<Props> {
                         accept={acceptedTypes}
                         onDrop={(accepted: Array<any>) => {
                             const { xml, csv, other } = groupBy(getType, accepted);
-                            forEach(file => {
-                                readXml(file, ({ doc, encoding, string, hash }) => {
-                                    this.props.addXmlFile({
-                                        filename: file.name,
-                                        doc: doc,
-                                        encoding: encoding,
-                                        string: string,
-                                        hash: hash,
+                            if (xml) {
+                                forEach(file => {
+                                    readXml(file, ({ doc, encoding, string, hash }) => {
+                                        this.props.addXmlFile({
+                                            filename: file.name,
+                                            doc: doc,
+                                            encoding: encoding,
+                                            string: string,
+                                            hash: hash,
+                                        });
                                     });
-                                });
-                            }, xml);
+                                }, xml);
+                            }
                         }}
                     >
                         <Grid container spacing={24}>
-                            {this.props.xmlFiles.size > 0 ? (
-                                <PaperSheet xs={6}>
-                                    <FileList
-                                        xmlFiles={this.props.xmlFiles}
-                                        onRemove={xmlFile => {
-                                            this.props.removeXmlFile(xmlFile.get("hash"));
-                                        }}
-                                    />
-                                </PaperSheet>
-                            ) : null}
-                            <PaperSheet xs={this.props.xmlFiles.size > 0 ? 6 : 12}>
-                                <BigIcon icon={"arrow_downward"} />
-                                <Typography variant="body1" align={"center"} style={{ opacity: 0.5 }}>
-                                    {"Déposer des fichiers"}
+                            <PaperSheet xs={12}>
+                                <Typography variant="h3" align={"center"} style={{ opacity: 0.5 }}>
+                                    {"Déposer des fichiers xml-ead"}
                                 </Typography>
+                                {this.props.xmlFiles.size > 0 ? (
+                                    <PaperSheet xs={12}>
+                                        <FileList
+                                            xmlFiles={this.props.xmlFiles}
+                                            onRemove={xmlFile => {
+                                                this.props.removeXmlFile(xmlFile.get("hash"));
+                                            }}
+                                        />
+                                    </PaperSheet>
+                                ) : (
+                                    <BigIcon icon={"arrow_downward"} />
+                                )}
                             </PaperSheet>
                         </Grid>
                     </Dropzone>

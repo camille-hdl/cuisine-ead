@@ -54,7 +54,7 @@ const getPluginsConfig = (prod, mini) => {
                 "./node_modules/rxjs/Subject.js": ["Subject"],
                 "./node_modules/process/browser.js": ["nextTick"],
                 "./node_modules/events/events.js": ["EventEmitter"],
-                "./node_modules/@material-ui/core/styles/index.js": ["withStyles"],
+                "./node_modules/@material-ui/core/styles/index.js": ["withStyles", "createMuiTheme", "MuiThemeProvider"],
                 "./node_modules/react-is/index.js": ["isValidElementType"],
             },
         }),
@@ -64,16 +64,6 @@ const getPluginsConfig = (prod, mini) => {
         globals(),
         builtins(),
     ];
-    if (!prod) {
-        sortie.push(
-            serve({
-                contentBase: "public",
-                openPage: "/",
-                historyApiFallback: true,
-            }),
-            livereload()
-        );
-    }
     if (mini) {
         sortie.push(
             terser({

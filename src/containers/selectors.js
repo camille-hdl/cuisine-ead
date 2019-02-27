@@ -4,11 +4,15 @@ import { Map, List } from "immutable";
 import { findRecipe } from "../lib/recipes.js";
 import { pipe, compose, memoizeWith, take, split, identity, join } from "ramda";
 
+/**
+ * Returns only the first few lines of the file,
+ * because rendering the diff is slow and freezes the browser
+ */
 const getFirstThousandLines = memoizeWith(
     identity,
     compose(
         join("\n"),
-        take(1000),
+        take(600),
         split("\n")
     )
 );
@@ -69,7 +73,7 @@ export const pipelineFnSelector = createSelector(
 
 /**
  * Returns a string representation of the selected xml file
- * after having applied the pipeline on it.
+ * after having applied the pipeline to it.
  */
 export const previewXmlStringSelector = createSelector(
     previewXmlFileSelector,

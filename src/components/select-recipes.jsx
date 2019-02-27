@@ -6,10 +6,11 @@ import Grid from "./material/grid.jsx";
 import { getRecipes } from "../lib/recipes.js";
 import RecipeList from "./material/recipe-list.jsx";
 import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
 import ResponsiveDrawer from "./material/resp-drawer.jsx";
 import ReactDiffViewer from "react-diff-viewer";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
 import Switch from "@material-ui/core/Switch";
 import OutlinedButton from "./material/outlined-button.jsx";
 import Typography from "@material-ui/core/Typography";
@@ -34,16 +35,19 @@ type Props = {
 };
 const PreviousStepLink = props => <RouterLink to="/upload" {...props} />;
 const NextStepLink = props => <RouterLink to="/resultats" {...props} />;
+
+/**
+ * Pick which operation to add to the pipeline and preview the changes on a file
+ */
 export default function SelectRecipes(props: Props) {
     const isWide = useMedia("(min-width: 920px");
-    const backLink = (
-        <OutlinedButton>
-            <Link component={PreviousStepLink}>{"← fichiers"}</Link>
-        </OutlinedButton>
-    );
+    const backLink = <OutlinedButton linkComponent={PreviousStepLink}>{"← fichiers"}</OutlinedButton>;
     const nextLink = (
-        <OutlinedButton>
-            <Link component={NextStepLink}>{"résultats →"}</Link>
+        <OutlinedButton
+            linkComponent={NextStepLink}
+            style={{ visibility: props.pipeline.size > 0 ? "visible" : "hidden" }}
+        >
+            {"résultats →"}
         </OutlinedButton>
     );
     if (props.previewEnabled) {
@@ -52,18 +56,14 @@ export default function SelectRecipes(props: Props) {
                 drawer={
                     <>
                         <div>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={props.previewEnabled}
-                                        onChange={() => {
-                                            props.togglePreview(!props.previewEnabled);
-                                        }}
-                                        value="Prévisualisation"
-                                    />
-                                }
-                                label="Prévisualisation (lent)"
-                            />
+                            <IconButton
+                                onClick={() => {
+                                    props.togglePreview(!props.previewEnabled);
+                                }}
+                                aria-label="Sortir de la comparaison"
+                            >
+                                <Icon>clear</Icon>
+                            </IconButton>
                         </div>
                         <div>
                             <SelectPreviewFile {...props} />
@@ -78,7 +78,7 @@ export default function SelectRecipes(props: Props) {
                             <Typography variant="subtitle1">
                                 <strong>
                                     {
-                                        "La prévisualisation ne montre que les 1000 premières lignes pour des raisons de performance"
+                                        "La comparaison ne montre que les ~600 premières lignes pour éviter de bloquer votre navigateur 🐌"
                                     }
                                 </strong>
                             </Typography>
@@ -90,7 +90,7 @@ export default function SelectRecipes(props: Props) {
                         </>
                     ) : null
                 ) : (
-                    <strong>{"Vous devez ajouter un fichier et des recettes"}</strong>
+                    <Typography variant="h5">{"⚠️ Vous devez choisir des recettes"}</Typography>
                 )}
             </ResponsiveDrawer>
         );
@@ -100,15 +100,28 @@ export default function SelectRecipes(props: Props) {
         <Grid container spacing={24}>
             <PaperSheet xs={12}>
                 <ErrorCatcher>
-                    <AppStepper activeStep={1} />
+                    <AppStepper activeStep={1}>
+                        {backLink}
+                        {nextLink}
+                    </AppStepper>
                 </ErrorCatcher>
-                <Grid container spacing={24}>
-                    <PaperSheet xs={6}>{backLink}</PaperSheet>
-                    <PaperSheet xs={6}>{nextLink}</PaperSheet>
-                </Grid>
             </PaperSheet>
-            <PaperSheet xs={6} />
-            <Grid item xs={6} />
+            <Grid idem xs={12}>
+                <div style={{ margin: "20px" }}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={props.previewEnabled}
+                                onChange={() => {
+                                    props.togglePreview(!props.previewEnabled);
+                                }}
+                                value="Comparaison avant → après"
+                            />
+                        }
+                        label="Comparaison avant → après 👀"
+                    />
+                </div>
+            </Grid>
             <Grid item xs={12}>
                 <Grid container spacing={24}>
                     {indexedMap((chunk, i: number) => {
@@ -120,22 +133,6 @@ export default function SelectRecipes(props: Props) {
                     }, recipesSplit)}
                 </Grid>
             </Grid>
-            <PaperSheet xs={12}>
-                <div>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={props.previewEnabled}
-                                onChange={() => {
-                                    props.togglePreview(!props.previewEnabled);
-                                }}
-                                value="Prévisualisation"
-                            />
-                        }
-                        label="Prévisualisation (lent)"
-                    />
-                </div>
-            </PaperSheet>
         </Grid>
     );
 }

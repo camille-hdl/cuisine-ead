@@ -35,11 +35,12 @@ function SelectPreviewFile(props: { classes: any, xmlFiles: IList, previewHash: 
                     button
                     aria-haspopup="true"
                     aria-controls="preview-select"
-                    aria-label="Fichier prévisualisé"
+                    aria-label="Fichier sélectionné"
                     onClick={ev => setAnchorEl(ev.currentTarget)}
                 >
                     <ListItemText
-                        primary={
+                        primary={"Fichier sélectionné"}
+                        secondary={
                             props.previewXmlFile
                                 ? getTitleProper(props.previewXmlFile.get("doc")) ||
                                   props.previewXmlFile.get("filename")

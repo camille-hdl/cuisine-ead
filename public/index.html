@@ -3,19 +3,21 @@
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <title>Cuisine EAD</title>
+        <title>Cuisine EAD 🍲</title>
         <meta name="description" content="Modifications systématiques de fichiers xml-EAD" />
         <script>
             if (navigator && navigator.serviceWorker) {
                 window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("/js/esm/sw.js", {scope: '/'});
+                    navigator.serviceWorker.register("/js/esm/sw.js", { scope: "/" });
                 });
             }
         </script>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
+        <link rel="preload" href="/js/esm/index.js" as="script" />
+        <link href="https://fonts.googleapis.com/css?family=Caveat" rel="stylesheet" />
+        <script src="/js/vendor/jschardet.min.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-        <script src="/js/vendor/jschardet.min.js"></script>
     </head>
     <body>
         <script type="module">
@@ -32,7 +34,7 @@
             if (!window.esDynamicImport) {
                 if (navigator && navigator.serviceWorker) {
                     window.addEventListener("load", () => {
-                        navigator.serviceWorker.register("/js/system/sw.js", {scope: '/'});
+                        navigator.serviceWorker.register("/js/system/sw.js", { scope: "/" });
                     });
                 }
                 // get the nomodule scripts and load (or inline) them

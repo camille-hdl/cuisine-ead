@@ -17,19 +17,11 @@ import { xpathFilter } from "../../lib/xml.js";
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        maxWidth: 752,
+        margin: "auto",
+        maxWidth: 720,
     },
-    demo: {
+    paper: {
         backgroundColor: theme.palette.background.paper,
-    },
-    title: {
-        margin: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,
-    },
-    margin: {
-        margin: theme.spacing.unit * 2,
-    },
-    padding: {
-        padding: `0 ${theme.spacing.unit * 2}px`,
     },
 });
 
@@ -55,10 +47,7 @@ class FileList extends React.PureComponent<Props> {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Typography variant="h6" className={classes.title}>
-                    Fichiers
-                </Typography>
-                <div className={classes.demo}>
+                <div className={classes.paper}>
                     <List dense={false}>
                         {map(
                             xmlFile => (

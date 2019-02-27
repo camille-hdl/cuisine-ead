@@ -7,27 +7,24 @@ import StepLabel from "@material-ui/core/StepLabel";
 
 const styles = theme => ({
     root: {
-        width: "90%",
+        width: "100%",
     },
-    backButton: {
-        marginRight: theme.spacing.unit,
-    },
-    instructions: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
-    },
+    buttonContainer: {
+        display: "flex",
+    }
 });
 
 function getSteps() {
-    return ["Ajouter des fichiers", "Choisir les recettes", "Résultat"];
+    return ["Ajouter des fichiers 🥒", "Choisir les recettes 🌶", "Résultat 🥗"];
 }
 
 class AppStepper extends React.PureComponent<{
     activeStep: number,
     classes: any,
+    children?: any,
 }> {
     render() {
-        const { classes, activeStep } = this.props;
+        const { classes, activeStep, children } = this.props;
         const steps = getSteps();
 
         return (
@@ -39,6 +36,7 @@ class AppStepper extends React.PureComponent<{
                         </Step>
                     ))}
                 </Stepper>
+                {children ? <div className={classes.buttonContainer}>{children}</div> : null}
             </div>
         );
     }
