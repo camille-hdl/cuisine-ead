@@ -4,7 +4,7 @@
   "description": "",
   "main": "public/index.html",
   "scripts": {
-    "test": "",
+    "test": "cypress run",
     "build": "run-s buildrollup workbox",
     "buildrollup": "rollup -c --prod --mini",
     "workboxesm": "workbox injectManifest workbox-config-esm.js",
