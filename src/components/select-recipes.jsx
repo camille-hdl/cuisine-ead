@@ -88,7 +88,7 @@ export default function SelectRecipes(props: Props) {
                             <Typography variant="subtitle1" data-cy="preview-warning">
                                 <strong>
                                     {
-                                        "La comparaison ne montre que les ~600 premières lignes pour éviter de bloquer votre navigateur 🐌"
+                                        "La comparaison ne montre que les ~600 premières lignes pour éviter de bloquer votre navigateur 🐌, ce qui peut provoquer des bizarreries"
                                     }
                                 </strong>
                             </Typography>
