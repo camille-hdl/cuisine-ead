@@ -27,7 +27,7 @@ function MenuBar(props: { classes: any }) {
                         {"Cuisine EAD 🍲"}
                     </Typography>
                     <Typography variant="body1" color="inherit">
-                        <Link href={"https://github.com/camille-hdl/ead-tinker"} target="_blank" color="inherit">
+                        <Link href={"https://github.com/camille-hdl/cuisine-ead"} target="_blank" color="inherit">
                             Github
                         </Link>
                     </Typography>

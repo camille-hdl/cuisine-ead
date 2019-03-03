@@ -60,7 +60,12 @@ export default class Resultats extends React.PureComponent<Props> {
                         </ErrorCatcher>
                     </PaperSheet>
                     <PaperSheet xs={12} style={{ textAlign: "center" }}>
-                        <Typography onClick={this.download} variant="h3" data-cy="download-link">
+                        <Typography
+                            onClick={this.download}
+                            style={{ cursor: "pointer" }}
+                            variant="h3"
+                            data-cy="download-link"
+                        >
                             {"Télécharger 🎁"}
                         </Typography>
                         <IconButton onClick={this.download}>
