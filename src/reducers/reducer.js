@@ -9,6 +9,7 @@ import {
     TOGGLE_PREVIEW,
 } from "../actions.js";
 import type { AddXmlFileData } from "../types.js";
+import updateCorrections from "../lib/corrections-parser.js";
 
 const addXmlFileReducer = (state: Map, data: AddXmlFileData): Map => {
     const isDuplicate = state
@@ -22,8 +23,8 @@ const removeXmlFileReducer = (state: Map, data: string): Map => {
     return state.update("xmlFiles", xmlFiles => xmlFiles.filter(f => f.get("hash") !== data));
 };
 
-const updateCorrectionsReducer = (state: Map, data: Map): Map => {
-    return state;
+const updateCorrectionsReducer = (state: Map, data: Array<string>): Map => {
+    return state.set("corrections", updateCorrections(data, state.get("corrections")));
 };
 
 const setPipelineReducer = (state: Map, data: List): Map => {

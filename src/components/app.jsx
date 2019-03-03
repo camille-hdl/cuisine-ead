@@ -29,6 +29,7 @@ export type Props = {
     setPipeline: (p: List) => void,
     setPreviewHash: (h: string) => void,
     togglePreview: (p: boolean) => void,
+    updateCorrections: (corrections: Array<string>) => void,
 } & RouteProps;
 
 const UploadFiles = lazy(() => import("./upload-files.jsx"));
@@ -63,8 +64,8 @@ const AsyncResultats = props => {
 };
 
 const getUploadFilesProps = (props: Props) => {
-    const { xmlFiles, corrections, addXmlFile, removeXmlFile } = props;
-    return { xmlFiles, corrections, addXmlFile, removeXmlFile };
+    const { xmlFiles, corrections, addXmlFile, removeXmlFile, updateCorrections } = props;
+    return { xmlFiles, corrections, addXmlFile, removeXmlFile, updateCorrections };
 };
 
 export default class App extends React.PureComponent<Props> {

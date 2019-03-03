@@ -11,7 +11,7 @@ const availables = [
     ["nettoyer_type", "Nettoyer les attributs 'type'"],
     ["ajouter_altrender", "Ajouter les attributs 'altrender'"],
     ["capitalize_persname", "Capitaliser les noms de famille persname"],
-    ["correction_controlaccess", "Corriger les controlaccess avec csv"],
+    ["correction_controlaccess", "Corriger les controlaccess (avec csv)"],
     ["supprimer_whitespace", "Supprimer les tabulations et sauts de ligne dans les textes"],
     ["remplacer_windows", "Remplacer les caractères spéciaux windows (oe, -, ', ...)"],
     ["supprimer_controlaccess", "Supprimer l'indexation dans les controlaccess"],

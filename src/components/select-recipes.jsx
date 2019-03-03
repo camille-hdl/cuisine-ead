@@ -3,7 +3,7 @@ import React from "react";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
 import Grid from "./material/grid.jsx";
-import { getRecipes } from "../lib/recipes.js";
+import { getRecipes, getStatefulRecipes } from "../lib/recipes.js";
 import RecipeList from "./material/recipe-list.jsx";
 import { Link as RouterLink } from "react-router-dom";
 import ResponsiveDrawer from "./material/resp-drawer.jsx";
@@ -14,6 +14,7 @@ import Icon from "@material-ui/core/Icon";
 import Switch from "@material-ui/core/Switch";
 import OutlinedButton from "./material/outlined-button.jsx";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import { splitEvery, map, addIndex } from "ramda";
 import useMedia from "react-use/lib/useMedia";
 import ErrorCatcher from "./error-catcher.jsx";
@@ -22,12 +23,15 @@ import SelectPreviewFile from "./material/select-preview.jsx";
 const indexedMap = addIndex(map);
 
 const availableRecipes = getRecipes();
+const availaleStatefulRecipes = getStatefulRecipes();
+
 type Props = {
     pipeline: List,
     previewXmlFile: Map | null,
     previewXmlString: string | null,
     xmlFiles: List,
     previewEnabled: boolean,
+    corrections: Map,
     togglePreview: (p: boolean) => void,
     pipelineFn: (doc: any) => any,
     setPipeline: (p: List) => void,
@@ -70,6 +74,11 @@ export default function SelectRecipes(props: Props) {
                             <SelectPreviewFile {...props} />
                         </div>
                         <RecipeList {...props} availableRecipes={availableRecipes} />
+                        <Divider />
+                        <Typography variant="h6">{`${
+                            props.corrections.size
+                        } corrections de controlaccess disponibles`}</Typography>
+                        <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                     </>
                 }
             >
@@ -133,6 +142,12 @@ export default function SelectRecipes(props: Props) {
                             </PaperSheet>
                         );
                     }, recipesSplit)}
+                    <PaperSheet xs={12} sm={6} key={"stateful-recipes"}>
+                        <Typography variant="h6">{`${
+                            props.corrections.size
+                        } corrections de controlaccess disponibles`}</Typography>
+                        <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
+                    </PaperSheet>
                 </Grid>
             </Grid>
         </Grid>

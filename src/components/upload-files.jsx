@@ -1,8 +1,9 @@
 //@flow
 import React from "react";
 import Dropzone from "react-dropzone";
-import { concat, groupBy, partialRight, includes, forEach } from "ramda";
+import { concat, groupBy, partialRight, includes, forEach, tail } from "ramda";
 import { readXml } from "../lib/xml.js";
+import Papa from "papaparse";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
 import FileList from "./material/file-list.jsx";
@@ -37,6 +38,7 @@ type Props = {
     corrections: Map,
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
+    updateCorrections: (corrections: Array<string>) => void,
 };
 
 const NextStepLink = props => <RouterLink to="/recettes" {...props} data-cy="next-step-link" />;
@@ -66,7 +68,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                         <Dropzone
                             className={"dropzone"}
                             accept={acceptedTypes}
-                            onDrop={(accepted: Array<any>) => {
+                            onDrop={(accepted: Array<any>, rejected: Array<any>) => {
                                 const { xml, csv, other } = groupBy(getType, accepted);
                                 if (xml) {
                                     forEach(file => {
@@ -81,12 +83,30 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                         });
                                     }, xml);
                                 }
+                                if (csv) {
+                                    forEach(file => {
+                                        Papa.parse(file, {
+                                            complete: results => {
+                                                this.props.updateCorrections(tail(results.data));
+                                            },
+                                        });
+                                    }, csv);
+                                }
+                                if (rejected) {
+                                    console.log("rejected", rejected);
+                                }
+                                if (other) {
+                                    console.log("ignored files", other);
+                                }
                             }}
                         >
                             <Grid container spacing={24}>
                                 <PaperSheet xs={12}>
-                                    <Typography variant="h3" align={"center"} style={{ opacity: 0.5 }}>
-                                        {"Déposer des fichiers xml-ead"}
+                                    <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
+                                        {"Déposer des fichiers"}
+                                    </Typography>
+                                    <Typography variant="h4" align="center" style={{ opacity: 0.5 }}>
+                                        {"xml-ead ou csv (corrections)"}
                                     </Typography>
                                     {this.props.xmlFiles.size > 0 ? (
                                         <PaperSheet xs={12} data-cy="file-list">

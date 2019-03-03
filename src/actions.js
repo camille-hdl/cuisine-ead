@@ -16,7 +16,7 @@ export const removeXmlFile = (data: string) => {
     return { type: REMOVE_XML_FILE, data: data };
 };
 
-export const updateCorrections = (data: Map) => {
+export const updateCorrections = (data: Array<string>) => {
     return { type: UPDATE_CORRECTIONS, data: data };
 };
 

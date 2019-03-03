@@ -1,5 +1,4 @@
 //@flow
-// import { each, concat, last, head, take, trim, filter, capitalize, map, flatten, isEqual, find } from "lodash";
 import {
     forEach,
     filter,
@@ -13,6 +12,7 @@ import {
     find,
     partialRight,
     propEq,
+    curry,
 } from "ramda";
 /**
  * Functions were written using lodashes `each`,
@@ -32,24 +32,19 @@ import { xpathFilter } from "./xml.js";
 
 export type Recipe = (doc: any) => any;
 
-type ExecuteState = {
-    eadFiles: List,
-    corrections: Map,
-    recipes: List,
-};
+/**
+ * Contains a single property: `corrections: Map`
+ */
+type ExecuteState = Map;
 
 export const supprimerLb = (doc: any): any => {
-    const messages = [];
     const lbs = xpathFilter(doc, "//lb");
-    messages.push(["enlever", lbs.length, "lbs"].join(" "));
     each(lbs, lb => lb.remove());
     return doc;
 };
 
 export const supprimerLabelsVides = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, '//*[@label=""]');
-    messages.push(["enlever", elems.length, "labels vides"].join(" "));
     each(elems, elem => elem.removeAttribute("label"));
     return doc;
 };
@@ -89,7 +84,6 @@ export const remplacePlageSeparator = (doc: any): any => {
 export const remplaceExtensionSeparator = (doc: any): any => {
     // d'abord les c level != piece et file
 
-    const messages = [];
     const elems = filter(c => {
         const temp = trim(c.innerHTML).split(" ");
         const tempArticle = last(temp).split("-");
@@ -108,7 +102,6 @@ export const remplaceExtensionSeparator = (doc: any): any => {
         }
         return false;
     }, xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'));
-    messages.push(["Remplacer '-' par '/' dans", elems.length, "unitid de level bas"].join(" "));
     each(elems, elem => {
         elem.innerHTML = "" + elem.innerHTML.replace("-", "/");
     });
@@ -117,27 +110,21 @@ export const remplaceExtensionSeparator = (doc: any): any => {
 };
 
 export const supprimeComments = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, "//comment()");
-    messages.push(["Supprimer", elems.length, "commentaires"].join(" "));
     each(elems, comment => comment.remove());
 
     return doc;
 };
 
 export const supprimeControlAccess = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, "//controlaccess/*");
-    messages.push(["Supprimer", elems.length, "controlaccess"].join(" "));
     each(elems, controlaccess => controlaccess.remove());
 
     return doc;
 };
 
 export const replaceUnitDateNd = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, '//unitdate[@normal="0"]');
-    messages.push(["Remplacer", elems.length, "unitdate normal='0'"].join(" "));
     each(elems, elem => elem.setAttribute("normal", "s.d."));
 
     return doc;
@@ -145,9 +132,7 @@ export const replaceUnitDateNd = (doc: any): any => {
 
 const capitalizeRE = /( |^|.|;)([A-Z\-']+)( |,|;|.|$)/gm;
 export const capitalizePersname = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, "//persname");
-    messages.push(["Capitalizer", elems.length, "persnames"].join(" "));
     each(elems, elem => {
         elem.innerHTML = elem.innerHTML.replace(capitalizeRE, (matched, p1, nom, p3) => {
             return [p1, capitalize(nom), p3].join("");
@@ -159,12 +144,9 @@ export const capitalizePersname = (doc: any): any => {
 
 const whitespaceRE = /(\t|\n *|\r *| {2,})/gm;
 export const supprimeWhitespace = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, "//text()");
-    let nbReplacements = 0;
     each(elems, elem => {
         if (elem.textContent && elem.textContent.trim() !== "") {
-            nbReplacements++;
             // il faut potentiellement faire l'operation plusieurs fois
             // car un remplacement peut créer un nouveau double espace par exemple
             do {
@@ -172,19 +154,15 @@ export const supprimeWhitespace = (doc: any): any => {
             } while (whitespaceRE.test(elem.textContent));
         }
     });
-    messages.push(`Remplacer ${nbReplacements} tabulations, doubles espaces et sauts de lignes.`);
 
     return doc;
 };
 
 export const remplacerCharWindows = (doc: any): any => {
-    const messages = [];
     const textElems = xpathFilter(doc, "//text()");
-    let nbReplacements = 0;
     // textes
     each(textElems, elem => {
         if (elem.textContent && elem.textContent.trim() !== "") {
-            nbReplacements++;
             elem.textContent = replaceMSChars(elem.textContent);
         }
     });
@@ -192,37 +170,30 @@ export const remplacerCharWindows = (doc: any): any => {
     const elems = xpathFilter(doc, "//*");
     each(elems, elem => {
         if (elem.hasAttributes()) {
-            nbReplacements++;
             for (let attr of elem.attributes) {
                 elem.setAttribute(attr.name, replaceMSChars(attr.value));
             }
         }
     });
-    messages.push(`Remplacer les caractères windows dans ${nbReplacements} éléments.`);
 
     return doc;
 };
 
 export const nettoyerAttrType = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(
         doc,
         '//odd[@type="commentaire"]|//relatedmaterial[@type="sources-internes"]|//relatedmaterial[@type="sources-externes"]'
     );
-    messages.push(["nettoyer", elems.length, "attributs 'type'"].join(" "));
     each(elems, elem => elem.removeAttribute("type"));
     return doc;
 };
 
 export const ajouterAltRender = (doc: any): any => {
-    const messages = [];
     const niveauHaut = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]');
     each(niveauHaut, elem => elem.setAttribute("altrender", "ligeo-branche-standardisadg"));
-    messages.push(["ajouter", niveauHaut.length, "altrender 'ligeo-branche-standardisadg'"].join(" "));
 
     const niveauBas = xpathFilter(doc, '//c[@level="file"]|//c[@level="piece"]');
     each(niveauBas, elem => elem.setAttribute("altrender", "ligeo-article-standardisadg"));
-    messages.push(["ajouter", niveauBas.length, "altrender 'ligeo-article-standardisadg'"].join(" "));
     return doc;
 };
 
@@ -230,14 +201,11 @@ export const ajouterAltRender = (doc: any): any => {
  * Supprimer les unitid[type=cote-de-consultation], enlever les attr type de unitid[type=cote-future]
  */
 export const nettoyerCoteConsultation = (doc: any): any => {
-    const messages = [];
     const cotesConsults = xpathFilter(doc, '//unitid[@type="cote-de-consultation"]');
     each(cotesConsults, unitid => unitid.remove());
-    messages.push(["supprimer", cotesConsults.length, "unitid[type=cote-de-consultation]"].join(" "));
 
     const cotesFutures = xpathFilter(doc, '//unitid[@type="cote-future"]');
     each(cotesFutures, unitid => unitid.removeAttribute("type"));
-    messages.push(["enlever", cotesFutures.length, "attributs type=cote-future"].join(" "));
     return doc;
 };
 
@@ -245,15 +213,12 @@ export const nettoyerCoteConsultation = (doc: any): any => {
  * Supprimer tous les éléments avec audience=internal
  */
 export const supprimerInternal = (doc: any): any => {
-    const messages = [];
     const internals = xpathFilter(doc, '//*[@audience="internal"]');
     each(internals, element => element.remove());
-    messages.push(["enlever", internals.length, "éléments audience=internal"].join(" "));
     return doc;
 };
 
 export const completerDidVides = (doc: any): any => {
-    const messages = [];
     const dids = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
     }, xpathFilter(doc, "//did"));
@@ -266,17 +231,14 @@ export const completerDidVides = (doc: any): any => {
         ).join(" ; ");
         element.appendChild(unitId);
     });
-    messages.push(["compléter", dids.length, "dids vides"].join(" "));
     return doc;
 };
 
 export const supprimerControlaccessVides = (doc: any): any => {
-    const messages = [];
     const controlaccesses = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
     }, xpathFilter(doc, "//controlaccess"));
     each(controlaccesses, element => element.remove());
-    messages.push(["supprimer", controlaccesses.length, "controlaccess vides"].join(" "));
     return doc;
 };
 
@@ -291,19 +253,15 @@ const getAttributesMap = (element: Element): { [key: string]: string } => {
 };
 
 export const ajouterLevelFile = (doc: any): any => {
-    const messages = [];
     const elems = xpathFilter(doc, "//c");
-    let nb = 0;
     each(elems, elem => {
         const childrenC = xpathFilter(doc, elem, "c");
         if (childrenC.length > 0) return;
         const attrs = getAttributesMap(elem);
         if (!attrs.level) {
             elem.setAttribute("level", "file");
-            nb++;
         }
     });
-    messages.push(["ajouter", nb, "attributs level=file"].join(" "));
     return doc;
 };
 
@@ -311,9 +269,7 @@ export const ajouterLevelFile = (doc: any): any => {
  * Si une indexation est présente sur un parent ou au niveau du document, la supprimer
  */
 export const dedoublonnerIndexation = (doc: any): any => {
-    const messages = [];
     const controlaccesses = xpathFilter(doc, "//c/controlaccess");
-    let nbSupprime = 0;
     each(controlaccesses, controlaccess => {
         if (!controlaccess.children || !controlaccess.parentNode) return;
         // on cherche dans les parents et dans le archdesc
@@ -333,7 +289,6 @@ export const dedoublonnerIndexation = (doc: any): any => {
                 return equals(getAttributesMap(parentIndex), getAttributesMap(index));
             }, parentIndices);
             if (existant) {
-                nbSupprime++;
                 // on les note quelque part pour suppression
                 // si on supprime de suite, ça cause des problèmes dans la boucle each
                 trashBin.push(index);
@@ -341,7 +296,6 @@ export const dedoublonnerIndexation = (doc: any): any => {
         });
         each(trashBin, index => index.remove());
     });
-    messages.push(["Enlever", nbSupprime, "indexations en double"].join(" "));
     return doc;
 };
 
@@ -371,47 +325,46 @@ const unitidExistsInDoc = (doc: any, unitid: string): boolean => {
 
 /**
  * Corriger les controlacces à partir des corrections fournies par csv
+ * This function is curryable
  */
-const correctionControlAccess = (doc: any, state: ExecuteState): any => {
-    const messages = [];
-    const corrections = state.corrections.toJS();
-    let correctionsNb = 0;
-    each(corrections, (correction, controlaccess: string) => {
-        if (controlaccess.trim() === "") return;
-        const occurrences = xpathFilter(doc, `//${controlaccess}`);
-        each(occurrences, occurrence => {
-            const terme = occurrence.innerHTML.trim();
-            if (terme === "") return;
-            if (typeof correction[terme] !== "undefined") {
-                correctionsNb++;
-                // recuperer les attributs,
-                const attrs = {};
-                if (occurrence.hasAttributes()) {
-                    for (let attr of occurrence.attributes) {
-                        attrs[attr.name] = attr.value;
+const correctionControlAccess = curry(
+    (state: ExecuteState, doc: any): any => {
+        state.get("corrections").forEach((correction: Map, controlaccess: string) => {
+            if (!controlaccess || controlaccess.trim() === "") return;
+            const occurrences = xpathFilter(doc, `//${controlaccess}`);
+            each(occurrences, occurrence => {
+                const terme = occurrence.innerHTML.trim();
+                if (terme === "") return;
+                if (correction.has(terme)) {
+                    // get the original attributes
+                    const attrs = {};
+                    if (occurrence.hasAttributes()) {
+                        for (let attr of occurrence.attributes) {
+                            attrs[attr.name] = attr.value;
+                        }
+                    }
+                    const parent = occurrence.parentNode;
+                    if (!parent) return;
+                    // remove the original controlaccess
+                    occurrence.remove();
+
+                    // if we have replacements, use them
+                    if (correction.get(terme).size > 0) {
+                        correction.get(terme).forEach(nouveauTerme => {
+                            const nouveauControlAccess = nouveauTerme.last();
+                            const el = doc.createElement(nouveauControlAccess);
+                            el.innerHTML = nouveauTerme.first();
+                            // put back the attributes
+                            each(attrs, (attrValue, attrName) => el.setAttribute(attrName, attrValue));
+                            parent.appendChild(el);
+                        });
                     }
                 }
-                const parent = occurrence.parentNode;
-                if (!parent) return;
-                // supprimer le controlaccess original
-                occurrence.remove();
-
-                // remplacer le terme, si on a des remplacements
-                if (correction[terme].length > 0) {
-                    each(correction[terme], nouveauTerme => {
-                        const nouveauControlAccess = last(nouveauTerme);
-                        const el = doc.createElement(nouveauControlAccess);
-                        el.innerHTML = head(nouveauTerme);
-                        each(attrs, (attrValue, attrName) => el.setAttribute(attrName, attrValue));
-                        parent.appendChild(el);
-                    });
-                }
-            }
+            });
         });
-    });
-    messages.push(`Corriger ${correctionsNb} occurrences de controlaccess`);
-    return doc;
-};
+        return doc;
+    }
+);
 
 export const extractCA = (doc: any): Array<Controlaccess> => {
     const elems = xpathFilter(doc, "//controlaccess/*");
@@ -433,6 +386,11 @@ export const extractCA = (doc: any): Array<Controlaccess> => {
     );
 };
 
+/**
+ * Returns an array of 'simple' recipes : functions that take a single DOM `Document` as argument and returns
+ * the modified `Document`.
+ * Each element in the array is an object `{ key: string, fn: (doc: Document) => Document }`
+ */
 export const getRecipes = () => {
     return [
         { key: "supprimer_lb", fn: supprimerLb },
@@ -444,7 +402,6 @@ export const getRecipes = () => {
         { key: "nettoyer_type", fn: nettoyerAttrType },
         { key: "ajouter_altrender", fn: ajouterAltRender },
         { key: "capitalize_persname", fn: capitalizePersname },
-        // { key: "correction_controlaccess", fn: correctionControlAccess },
         { key: "supprimer_whitespace", fn: supprimeWhitespace },
         { key: "remplacer_windows", fn: remplacerCharWindows },
         { key: "supprimer_controlaccess", fn: supprimeControlAccess },
@@ -460,12 +417,30 @@ export const getRecipes = () => {
 const _findRecipe = partialRight(find, [getRecipes()]);
 export const findRecipe = (key: string): Recipe | undefined => _findRecipe(propEq("key", key));
 
-// appliquer une modification
-export default (initDoc: any, modif: string, state: ExecuteState) => {
-    const recipe = findRecipe(modif);
-    if (!recipe) {
-        throw new Error("Unknown recipe: " + modif);
+/**
+ * Returns an array of 'stateful' recipes : functions that take a DOM `Document` and the app state
+ * as arguments, and return the modified `Document`.
+ * * Each element in the array is an object `{ key: string, fn: (state: ExecuteState, doc: Document) => Document }` where `fn` is `curry`ed
+ * * The `state` Map contains a property `corrections: Map`.
+ */
+export const getStatefulRecipes = () => {
+    return [{ key: "correction_controlaccess", fn: correctionControlAccess }];
+};
+
+const _findStatefulRecipe = partialRight(find, [getStatefulRecipes()]);
+export const findStatefulRecipe = (key: string): Recipe | undefined => _findStatefulRecipe(propEq("key", key));
+
+/**
+ * Given a `recipeKey`, this will return the corresponding function `(doc: Document) => document`
+ * to apply a modification on a DOM `Document`.
+ * If the function needs the application state to work, it will be provided automatically.
+ */
+export default (recipeKey: string, state: ExecuteState): ((doc: any) => any) => {
+    if (findRecipe(recipeKey)) {
+        return findRecipe(recipeKey).fn;
     }
-    const doc = modif.fn.length > 1 ? modif.fn(initDoc, state) : modif.f(initDoc);
-    return doc;
+    if (findStatefulRecipe(recipeKey)) {
+        return findStatefulRecipe(recipeKey).fn(state);
+    }
+    throw new Error("Unknown recipe: " + recipeKey);
 };
