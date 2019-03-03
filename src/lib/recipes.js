@@ -7,7 +7,7 @@ import {
     take,
     trim,
     map as Rmap,
-    flatten,
+    unnest,
     equals,
     find,
     partialRight,
@@ -368,7 +368,7 @@ const correctionControlAccess = curry(
 
 export const extractCA = (doc: any): Array<Controlaccess> => {
     const elems = xpathFilter(doc, "//controlaccess/*");
-    return flatten(
+    return unnest(
         map(filter(elem => elem.innerHTML.trim && elem.innerHTML.trim() !== "", elems), elem => {
             const attrs = [];
             if (elem.hasAttributes()) {

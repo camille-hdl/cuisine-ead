@@ -9,9 +9,10 @@ import OutlinedButton from "./material/outlined-button.jsx";
 import AppStepper from "./material/stepper.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 import FileSaver from "file-saver";
-import { take, last } from "ramda";
+import { take, last, map, uniq } from "ramda";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
+import { extractCA } from "../lib/recipes.js";
 
 import type { Props } from "./app.jsx";
 
@@ -32,10 +33,19 @@ const genNewFilename = (oldFilename: string): string => {
 };
 const PreviousStepLink = props => <RouterLink to="/recettes" {...props} data-cy="prev-step-link" />;
 
+const escapeRE = /(^|[^"])"([^"]|$)/gim;
+const escapeCell = (input: string): string => {
+    return '"' + input.replace(escapeRE, '""') + '"';
+};
+
 /**
  * Download the files after having applied the pipeline to it
  */
 export default class Resultats extends React.PureComponent<Props> {
+    /**
+     * Save the xmlFiles after having applied the pipeline to them
+     * in the browser
+     */
     download = () => {
         this.props.xmlFiles.forEach(xmlFile => {
             // telecharger
@@ -47,6 +57,29 @@ export default class Resultats extends React.PureComponent<Props> {
                 genNewFilename(xmlFile.get("filename"))
             );
         });
+    };
+    /**
+     * Export controlaccess tags and their content in a csv file
+     */
+    downloadControlAccess = () => {
+        const controlaccesses = this.props.xmlFiles.reduce((acc: Array<any>, xmlFile: Map): Array<any> => {
+            const output = this.props.pipelineFn(xmlFile);
+            return [...acc, ...extractCA(output)];
+        }, []);
+        FileSaver.saveAs(
+            new Blob(
+                [
+                    [
+                        ["controlaccess", "valeur", "attribut"].join(";"),
+                        ...map(ligne => {
+                            return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
+                        }, uniq(controlaccesses)),
+                    ].join("\n"),
+                ],
+                { type: "text/plain;charset=utf-8" }
+            ),
+            "controlaccess.csv"
+        );
     };
     render() {
         return (
@@ -75,7 +108,24 @@ export default class Resultats extends React.PureComponent<Props> {
                             {
                                 "Votre navigateur vous demandera peut-être la permission de télécharger plusieurs fichiers."
                             }
+                            <br />
+                            {
+                                "Si vous êtes sur iOS, vous ne pourrez peut-être pas télécharger plusieurs fichiers à la fois."
+                            }
                         </Typography>
+                    </PaperSheet>
+                    <PaperSheet xs={12} style={{ textAlign: "center" }}>
+                        <Typography
+                            onClick={this.downloadControlAccess}
+                            style={{ cursor: "pointer" }}
+                            variant="h5"
+                            data-cy="download-csv-link"
+                        >
+                            {"Exporter les controlaccess en .csv"}
+                        </Typography>
+                        <IconButton onClick={this.downloadControlAccess}>
+                            <Icon>get_app</Icon>
+                        </IconButton>
                     </PaperSheet>
                 </Grid>
             </div>
