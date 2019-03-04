@@ -4,7 +4,7 @@
   "description": "",
   "main": "public/index.html",
   "scripts": {
-    "test": "run-s build testci",
+    "test": "run-s jest build testci",
     "testci": "start-server-and-test serve http://localhost:5000 cypress:run",
     "build": "run-s buildrollup workbox",
     "buildrollup": "rollup -c --prod --mini",
@@ -15,7 +15,8 @@
     "serve": "serve",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:install": "cypress install"
+    "cypress:install": "cypress install",
+    "jest": "jest"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
@@ -27,6 +28,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.1.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "cypress": "^3.1.5",
     "eslint": "^5.13.0",
@@ -77,6 +79,22 @@
     "reselect": "^3.0.1",
     "rxjs": "^6.3.2",
     "xxhash-wasm": "^0.3.1"
+  },
+  "jest": {
+    "verbose": true,
+    "testRegex": "(/__tests__/.*|\\.(test|spec|react-test))\\.(js|jsx)$",
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "globals": {
+      "NODE_ENV": "test"
+    },
+    "testPathIgnorePatterns": [
+      "node_modules"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|my-project|react-native-button)/"
+    ]
   },
   "repository": {
     "type": "git",

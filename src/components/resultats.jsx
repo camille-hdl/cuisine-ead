@@ -9,45 +9,15 @@ import OutlinedButton from "./material/outlined-button.jsx";
 import AppStepper from "./material/stepper.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 import FileSaver from "file-saver";
-import { take, last, map, uniq, forEach } from "ramda";
+import { map, uniq } from "ramda";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { extractCA } from "../lib/recipes.js";
-
+import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
 
-/**
- * Remove the old `encoding` attribute on the `xml` tag of the output.
- * We can't do it from the `Document` API because it doesn't have access to it.
- * We output utf-8, so we don't need to keep it.
- * We have to handle uppercase and lowercase variations as well as possible.
- */
-const cleanOutputEncoding = (xmlStr: string, encoding: string): string => {
-    let str = xmlStr.replace('encoding="' + encoding + '"', "");
-    str = xmlStr.replace("encoding='" + encoding + "'", "");
-    str = xmlStr.replace("encoding='" + encoding.toLowerCase() + "'", "");
-    str = str.replace('encoding="' + encoding.toLowerCase() + '"', "");
-    forEach(
-        commonEncoding => {
-            str = xmlStr.replace("encoding='" + commonEncoding.toLowerCase() + "'", "");
-            str = str.replace('encoding="' + commonEncoding.toLowerCase() + '"', "");
-        },
-        ["ISO-8859-1", "Windows-1252"]
-    );
-    return str;
-};
-const genNewFilename = (oldFilename: string): string => {
-    const temp = oldFilename.split(".");
-    const extension = last(temp);
-    const debut = take(temp.length - 1, temp);
-    return [[debut.join("."), "_resu"].join(""), extension].join(".");
-};
 const PreviousStepLink = props => <RouterLink to="/recettes" {...props} data-cy="prev-step-link" />;
 
-const escapeRE = /(^|[^"])"([^"]|$)/gim;
-const escapeCell = (input: string): string => {
-    return '"' + input.replace(escapeRE, '""') + '"';
-};
 
 /**
  * Download the files after having applied the pipeline to it
