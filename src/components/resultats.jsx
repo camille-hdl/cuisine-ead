@@ -15,9 +15,9 @@ import Icon from "@material-ui/core/Icon";
 import { extractCA } from "../lib/recipes.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
+import JSZip from "jszip";
 
 const PreviousStepLink = props => <RouterLink to="/recettes" {...props} data-cy="prev-step-link" />;
-
 
 /**
  * Download the files after having applied the pipeline to it
@@ -37,6 +37,21 @@ export default class Resultats extends React.PureComponent<Props> {
                 new Blob([str], { type: "application/xml;charset=utf-8" }),
                 genNewFilename(xmlFile.get("filename"))
             );
+        });
+    };
+    /**
+     * Download everything in a single zip archive
+     */
+    downloadZip = () => {
+        const zip = new JSZip();
+        this.props.xmlFiles.forEach(xmlFile => {
+            const output = this.props.pipelineFn(xmlFile);
+            const serializer = new XMLSerializer();
+            const str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
+            zip.file(genNewFilename(xmlFile.get("filename")), str);
+        });
+        zip.generateAsync({ type: "blob" }).then(blob => {
+            FileSaver.saveAs(blob, "EAD cuisiné.zip");
         });
     };
     /**
@@ -73,14 +88,14 @@ export default class Resultats extends React.PureComponent<Props> {
                             </AppStepper>
                         </ErrorCatcher>
                     </PaperSheet>
-                    <PaperSheet xs={12} style={{ textAlign: "center" }}>
+                    <PaperSheet xs={12} md={4} style={{ textAlign: "center" }}>
                         <Typography
                             onClick={this.download}
                             style={{ cursor: "pointer" }}
-                            variant="h3"
+                            variant="h5"
                             data-cy="download-link"
                         >
-                            {"Télécharger 🎁"}
+                            {"↓ Fichiers séparés 📄📄📄"}
                         </Typography>
                         <IconButton onClick={this.download}>
                             <Icon>get_app</Icon>
@@ -95,14 +110,27 @@ export default class Resultats extends React.PureComponent<Props> {
                             }
                         </Typography>
                     </PaperSheet>
-                    <PaperSheet xs={12} style={{ textAlign: "center" }}>
+                    <PaperSheet xs={12} md={4} style={{ textAlign: "center" }}>
+                        <Typography
+                            onClick={this.downloadZip}
+                            style={{ cursor: "pointer" }}
+                            variant="h5"
+                            data-cy="download-zip-link"
+                        >
+                            {"↓ Archive zip 🎁"}
+                        </Typography>
+                        <IconButton onClick={this.downloadZip}>
+                            <Icon>get_app</Icon>
+                        </IconButton>
+                    </PaperSheet>
+                    <PaperSheet xs={12} md={4} style={{ textAlign: "center" }}>
                         <Typography
                             onClick={this.downloadControlAccess}
                             style={{ cursor: "pointer" }}
                             variant="h5"
                             data-cy="download-csv-link"
                         >
-                            {"Exporter les controlaccess en .csv"}
+                            {"↓ Controlaccess en .csv 📊"}
                         </Typography>
                         <IconButton onClick={this.downloadControlAccess}>
                             <Icon>get_app</Icon>

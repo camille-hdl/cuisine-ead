@@ -64,6 +64,7 @@
     "file-saver": "^2.0.0",
     "immutable": "^3.8.2",
     "jschardet": "^2.1.0",
+    "jszip": "^3.2.0",
     "papaparse": "^4.6.3",
     "ramda": "^0.26.1",
     "react": "^16.8.2",
