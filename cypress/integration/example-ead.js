@@ -56,8 +56,8 @@ describe('Happy path', function () {
 
 
         cy.url().should("contain", "/resultats");
-        cy.get("h3").contains("Télécharger");
-        cy.get("h3").parent().find("button");
+        cy.get("[data-cy=download-link]").contains("Fichiers séparés");
+        cy.get("[data-cy=download-link]").parent().find("button");
     });
 
 });

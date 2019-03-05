@@ -44,15 +44,26 @@ export default class Resultats extends React.PureComponent<Props> {
      */
     downloadZip = () => {
         const zip = new JSZip();
-        this.props.xmlFiles.forEach(xmlFile => {
-            const output = this.props.pipelineFn(xmlFile);
-            const serializer = new XMLSerializer();
-            const str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
-            zip.file(genNewFilename(xmlFile.get("filename")), str);
+        const promises = this.props.xmlFiles.map(xmlFile => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const output = this.props.pipelineFn(xmlFile);
+                    const serializer = new XMLSerializer();
+                    const str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
+                    resolve({ filename: genNewFilename(xmlFile.get("filename")), str: str });
+                }, 0);
+            });
         });
-        zip.generateAsync({ type: "blob" }).then(blob => {
-            FileSaver.saveAs(blob, "EAD cuisiné.zip");
-        });
+        if (promises.size > 0) {
+            Promise.all(promises.toArray()).then(outputFiles => {
+                outputFiles.forEach(outputFile => {
+                    zip.file(outputFile.filename, outputFile.str);
+                });
+                zip.generateAsync({ type: "blob" }).then(blob => {
+                    FileSaver.saveAs(blob, "EAD cuisiné.zip");
+                });
+            });
+        }
     };
     /**
      * Export controlaccess tags and their content in a csv file
