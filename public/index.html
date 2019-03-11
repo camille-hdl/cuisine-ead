@@ -5,13 +5,6 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>Cuisine EAD 🍲</title>
         <meta name="description" content="Modifications systématiques de fichiers xml-EAD" />
-        <script>
-            if (navigator && navigator.serviceWorker) {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("/js/esm/sw.js", { scope: "/" });
-                });
-            }
-        </script>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no" />
         <link rel="preload" href="/js/esm/index.js" as="script" />
         <link href="https://fonts.googleapis.com/css?family=Caveat" rel="stylesheet" />
@@ -22,6 +15,11 @@
     <body>
         <script type="module">
             (function() {
+                if (navigator && navigator.serviceWorker) {
+                    window.addEventListener("load", () => {
+                        navigator.serviceWorker.register("/js/esm/sw.js", { scope: "/" });
+                    });
+                }
                 window.esDynamicImport = true;
                 // this will throw if dynamic import is not supported
                 import("/js/esm/index.js");
@@ -32,11 +30,6 @@
         <script type="module">
             // if the module script tag throws, window.esDynamicImport will be undefined
             if (!window.esDynamicImport) {
-                if (navigator && navigator.serviceWorker) {
-                    window.addEventListener("load", () => {
-                        navigator.serviceWorker.register("/js/system/sw.js", { scope: "/" });
-                    });
-                }
                 // get the nomodule scripts and load (or inline) them
                 const noms = Array.prototype.slice
                     .call(document.getElementsByTagName("script"), 0)
@@ -57,6 +50,11 @@
         <!-- No ES6 modules support : fallback to systemJS -->
         <script nomodule src="https://unpkg.com/systemjs@0.21.0/dist/system-production.js"></script>
         <script nomodule>
+            if (navigator && navigator.serviceWorker) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/js/system/sw.js", { scope: "/" });
+                });
+            }
             System.import("/js/system/index.js");
         </script>
         <div id="app-container"></div>
