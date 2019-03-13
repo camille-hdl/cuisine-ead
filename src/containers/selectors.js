@@ -17,16 +17,16 @@ const getFirstThousandLines = memoizeWith(
     )
 );
 
-export const previewHashSelector = state => state.get("previewHash");
-export const xmlFilesSelector = state => state.get("xmlFiles");
-export const pipelineSelector = state => state.get("pipeline");
-export const previewEnabledSelector = state => state.get("previewEnabled");
-export const correctionsSelector = state => state.get("corrections");
+export const previewHashSelector = (state: Map): string | null => state.get("previewHash");
+export const xmlFilesSelector = (state: Map): List<Map> => state.get("xmlFiles");
+export const pipelineSelector = (state: Map): List => state.get("pipeline");
+export const previewEnabledSelector = (state: Map): boolean => state.get("previewEnabled");
+export const correctionsSelector = (state: Map): Map => state.get("corrections");
 
 /**
  * If preview is enabled, we return the selected file, or the first one if none is selected.
  */
-export const previewXmlFileSelector = createSelector(
+export const previewXmlFileSelector = createSelector<Map, void, string | null, List, boolean, Map | null>(
     previewHashSelector,
     xmlFilesSelector,
     previewEnabledSelector,
@@ -44,7 +44,7 @@ export const previewXmlFileSelector = createSelector(
 /**
  * Returns the first few hundred lines of the previewed `xmlFile`
  */
-export const previewXmlFileSliceSelector = createSelector(
+export const previewXmlFileSliceSelector = createSelector<Map, void, Map | null, Map | null>(
     previewXmlFileSelector,
     (previewXmlFile: Map | null): Map | null => {
         return previewXmlFile ? previewXmlFile.update("string", getFirstThousandLines) : null;
@@ -62,7 +62,7 @@ const createNewDoc = (xmlFile: Map): Document => {
 /**
  * Returns the state required by stateful recipes, such as controlaccess corrections.
  */
-export const pipelineStateSelector = createSelector(
+export const pipelineStateSelector = createSelector<Map, void, Map, Map>(
     correctionsSelector,
     (corrections: Map): Map => {
         return Map({
@@ -71,6 +71,7 @@ export const pipelineStateSelector = createSelector(
     }
 );
 
+type PipelineFn = (xmlFile: Map) => Document;
 /**
  * Returns a memoized function that applies the selected recipes to a `xmlFile` objet.
  * `xmlFile.hash` is used as the cache key.
@@ -79,10 +80,10 @@ export const pipelineStateSelector = createSelector(
  * The function will create a new `Document` every time it's called
  * because the DOM API mutates it.
  */
-export const pipelineFnSelector = createSelector(
+export const pipelineFnSelector = createSelector<Map, void, List, Map, PipelineFn | null>(
     pipelineSelector,
     pipelineStateSelector,
-    (pipeline: List, executeState: Map): ((doc: Document) => Document) => {
+    (pipeline: List, executeState: Map): PipelineFn | null => {
         if (pipeline.size <= 0) return null;
         const recipesFns = pipeline.map(r => getRecipeFn(r.get("key"), executeState)).toArray();
         const fn = pipe(...recipesFns);
@@ -94,10 +95,10 @@ export const pipelineFnSelector = createSelector(
  * Returns a string representation of the selected xml file
  * after having applied the pipeline to it.
  */
-export const previewXmlStringSelector = createSelector(
+export const previewXmlStringSelector = createSelector<Map, void, Map | null, PipelineFn | null, string | null>(
     previewXmlFileSelector,
     pipelineFnSelector,
-    (xmlFile: Map, pipelineFn: (doc: Document) => Document): string | null => {
+    (xmlFile: Map, pipelineFn: ((doc: Document) => Document) | null): string | null => {
         if (!xmlFile || !pipelineFn) return null;
         const newDoc = pipelineFn(xmlFile);
         const serializer = new XMLSerializer();
