@@ -13,7 +13,8 @@
 
 ## Notes
 
-Sample files used in integration tests are from https://francearchives.fr/fr/open_data and https://www.siv.archives-nationales.culture.gouv.fr/siv/.
+* Sample files used in integration tests are from https://francearchives.fr/fr/open_data and https://www.siv.archives-nationales.culture.gouv.fr/siv/.
+* On the `netlify` branch, `cypress` is removed from the devDependencies because of cypress-io/cypress#3419 (takes forever to unzip on netlify). This means `package.lock` isn't the same on each branch.
 
 
 [@camille_hdl](https://twitter.com/camille_hdl)
