@@ -16,7 +16,9 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:install": "cypress install",
-    "jest": "jest"
+    "jest": "jest",
+    "predeploy": "CI=1 npm i cypress",
+    "deploy": "npm run build"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
