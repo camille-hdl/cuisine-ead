@@ -327,7 +327,7 @@ const unitidExistsInDoc = (doc: any, unitid: string): boolean => {
  * Corriger les controlacces à partir des corrections fournies par csv
  * This function is curryable
  */
-const correctionControlAccess = curry(
+const correctionControlAccess = curry<ExecuteState, any>(
     (state: ExecuteState, doc: any): any => {
         state.get("corrections").forEach((correction: Map, controlaccess: string) => {
             if (!controlaccess || controlaccess.trim() === "") return;
