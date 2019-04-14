@@ -7,6 +7,7 @@ import builtins from "rollup-plugin-node-builtins";
 import globals from "rollup-plugin-node-globals";
 import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-cpy";
+import json from "rollup-plugin-json";
 
 const outputDir = "./public/js/";
 
@@ -52,7 +53,11 @@ const getPluginsConfig = (prod, mini) => {
                 "./node_modules/rxjs/Subject.js": ["Subject"],
                 "./node_modules/process/browser.js": ["nextTick"],
                 "./node_modules/events/events.js": ["EventEmitter"],
-                "./node_modules/@material-ui/core/styles/index.js": ["withStyles", "createMuiTheme", "MuiThemeProvider"],
+                "./node_modules/@material-ui/core/styles/index.js": [
+                    "withStyles",
+                    "createMuiTheme",
+                    "MuiThemeProvider",
+                ],
                 "./node_modules/react-is/index.js": ["isValidElementType"],
             },
         }),
@@ -61,6 +66,11 @@ const getPluginsConfig = (prod, mini) => {
         }),
         globals(),
         builtins(),
+        json({
+            preferConst: true,
+            compact: true,
+            namedExports: true,
+        }),
     ];
     if (mini) {
         sortie.push(

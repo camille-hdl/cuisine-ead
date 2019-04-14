@@ -59,7 +59,7 @@ export const readXml = (file: any, loadCallback: (doc: any) => void) => {
         //FIXME: jschardet is very slow
         const info = jschardet.detect(str);
         const decoder = getDecoder(info.encoding);
-        const xmlString = decoder.decode(buffer);
+        const xmlString = normalizeXmlString(decoder.decode(buffer));
         getWASMInstance(hasher => {
             loadCallback({
                 doc: parser.parseFromString(xmlString, "application/xml"),
@@ -91,4 +91,12 @@ export const xpathFilter = (doc: any, ...args: [string] | [Element, string]): Ar
         }
     } while (c !== null);
     return elems;
+};
+
+const crlfRE = /\r\n/g;
+/**
+ * Replaces CRLF (old windows) with LF.
+ */
+export const normalizeXmlString = (str: string): string => {
+    return str.replace(crlfRE, "\n");
 };
