@@ -15,16 +15,22 @@ import Switch from "@material-ui/core/Switch";
 import OutlinedButton from "./material/outlined-button.jsx";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import { splitEvery, map, addIndex } from "ramda";
+import { uniq, sortBy, equals, ascend, map, filter } from "ramda";
 import useMedia from "react-use/lib/useMedia";
 import ErrorCatcher from "./error-catcher.jsx";
 import AppStepper from "./material/stepper.jsx";
 import SelectPreviewFile from "./material/select-preview.jsx";
-const indexedMap = addIndex(map);
+import { getCategory } from "../lib/recipes-lib.js";
 
 const availableRecipes = getRecipes();
 const availaleStatefulRecipes = getStatefulRecipes();
-
+const categories = sortBy(ascend)(uniq(map(r => getCategory(r.key), availableRecipes)));
+const recipesByCategories = map(c => {
+    return {
+        category: c,
+        recipes: sortBy(ascend)(filter(r => equals(c, getCategory(r.key)), availableRecipes)),
+    };
+}, categories);
 type Props = {
     pipeline: List,
     previewXmlFile: Map | null,
@@ -105,7 +111,6 @@ export default function SelectRecipes(props: Props) {
             </ResponsiveDrawer>
         );
     }
-    const recipesSplit = splitEvery(5, availableRecipes);
     return (
         <Grid container spacing={24}>
             <PaperSheet xs={12}>
@@ -135,13 +140,14 @@ export default function SelectRecipes(props: Props) {
             </Grid>
             <Grid item xs={12}>
                 <Grid container spacing={24}>
-                    {indexedMap((chunk, i: number) => {
+                    {map(r => {
                         return (
-                            <PaperSheet xs={12} sm={6} key={i}>
-                                <RecipeList {...props} availableRecipes={chunk} />
+                            <PaperSheet xs={12} sm={6} key={r.category}>
+                                <Typography variant="h6">{r.category}</Typography>
+                                <RecipeList {...props} availableRecipes={r.recipes} />
                             </PaperSheet>
                         );
-                    }, recipesSplit)}
+                    }, recipesByCategories)}
                     <PaperSheet xs={12} sm={6} key={"stateful-recipes"}>
                         <Typography variant="h6">{`${
                             props.corrections.size

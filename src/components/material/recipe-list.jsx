@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import { List as ImmutableList, Map } from "immutable";
 import { map } from "ramda";
 import Switch from "@material-ui/core/Switch";
-import { getLabel } from "../../lib/recipes-lib.js";
+import { getLabel, getComplement } from "../../lib/recipes-lib.js";
 
 const styles = theme => ({
     root: {
@@ -62,7 +62,11 @@ class RecipeList extends React.PureComponent<Props> {
                         {map(
                             recipe => (
                                 <ListItem key={recipe.key} button={true} onClick={this.handleToggle(recipe.key)}>
-                                    <ListItemText data-cy={"recipe-key"} primary={getLabel(recipe.key)} />
+                                    <ListItemText
+                                        data-cy={"recipe-key"}
+                                        primary={getLabel(recipe.key)}
+                                        secondary={getComplement(recipe.key)}
+                                    />
                                     <ListItemSecondaryAction>
                                         <Switch
                                             onChange={this.handleToggle(recipe.key)}
