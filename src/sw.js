@@ -13,6 +13,15 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
+var VERSION = "v0.1.2";
+workbox.core.setCacheNameDetails({
+    prefix: "cuisine-ead",
+    suffix: VERSION,
+});
+self.addEventListener("activate", function() {
+    console.log("Service Worker version", VERSION);
+});
+
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
  * requests for URLs in the manifest.

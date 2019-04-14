@@ -1,6 +1,7 @@
 //@flow
 import React from "react";
 import ReactDOM from "react-dom";
+import { version } from "../package.json";
 
 import { AppContainer } from "./containers/app.jsx";
 
@@ -10,6 +11,7 @@ import { fromJS } from "immutable";
 import { createStore, applyMiddleware, compose } from "redux";
 import { BrowserRouter } from "react-router-dom";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+console.log("version", version);
 
 export const getInitialState = () => {
     return {
