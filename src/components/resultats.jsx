@@ -32,7 +32,10 @@ export default class Resultats extends React.PureComponent<Props> {
             // telecharger
             const output = this.props.pipelineFn(xmlFile);
             const serializer = new XMLSerializer();
-            let str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
+            let str = cleanOutputEncoding(
+                this.props.outputPipelineFn(serializer.serializeToString(output)),
+                xmlFile.get("encoding")
+            );
             FileSaver.saveAs(
                 new Blob([str], { type: "application/xml;charset=utf-8" }),
                 genNewFilename(xmlFile.get("filename"))
@@ -49,7 +52,10 @@ export default class Resultats extends React.PureComponent<Props> {
                 setTimeout(() => {
                     const output = this.props.pipelineFn(xmlFile);
                     const serializer = new XMLSerializer();
-                    const str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
+                    const str = cleanOutputEncoding(
+                        this.props.outputPipelineFn(serializer.serializeToString(output)),
+                        xmlFile.get("encoding")
+                    );
                     resolve({ filename: genNewFilename(xmlFile.get("filename")), str: str });
                 }, 0);
             });

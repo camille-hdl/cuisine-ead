@@ -18,6 +18,7 @@ export const getInitialState = () => {
         xmlFiles: [],
         corrections: {},
         pipeline: [],
+        outputPipeline: [],
         previewHash: null,
         previewEnabled: false,
     };
