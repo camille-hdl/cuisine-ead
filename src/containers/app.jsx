@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import App from "../components/app.jsx";
 import type { Map, List } from "immutable";
 import { withRouter } from "react-router-dom";
+import { version } from "../../package.json";
 import {
     previewXmlFileSliceSelector,
     pipelineFnSelector,
@@ -13,6 +14,7 @@ import {
 
 export const mapStateToProps = (state: Map) => {
     return {
+        version: version,
         xmlFiles: state.get("xmlFiles"),
         pipeline: state.get("pipeline"),
         pipelineFn: pipelineFnSelector(state),

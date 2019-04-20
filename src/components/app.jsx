@@ -17,6 +17,7 @@ type RouteProps = {
     match: any,
 };
 export type Props = {
+    version: string,
     xmlFiles: List,
     pipeline: List,
     outputPipeline: List,
@@ -77,7 +78,7 @@ export default class App extends React.PureComponent<Props> {
         const hasPipeline = this.props.pipeline.size > 0;
         return (
             <>
-                <MenuBar />
+                <MenuBar version={this.props.version} />
                 <Switch>
                     <Route
                         exact

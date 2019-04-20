@@ -17,8 +17,8 @@ const styles = {
     },
 };
 const LinkToIndex = props => <RouterLink {...props} to="/" />;
-function MenuBar(props: { classes: any }) {
-    const { classes } = props;
+function MenuBar(props: { classes: any, version: string }) {
+    const { classes, version } = props;
     return (
         <div className={classes.root}>
             <AppBar position="static" color="primary">
@@ -27,6 +27,7 @@ function MenuBar(props: { classes: any }) {
                         {"Cuisine EAD 🍲"}
                     </Typography>
                     <Typography variant="body1" color="inherit">
+                        {`v${version} - `}
                         <Link href={"https://github.com/camille-hdl/cuisine-ead"} target="_blank" color="inherit">
                             Github
                         </Link>
