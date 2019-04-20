@@ -24,6 +24,7 @@ export const pipelineSelector = (state: Map): List => state.get("pipeline");
 export const outputPipelineSelector = (state: Map): List => state.get("outputPipeline");
 export const previewEnabledSelector = (state: Map): boolean => state.get("previewEnabled");
 export const correctionsSelector = (state: Map): Map => state.get("corrections");
+export const versionSelector = (state: Map): string => state.get("version");
 
 /**
  * If preview is enabled, we return the selected file, or the first one if none is selected.

@@ -10,9 +10,11 @@ import { fromJS } from "immutable";
 import { createStore, applyMiddleware, compose } from "redux";
 import { BrowserRouter } from "react-router-dom";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+import { version } from "../package.json";
 
 export const getInitialState = () => {
     return {
+        version: version,
         xmlFiles: [],
         corrections: {},
         pipeline: [],
