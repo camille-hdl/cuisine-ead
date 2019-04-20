@@ -104,7 +104,6 @@ export const outputPipelineFnSelector = createSelector<Map, void, List, OutputPi
     (outputPipeline: List): OutputPipelineFn | null => {
         if (outputPipeline.size <= 0) return (str: string) => str;
         const recipesFns = outputPipeline.map(r => getOutputRecipeFn(r.get("key"))).toArray();
-        console.log(recipesFns);
         const fn = pipe(...recipesFns);
         return fn;
     }
@@ -134,5 +133,22 @@ export const previewXmlStringSelector = createSelector<
         const newDoc = pipelineFn(xmlFile);
         const serializer = new XMLSerializer();
         return getFirstThousandLines(outputPipelineFn(serializer.serializeToString(newDoc)));
+    }
+);
+
+/**
+ * Returns a Map containing all the necessary components for this particular recipe.
+ * This objet can be exported to JSON, to be re-used later as input.
+ */
+export const fullRecipeSelector = createSelector<Map, void, string, List, List, Map>(
+    versionSelector,
+    pipelineSelector,
+    outputPipelineSelector,
+    (version: string, pipeline: List, outputPipeline: List): Map => {
+        return Map({
+            version: version,
+            pipeline: pipeline,
+            outputPipeline: outputPipeline,
+        });
     }
 );

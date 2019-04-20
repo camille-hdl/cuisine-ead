@@ -4,17 +4,17 @@ import { connect } from "react-redux";
 import App from "../components/app.jsx";
 import type { Map, List } from "immutable";
 import { withRouter } from "react-router-dom";
-import { version } from "../../package.json";
 import {
     previewXmlFileSliceSelector,
     pipelineFnSelector,
     previewXmlStringSelector,
     outputPipelineFnSelector,
+    fullRecipeSelector,
 } from "./selectors.js";
 
 export const mapStateToProps = (state: Map) => {
     return {
-        version: version,
+        version: state.get("version"),
         xmlFiles: state.get("xmlFiles"),
         pipeline: state.get("pipeline"),
         pipelineFn: pipelineFnSelector(state),
@@ -24,6 +24,7 @@ export const mapStateToProps = (state: Map) => {
         previewXmlFile: previewXmlFileSliceSelector(state),
         previewXmlString: previewXmlStringSelector(state),
         previewEnabled: state.get("previewEnabled"),
+        fullRecipe: fullRecipeSelector(state),
     };
 };
 

@@ -75,6 +75,8 @@ function StartButton(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{`Lors de la dernière étape, il est possible d'exporter les réglages en JSON. 
+                                Cela permet de les réutiliser en déposant le fichier JSON en même temps que les fichiers XML ou CSV.`}</li>
                                 <li>
                                     {`Traitements en sortie ("assaisonnements") : suppression des lignes vides,
                                     indentation automatique (lent)`}

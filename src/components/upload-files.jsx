@@ -1,17 +1,30 @@
 //@flow
 import React from "react";
 import Dropzone from "react-dropzone";
-import { concat, groupBy, partialRight, includes, forEach, tail } from "ramda";
+import {
+    concat,
+    groupBy,
+    partialRight,
+    reduce,
+    mergeDeepWith,
+    uniqBy,
+    prop,
+    head,
+    includes,
+    forEach,
+    tail,
+    map,
+} from "ramda";
 import { readXml } from "../lib/xml.js";
+import { openFile } from "../lib/utils.js";
 import Papa from "papaparse";
 import PaperSheet from "./material/paper-sheet.jsx";
-import type { List, Map } from "immutable";
+import { List, Map, fromJS } from "immutable";
 import FileList from "./material/file-list.jsx";
 import BigIcon from "./material/big-icon.jsx";
 import Grid from "./material/grid.jsx";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
 import OutlinedButton from "./material/outlined-button.jsx";
 import AppStepper from "./material/stepper.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
@@ -25,17 +38,32 @@ const csvTypes = [
     "text/tab-separated-values",
     "text/comma-separated-values",
 ];
+const jsonTypes = ["application/json"];
 const isXml = partialRight(includes, [xmlTypes]);
 const isCsv = partialRight(includes, [csvTypes]);
+const isJson = partialRight(includes, [jsonTypes]);
 /**
- * Returns "csv" or "xml" depending on the file's mime type
+ * Returns "csv", "xml" or "json" depending on the file's mime type
  */
-const getType = (file: { type: string }) => (isXml(file.type) ? "xml" : isCsv(file.type) ? "csv" : "other");
-const acceptedTypes = concat(xmlTypes, csvTypes);
+const getType = (file: { type: string }) =>
+    isXml(file.type) ? "xml" : isCsv(file.type) ? "csv" : isJson(file.type) ? "json" : "other";
+const concatAll = reduce(concat, []);
+const acceptedTypes = concatAll([xmlTypes, csvTypes, jsonTypes]);
+
+const mergeDeepAll = reduce(
+    mergeDeepWith((a, b) => {
+        return uniqBy(prop("key"), concat(a, b));
+    }),
+    {}
+);
 
 type Props = {
     xmlFiles: List,
     corrections: Map,
+    pipeline: List,
+    outputPipeline: List,
+    setPipeline: (pipeline: List) => void,
+    setOutputPipeline: (pipeline: List) => void,
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
     updateCorrections: (corrections: Array<string>) => void,
@@ -43,9 +71,33 @@ type Props = {
 
 const NextStepLink = props => <RouterLink to="/recettes" {...props} data-cy="next-step-link" />;
 /**
- * Add xml files
+ * Add xml, csv and json files
  */
 export default class UploadFiles extends React.PureComponent<Props> {
+    /**
+     * If the user provides a JSON file, we use it as a preset of recipes
+     */
+    importJson = (inputJson: { version: string | Array<string>, pipeline: Array<any>, outputPipeline: Array<any> }) => {
+        console.log("import", inputJson);
+        if (inputJson.pipeline && inputJson.pipeline.length > 0) {
+            const inputRecipes = fromJS(inputJson.pipeline);
+            /**
+             * Don't add duplicates
+             */
+            const recipesKeys = this.props.pipeline.map(p => p.get("key"));
+            const usableRecipes = inputRecipes.filter(ir => !recipesKeys.includes(ir.get("key")));
+            this.props.setPipeline(this.props.pipeline.concat(usableRecipes));
+        }
+        if (inputJson.outputPipeline && inputJson.outputPipeline.length > 0) {
+            const inputRecipes = fromJS(inputJson.outputPipeline);
+            /**
+             * Don't add duplicates
+             */
+            const recipesKeys = this.props.outputPipeline.map(p => p.get("key"));
+            const usableRecipes = inputRecipes.filter(ir => !recipesKeys.includes(ir.get("key")));
+            this.props.setOutputPipeline(this.props.outputPipeline.concat(usableRecipes));
+        }
+    };
     render() {
         return (
             <div>
@@ -69,7 +121,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                             className={"dropzone"}
                             accept={acceptedTypes}
                             onDrop={(accepted: Array<any>, rejected: Array<any>) => {
-                                const { xml, csv, other } = groupBy(getType, accepted);
+                                const { xml, csv, json, other } = groupBy(getType, accepted);
                                 if (xml) {
                                     forEach(file => {
                                         readXml(file, ({ doc, encoding, string, hash }) => {
@@ -84,6 +136,9 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                     }, xml);
                                 }
                                 if (csv) {
+                                    /**
+                                     * CSV files are controlaccess corrections
+                                     */
                                     forEach(file => {
                                         Papa.parse(file, {
                                             complete: results => {
@@ -91,6 +146,21 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                             },
                                         });
                                     }, csv);
+                                }
+                                if (json) {
+                                    /**
+                                     * json files are "fullRecipe" files :
+                                     * a list of recipes and outputRecipes to be applied to the xml files.
+                                     * If multiple json files are provided, we merge them
+                                     * TODO: check if the files are valid
+                                     */
+                                    const promises = map(openFile, json);
+                                    Promise.all(promises).then((jsonStrings: Array<string>) => {
+                                        const jsonObjects = map(JSON.parse, jsonStrings);
+                                        const finalJson =
+                                            jsonObjects.length > 1 ? mergeDeepAll(jsonObjects) : head(jsonObjects);
+                                        this.importJson(finalJson);
+                                    });
                                 }
                                 if (rejected) {
                                     console.log("rejected", rejected);
