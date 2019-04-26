@@ -32,7 +32,10 @@ export default class Resultats extends React.PureComponent<Props> {
             // telecharger
             const output = this.props.pipelineFn(xmlFile);
             const serializer = new XMLSerializer();
-            let str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
+            let str = cleanOutputEncoding(
+                this.props.outputPipelineFn(serializer.serializeToString(output)),
+                xmlFile.get("encoding")
+            );
             FileSaver.saveAs(
                 new Blob([str], { type: "application/xml;charset=utf-8" }),
                 genNewFilename(xmlFile.get("filename"))
@@ -49,7 +52,10 @@ export default class Resultats extends React.PureComponent<Props> {
                 setTimeout(() => {
                     const output = this.props.pipelineFn(xmlFile);
                     const serializer = new XMLSerializer();
-                    const str = cleanOutputEncoding(serializer.serializeToString(output), xmlFile.get("encoding"));
+                    const str = cleanOutputEncoding(
+                        this.props.outputPipelineFn(serializer.serializeToString(output)),
+                        xmlFile.get("encoding")
+                    );
                     resolve({ filename: genNewFilename(xmlFile.get("filename")), str: str });
                 }, 0);
             });
@@ -59,6 +65,7 @@ export default class Resultats extends React.PureComponent<Props> {
                 outputFiles.forEach(outputFile => {
                     zip.file(outputFile.filename, outputFile.str);
                 });
+                zip.file("recette.cuisine-ead.json", this.getFullRecipe());
                 zip.generateAsync({ type: "blob" }).then(blob => {
                     FileSaver.saveAs(blob, "EAD cuisiné.zip");
                 });
@@ -88,6 +95,18 @@ export default class Resultats extends React.PureComponent<Props> {
             "controlaccess.csv"
         );
     };
+    getFullRecipe = (): string => {
+        return JSON.stringify(this.props.fullRecipe.toJS());
+    };
+    /**
+     * Exports the full recipe as JSON
+     */
+    downloadFullRecipe = () => {
+        FileSaver.saveAs(
+            new Blob([this.getFullRecipe()], { type: "application/json;charset=utf-8" }),
+            "recette.cuisine-ead.json"
+        );
+    };
     render() {
         return (
             <div>
@@ -99,14 +118,14 @@ export default class Resultats extends React.PureComponent<Props> {
                             </AppStepper>
                         </ErrorCatcher>
                     </PaperSheet>
-                    <PaperSheet xs={12} md={4} style={{ textAlign: "center" }}>
+                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
                         <Typography
                             onClick={this.download}
                             style={{ cursor: "pointer" }}
                             variant="h5"
                             data-cy="download-link"
                         >
-                            {"↓ Fichiers séparés 📄📄📄"}
+                            {"Fichiers séparés 📄📄📄"}
                         </Typography>
                         <IconButton onClick={this.download}>
                             <Icon>get_app</Icon>
@@ -115,35 +134,44 @@ export default class Resultats extends React.PureComponent<Props> {
                             {
                                 "Votre navigateur vous demandera peut-être la permission de télécharger plusieurs fichiers."
                             }
-                            <br />
-                            {
-                                "Si vous êtes sur iOS, vous ne pourrez peut-être pas télécharger plusieurs fichiers à la fois."
-                            }
                         </Typography>
                     </PaperSheet>
-                    <PaperSheet xs={12} md={4} style={{ textAlign: "center" }}>
+                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
                         <Typography
                             onClick={this.downloadZip}
                             style={{ cursor: "pointer" }}
                             variant="h5"
                             data-cy="download-zip-link"
                         >
-                            {"↓ Archive zip 🎁"}
+                            {"Archive zip 🎁"}
                         </Typography>
                         <IconButton onClick={this.downloadZip}>
                             <Icon>get_app</Icon>
                         </IconButton>
                     </PaperSheet>
-                    <PaperSheet xs={12} md={4} style={{ textAlign: "center" }}>
+                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
                         <Typography
                             onClick={this.downloadControlAccess}
                             style={{ cursor: "pointer" }}
                             variant="h5"
                             data-cy="download-csv-link"
                         >
-                            {"↓ Controlaccess en .csv 📊"}
+                            {"Controlaccess en .csv 📊"}
                         </Typography>
                         <IconButton onClick={this.downloadControlAccess}>
+                            <Icon>get_app</Icon>
+                        </IconButton>
+                    </PaperSheet>
+                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
+                        <Typography
+                            onClick={this.downloadFullRecipe}
+                            style={{ cursor: "pointer" }}
+                            variant="h5"
+                            data-cy="download-json-link"
+                        >
+                            {"Recette 💌"}
+                        </Typography>
+                        <IconButton onClick={this.downloadFullRecipe}>
                             <Icon>get_app</Icon>
                         </IconButton>
                     </PaperSheet>

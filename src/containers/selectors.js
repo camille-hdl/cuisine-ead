@@ -2,6 +2,7 @@
 import { createSelector } from "reselect";
 import { Map, List } from "immutable";
 import getRecipeFn from "../lib/recipes.js";
+import getOutputRecipeFn from "../lib/output-recipes.js";
 import { pipe, compose, memoizeWith, take, split, identity, join } from "ramda";
 
 /**
@@ -20,8 +21,10 @@ const getFirstThousandLines = memoizeWith(
 export const previewHashSelector = (state: Map): string | null => state.get("previewHash");
 export const xmlFilesSelector = (state: Map): List<Map> => state.get("xmlFiles");
 export const pipelineSelector = (state: Map): List => state.get("pipeline");
+export const outputPipelineSelector = (state: Map): List => state.get("outputPipeline");
 export const previewEnabledSelector = (state: Map): boolean => state.get("previewEnabled");
 export const correctionsSelector = (state: Map): Map => state.get("corrections");
+export const versionSelector = (state: Map): string => state.get("version");
 
 /**
  * If preview is enabled, we return the selected file, or the first one if none is selected.
@@ -91,17 +94,61 @@ export const pipelineFnSelector = createSelector<Map, void, List, Map, PipelineF
     }
 );
 
+type OutputPipelineFn = (xmlString: string) => string;
+/**
+ * Returns a function that applies the selected output recipes (`xmlString => xmlString`) to an xmlString
+ * *after* `pipelineFn` has been applied.
+ */
+export const outputPipelineFnSelector = createSelector<Map, void, List, OutputPipelineFn>(
+    outputPipelineSelector,
+    (outputPipeline: List): OutputPipelineFn | null => {
+        if (outputPipeline.size <= 0) return (str: string) => str;
+        const recipesFns = outputPipeline.map(r => getOutputRecipeFn(r.get("key"))).toArray();
+        const fn = pipe(...recipesFns);
+        return fn;
+    }
+);
+
 /**
  * Returns a string representation of the selected xml file
  * after having applied the pipeline to it.
  */
-export const previewXmlStringSelector = createSelector<Map, void, Map | null, PipelineFn | null, string | null>(
+export const previewXmlStringSelector = createSelector<
+    Map,
+    void,
+    Map | null,
+    PipelineFn | null,
+    OutputPipelineFn,
+    string | null
+>(
     previewXmlFileSelector,
     pipelineFnSelector,
-    (xmlFile: Map, pipelineFn: ((doc: Document) => Document) | null): string | null => {
+    outputPipelineFnSelector,
+    (
+        xmlFile: Map,
+        pipelineFn: ((doc: Document) => Document) | null,
+        outputPipelineFn: (str: string) => string
+    ): string | null => {
         if (!xmlFile || !pipelineFn) return null;
         const newDoc = pipelineFn(xmlFile);
         const serializer = new XMLSerializer();
-        return getFirstThousandLines(serializer.serializeToString(newDoc));
+        return getFirstThousandLines(outputPipelineFn(serializer.serializeToString(newDoc)));
+    }
+);
+
+/**
+ * Returns a Map containing all the necessary components for this particular recipe.
+ * This objet can be exported to JSON, to be re-used later as input.
+ */
+export const fullRecipeSelector = createSelector<Map, void, string, List, List, Map>(
+    versionSelector,
+    pipelineSelector,
+    outputPipelineSelector,
+    (version: string, pipeline: List, outputPipeline: List): Map => {
+        return Map({
+            version: version,
+            pipeline: pipeline,
+            outputPipeline: outputPipeline,
+        });
     }
 );

@@ -4,7 +4,9 @@ import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
 import Grid from "./material/grid.jsx";
 import { getRecipes, getStatefulRecipes } from "../lib/recipes.js";
+import { getRecipes as getOutputRecipes } from "../lib/output-recipes.js";
 import RecipeList from "./material/recipe-list.jsx";
+import OutputRecipeList from "./material/output-recipe-list.jsx";
 import { Link as RouterLink } from "react-router-dom";
 import ResponsiveDrawer from "./material/resp-drawer.jsx";
 import ReactDiffViewer from "react-diff-viewer";
@@ -31,8 +33,10 @@ const recipesByCategories = map(c => {
         recipes: sortBy(ascend)(filter(r => equals(c, getCategory(r.key)), availableRecipes)),
     };
 }, categories);
+const availableOutputRecipes = getOutputRecipes();
 type Props = {
     pipeline: List,
+    outputPipeline: List,
     previewXmlFile: Map | null,
     previewXmlString: string | null,
     xmlFiles: List,
@@ -40,7 +44,9 @@ type Props = {
     corrections: Map,
     togglePreview: (p: boolean) => void,
     pipelineFn: (doc: any) => any,
+    outputPipelineFn: (doc: any) => any,
     setPipeline: (p: List) => void,
+    setOutputPipeline: (p: List) => void,
     setPreviewHash: (h: string) => void,
 };
 const PreviousStepLink = props => <RouterLink to="/upload" {...props} data-cy="prev-step-link" />;
@@ -85,6 +91,9 @@ export default function SelectRecipes(props: Props) {
                             props.corrections.size
                         } corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
+                        <Divider />
+                        <Typography variant="h6">{"Assaisonnements"}</Typography>
+                        <OutputRecipeList {...props} availableRecipes={availableOutputRecipes} />
                     </>
                 }
             >
@@ -153,6 +162,10 @@ export default function SelectRecipes(props: Props) {
                             props.corrections.size
                         } corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
+                    </PaperSheet>
+                    <PaperSheet xs={12} sm={6} key={"output-recipes"}>
+                        <Typography variant="h6">{"Assaisonnements"}</Typography>
+                        <OutputRecipeList {...props} availableRecipes={availableOutputRecipes} />
                     </PaperSheet>
                 </Grid>
             </Grid>

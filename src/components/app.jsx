@@ -17,16 +17,21 @@ type RouteProps = {
     match: any,
 };
 export type Props = {
+    version: string,
     xmlFiles: List,
     pipeline: List,
+    outputPipeline: List,
     corrections: Map,
     previewXmlFile: Map | null,
     previewXmlString: string | null,
     previewEnabled: boolean,
+    fullRecipe: Map,
     pipelineFn: (doc: any) => any,
+    outputPipelineFn: (xmlStr: string) => string,
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
     setPipeline: (p: List) => void,
+    setOutputPipeline: (p: List) => void,
     setPreviewHash: (h: string) => void,
     togglePreview: (p: boolean) => void,
     updateCorrections: (corrections: Array<string>) => void,
@@ -63,28 +68,20 @@ const AsyncResultats = props => {
     );
 };
 
-const getUploadFilesProps = (props: Props) => {
-    const { xmlFiles, corrections, addXmlFile, removeXmlFile, updateCorrections } = props;
-    return { xmlFiles, corrections, addXmlFile, removeXmlFile, updateCorrections };
-};
-
 export default class App extends React.PureComponent<Props> {
     render() {
         const hasXmlFiles = this.props.xmlFiles.size > 0;
         const hasPipeline = this.props.pipeline.size > 0;
         return (
             <>
-                <MenuBar />
+                <MenuBar version={this.props.version} />
                 <Switch>
                     <Route
                         exact
                         path="/"
                         render={routeProps => <StartButton hasXmlFiles={hasXmlFiles} {...routeProps} />}
                     />
-                    <Route
-                        path="/upload"
-                        render={routeProps => <AsyncUploadFiles {...getUploadFilesProps(this.props)} {...routeProps} />}
-                    />
+                    <Route path="/upload" render={routeProps => <AsyncUploadFiles {...this.props} {...routeProps} />} />
                     <Route
                         path="/recettes"
                         render={routeProps =>

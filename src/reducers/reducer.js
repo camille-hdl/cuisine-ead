@@ -7,6 +7,7 @@ import {
     SET_PIPELINE,
     SET_PREVIEW_HASH,
     TOGGLE_PREVIEW,
+    SET_OUTPUT_PIPELINE,
 } from "../actions.js";
 import type { AddXmlFileData } from "../types.js";
 import updateCorrections from "../lib/corrections-parser.js";
@@ -31,12 +32,17 @@ const setPipelineReducer = (state: Map, data: List): Map => {
     return state.set("pipeline", data);
 };
 
+const setOutputPipelinereducer = (state: Map, data: List): Map => {
+    return state.set("outputPipeline", data);
+};
+
 type Reducer = (state: Map, data: any) => Map;
 const reducersMap: { [actionType: string]: Reducer } = {
     [ADD_XML_FILE]: addXmlFileReducer,
     [UPDATE_CORRECTIONS]: updateCorrectionsReducer,
     [REMOVE_XML_FILE]: removeXmlFileReducer,
     [SET_PIPELINE]: setPipelineReducer,
+    [SET_OUTPUT_PIPELINE]: setOutputPipelinereducer,
     [SET_PREVIEW_HASH]: (state: Map, data: string) => state.set("previewHash", data),
     [TOGGLE_PREVIEW]: (state: Map, data: boolean) => state.set("previewEnabled", data),
 };

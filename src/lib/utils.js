@@ -42,3 +42,16 @@ const escapeReplacer = (match, p1, p2, p3): string => [p1, '""', p3].join("");
 export const escapeCell = (input: string): string => {
     return '"' + input.replace(escapeRE, escapeReplacer) + '"';
 };
+
+/**
+ * Simple Promise wrapper around the FileReader API
+ */
+export const openFile = (file: File): Promise => {
+    return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+        reader.readAsText(file);
+    });
+};

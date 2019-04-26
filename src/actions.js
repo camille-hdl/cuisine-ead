@@ -8,6 +8,7 @@ export const UPDATE_CORRECTIONS = "UPDATE_CORRECTIONS";
 export const SET_PIPELINE = "SET_PIPELINE";
 export const SET_PREVIEW_HASH = "SET_PREVIEW_HASH";
 export const TOGGLE_PREVIEW = "TOGGLE_PREVIEW";
+export const SET_OUTPUT_PIPELINE = "SET_OUTPUT_PIPELINE";
 
 export const addXmlFile = (data: AddXmlFileData) => {
     return { type: ADD_XML_FILE, data: data };
@@ -22,6 +23,10 @@ export const updateCorrections = (data: Array<string>) => {
 
 export const setPipeline = (data: List) => {
     return { type: SET_PIPELINE, data: data };
+};
+
+export const setOutputPipeline = (data: List) => {
+    return { type: SET_OUTPUT_PIPELINE, data: data };
 };
 
 export const setPreviewHash = (data: string) => {
