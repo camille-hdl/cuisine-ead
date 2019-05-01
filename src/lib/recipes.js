@@ -13,6 +13,7 @@ import {
     partialRight,
     propEq,
     curry,
+    pipe,
 } from "ramda";
 /**
  * Functions were written using lodashes `each`,
@@ -123,9 +124,103 @@ export const supprimeControlAccess = (doc: any): any => {
     return doc;
 };
 
+export const ajouterScopecontentAudience = (doc: any): any => {
+    const elems = xpathFilter(doc, "//scopecontent");
+    each(elems, elem => {
+        if (!elem.hasAttribute("audience")) {
+            elem.setAttribute("audience", "external");
+        }
+    });
+
+    return doc;
+};
+
+export const geognameSourceGeo = (doc: any): any => {
+    const elems = xpathFilter(doc, "//geogname");
+    each(elems, elem => {
+        if (!elem.hasAttribute("source")) {
+            elem.setAttribute("source", "geogname");
+        }
+    });
+
+    return doc;
+};
+
+export const extentUnit = (doc: any): any => {
+    const elems = xpathFilter(doc, '//extent[@type="nombre elements"]');
+    each(elems, elem => {
+        elem.removeAttribute("type");
+        elem.setAttribute("unit", "feuille");
+    });
+    return doc;
+};
+
+export const dimensionsTypeUnit = (doc: any): any => {
+    const elems = xpathFilter(doc, "//dimensions");
+    each(elems, elem => {
+        if (!elem.hasAttribute("type") && !elem.hasAttribute("unit")) {
+            elem.setAttribute("type", "hauteur_x_largeur");
+            elem.setAttribute("unit", "cm");
+        }
+    });
+    return doc;
+};
+
+export const corpnameToSubjectW = (doc: any): any => {
+    const elems = xpathFilter(doc, "//corpname");
+    each(elems, elem => {
+        if (!elem.hasAttributes()) {
+            const subj = doc.createElement("subject");
+            subj.setAttribute("source", "periode_thesaurus_w");
+            if (elem.childNodes) {
+                each(elem.childNodes, c => subj.appendChild(c));
+            }
+            elem.replaceWith(subj);
+        }
+    });
+    return doc;
+};
+
+export const ajouterSubjectSourceW = (doc: any): any => {
+    const elems = xpathFilter(doc, "//subject");
+    each(elems, elem => {
+        if (!elem.hasAttribute("source")) {
+            elem.setAttribute("source", "thesaurus_w");
+        }
+    });
+    return doc;
+};
+
+export const corrigerSubjectContexteHisto = (doc: any): any => {
+    const elems = xpathFilter(doc, '//subject[@source="contexte-historique"]');
+    each(elems, elem => {
+        elem.setAttribute("source", "periode_thesaurus_w");
+    });
+    return doc;
+};
+
+export const corrigerMatSpecDonnees = (doc: any): any => {
+    const elems = xpathFilter(doc, '//materialspec[@type="données mathématiques"]');
+    each(elems, elem => {
+        elem.setAttribute("type", "echelle");
+    });
+    return doc;
+};
+
 export const replaceUnitDateNd = (doc: any): any => {
     const elems = xpathFilter(doc, '//unitdate[@normal="0"]');
     each(elems, elem => elem.setAttribute("normal", "s.d."));
+
+    return doc;
+};
+
+export const viderUnitDateNormal = (doc: any): any => {
+    const elems = xpathFilter(doc, "//unitdate");
+    each(elems, elem => {
+        if (elem.hasAttribute("normal")) {
+            elem.setAttribute("normal", "");
+        }
+    });
 
     return doc;
 };
@@ -188,12 +283,9 @@ export const nettoyerAttrType = (doc: any): any => {
     return doc;
 };
 
-export const ajouterAltRender = (doc: any): any => {
-    const niveauHaut = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]');
-    each(niveauHaut, elem => elem.setAttribute("altrender", "ligeo-branche-standardisadg"));
-
-    const niveauBas = xpathFilter(doc, '//c[@level="file"]|//c[@level="piece"]');
-    each(niveauBas, elem => elem.setAttribute("altrender", "ligeo-article-standardisadg"));
+export const nettoyerAttrTypeTitre = (doc: any): any => {
+    const elems = xpathFilter(doc, '//*[@type="titre"]');
+    each(elems, elem => elem.removeAttribute("type"));
     return doc;
 };
 
@@ -206,6 +298,29 @@ export const nettoyerCoteConsultation = (doc: any): any => {
 
     const cotesFutures = xpathFilter(doc, '//unitid[@type="cote-future"]');
     each(cotesFutures, unitid => unitid.removeAttribute("type"));
+    return doc;
+};
+
+export const nettoyerUnitTitleEmph = (doc: any): any => {
+    const emphs = xpathFilter(doc, '//unittitle/emph[@render="italic"]|//unittitle/emph[@render="super"]');
+    each(emphs, element => {
+        if (element.childNodes) {
+            element.replaceWith(...element.childNodes);
+        } else {
+            element.remove();
+        }
+    });
+    return doc;
+};
+export const nettoyerAddressline = (doc: any): any => {
+    const emphs = xpathFilter(doc, "//addressline");
+    each(emphs, element => {
+        if (element.childNodes) {
+            element.replaceWith(...element.childNodes);
+        } else {
+            element.remove();
+        }
+    });
     return doc;
 };
 
@@ -239,6 +354,14 @@ export const supprimerControlaccessVides = (doc: any): any => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
     }, xpathFilter(doc, "//controlaccess"));
     each(controlaccesses, element => element.remove());
+    return doc;
+};
+
+export const supprimerHeadVides = (doc: any): any => {
+    const heads = filter(el => {
+        return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
+    }, xpathFilter(doc, "//head"));
+    each(heads, element => element.remove());
     return doc;
 };
 
@@ -298,6 +421,163 @@ export const dedoublonnerIndexation = (doc: any): any => {
     });
     return doc;
 };
+
+/**
+ * Ligeo
+ */
+
+/**
+ * Ancienne fonction. à enlever ?
+ */
+export const _OLD_ajouterAltRender = (doc: any): any => {
+    const niveauHaut = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]');
+    each(niveauHaut, elem => elem.setAttribute("altrender", "ligeo-branche-standardisadg"));
+
+    const niveauBas = xpathFilter(doc, '//c[@level="file"]|//c[@level="piece"]');
+    each(niveauBas, elem => elem.setAttribute("altrender", "ligeo-article-standardisadg"));
+    return doc;
+};
+
+/**
+ * Corriger les attributs level, ajouter les altrender
+ */
+export const ajouterAltRender = (doc: any): any => {
+    const elems = xpathFilter(doc, "//c");
+    each(elems, elem => {
+        if (!elem.hasAttributes()) {
+            elem.setAttribute("altrender", "ligeo-branche-standardisadg");
+            elem.setAttribute("level", "file");
+        } else if (elem.hasAttribute("level") && !elem.hasAttribute("altrender")) {
+            const attrs = getAttributesMap(elem);
+            if (attrs.level === "file") {
+                elem.setAttribute("altrender", "ligeo-article-standardisadg");
+                elem.setAttribute("level", "item");
+            } else if (attrs.level === "item") {
+                elem.setAttribute("altrender", "ligeo-simple-standardisadg");
+                elem.setAttribute("level", "file");
+            } else if (attrs.level === "series" || attrs.level === "subseries") {
+                elem.setAttribute("altrender", "ligeo-branche-iconographieisadg");
+                elem.setAttribute("level", "file");
+            } else if (attrs.level === "recordgrp") {
+                elem.setAttribute("altrender", "ligeo-branche-iconographieisadg");
+                elem.setAttribute("level", "item");
+            }
+        }
+    });
+    return doc;
+};
+
+/**
+ * Rechercher les genreform dans controlaccess sans attributs,
+ * mettre un attribut en fonction du contenu,
+ * les déplacer dans physdesc si besoin
+ */
+export const corrigerGenreformPhysdesc = (doc: any): any => {
+    const MATRICE = "matrice cadastrale";
+    const ETAT_SECTIONS = "état de sections";
+    const TABLEAU_ASSEM = "tableau d'assemblage";
+    const PLAN_MIN = "plan-minute de conservation";
+    const ICO = "iconographie";
+    const NOMENCL = "nomenclature des propriétaire";
+
+    const CAs = xpathFilter(doc, "//controlaccess");
+    each(CAs, elem => {
+        const genreforms = xpathFilter(doc, elem, "genreform");
+        let physdesc = last(xpathFilter(doc, elem, "parent::c/did/physdesc"));
+        let newPhysdesc = false;
+        if (!physdesc) {
+            // si le physdesc n'existe pas, le créer
+            physdesc = doc.createElement("physdesc");
+            newPhysdesc = true;
+        }
+        if (genreforms.length <= 0) return;
+        // récupérer les genreforms par contenu
+        const genreformMap = {};
+        each(genreforms, genreform => {
+            // on ignore les genreforms avec attributs
+            if (genreform.hasAttributes()) return;
+            const contenu = genreform.innerHTML;
+            if (!genreformMap[contenu]) genreformMap[contenu] = [];
+            genreformMap[contenu].push(genreform);
+        });
+        if (genreformMap[MATRICE] && genreformMap[MATRICE].length > 0) {
+            each(genreformMap[MATRICE], el => {
+                el.setAttribute("source", "genreform");
+                el.setAttribute("type", "genre");
+                physdesc.appendChild(el);
+            });
+        }
+        if (genreformMap[ETAT_SECTIONS] && genreformMap[ETAT_SECTIONS].length > 0) {
+            each(genreformMap[ETAT_SECTIONS], el => {
+                el.setAttribute("source", "genreform");
+                el.setAttribute("type", "genre");
+                physdesc.appendChild(el);
+            });
+        }
+        if (genreformMap[NOMENCL] && genreformMap[NOMENCL].length > 0) {
+            each(genreformMap[NOMENCL], el => {
+                el.setAttribute("source", "genreform");
+                el.setAttribute("type", "genre");
+                physdesc.appendChild(el);
+            });
+        }
+        /**
+         * Si on a iconographie + un autre genreform
+         */
+        if (genreformMap[ICO] && genreformMap[ICO].length > 0) {
+            let deplacerIco = false;
+            if (genreformMap[TABLEAU_ASSEM] && genreformMap[TABLEAU_ASSEM].length) {
+                deplacerIco = true;
+                each(genreformMap[TABLEAU_ASSEM], el => {
+                    el.setAttribute("source", "genreform");
+                    el.setAttribute("type", "genre");
+                    physdesc.appendChild(el);
+                });
+            }
+            if (genreformMap[PLAN_MIN] && genreformMap[PLAN_MIN].length) {
+                deplacerIco = true;
+                each(genreformMap[PLAN_MIN], el => {
+                    el.setAttribute("source", "genreform");
+                    el.setAttribute("type", "genre");
+                    physdesc.appendChild(el);
+                });
+            }
+            if (deplacerIco) {
+                each(genreformMap[ICO], el => {
+                    el.setAttribute("type", "nature");
+                    physdesc.appendChild(el);
+                });
+            }
+        }
+        if (newPhysdesc && physdesc.hasChildNodes()) {
+            const did = last(xpathFilter(doc, elem, "parent::c/did"));
+            if (!did) {
+                console.log("Pas de did pour créer le physdesc.");
+                return;
+            }
+            did.appendChild(physdesc);
+        }
+    });
+    return doc;
+};
+
+export const corrigerAccessRestrictLigeo = (doc: any): any => {
+    const accessRestrics = xpathFilter(doc, '//accessrestrict[@type="modalites-acces"]');
+    each(accessRestrics, elem => {
+        elem.setAttribute("type", "delai");
+        elem.setAttribute("id", "ligeo-2");
+    });
+    return doc;
+};
+
+/**
+ * Appliquer tous les traitements spécifiques à ligeo
+ */
+export const traitementsLigeo = pipe<any, any, any, any>(
+    ajouterAltRender,
+    corrigerAccessRestrictLigeo,
+    corrigerGenreformPhysdesc
+);
 
 /**
  * Détermine si un unitid de niveau bas existe dans le document
@@ -399,18 +679,34 @@ export const getRecipes = () => {
         { key: "remplacer_sep_ext", fn: remplaceExtensionSeparator },
         { key: "supprimer_commentaire", fn: supprimeComments },
         { key: "remplacer_date_0", fn: replaceUnitDateNd },
+        { key: "vider_unitdate_normal", fn: viderUnitDateNormal },
         { key: "nettoyer_type", fn: nettoyerAttrType },
+        { key: "nettoyer_type_titre", fn: nettoyerAttrTypeTitre },
         { key: "ajouter_altrender", fn: ajouterAltRender },
+        { key: "corriger_accessrestrict_ligeo", fn: corrigerAccessRestrictLigeo },
         { key: "capitalize_persname", fn: capitalizePersname },
         { key: "supprimer_whitespace", fn: supprimeWhitespace },
         { key: "remplacer_windows", fn: remplacerCharWindows },
         { key: "supprimer_controlaccess", fn: supprimeControlAccess },
         { key: "nettoyer_cotes_consultation", fn: nettoyerCoteConsultation },
+        { key: "nettoyer_emph_unittitle", fn: nettoyerUnitTitleEmph },
+        { key: "nettoyer_addressline", fn: nettoyerAddressline },
         { key: "supprimer_internal", fn: supprimerInternal },
+        { key: "ajouter_scopecontent_audience", fn: ajouterScopecontentAudience },
         { key: "completer_did_vides", fn: completerDidVides },
         { key: "dedoublonner_indexation", fn: dedoublonnerIndexation },
         { key: "supprimer_ca_vides", fn: supprimerControlaccessVides },
+        { key: "supprimer_head_vides", fn: supprimerHeadVides },
         { key: "ajouter_level_file", fn: ajouterLevelFile },
+        { key: "geog_source_geog", fn: geognameSourceGeo },
+        { key: "extent_unit", fn: extentUnit },
+        { key: "dimensions_type_unit", fn: dimensionsTypeUnit },
+        { key: "corpname_to_subject", fn: corpnameToSubjectW },
+        { key: "subject_ajouter_sourceW", fn: ajouterSubjectSourceW },
+        { key: "corriger_source_contexte", fn: corrigerSubjectContexteHisto },
+        { key: "corriger_mat_spec_donnees", fn: corrigerMatSpecDonnees },
+        { key: "corriger_deplacer_genreform", fn: corrigerGenreformPhysdesc },
+        { key: "pack_ligeo", fn: traitementsLigeo },
     ];
 };
 

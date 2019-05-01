@@ -121,7 +121,7 @@ export default function SelectRecipes(props: Props) {
         );
     }
     return (
-        <Grid container spacing={24}>
+        <Grid container>
             <PaperSheet xs={12}>
                 <ErrorCatcher>
                     <AppStepper activeStep={1}>
@@ -148,7 +148,7 @@ export default function SelectRecipes(props: Props) {
                 </div>
             </Grid>
             <Grid item xs={12}>
-                <Grid container spacing={24}>
+                <Grid container>
                     {map(r => {
                         return (
                             <PaperSheet xs={12} sm={6} key={r.category}>

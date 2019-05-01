@@ -8,3 +8,6 @@ cache:
     - ~/.cache
 install:
   - npm ci
+branches:
+  except:
+  - netlify

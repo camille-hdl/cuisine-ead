@@ -1,7 +1,7 @@
 //@flow
 import React, { useState } from "react";
 import { NavLink as RouterLink } from "react-router-dom";
-import OutlinedButton from "./outlined-button.jsx";
+import OutlinedButton from "./material/outlined-button.jsx";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -38,11 +38,11 @@ const UploadLink = props => <RouterLink to="/upload" {...props} />;
 /**
  * homepage and start button
  */
-function StartButton(props: { hasXmlFiles: boolean, classes: any }) {
+function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
     const [changelogExpanded, toggleChangelog] = useState(false);
     const { hasXmlFiles, classes } = props;
     return (
-        <Grid container spacing={24} className={classes.root}>
+        <Grid container className={classes.root}>
             <Grid item xs={12}>
                 <Typography variant="h1" className={classes.title} color={"primary"}>
                     {"Cuisine EAD 🍲"}
@@ -75,6 +75,7 @@ function StartButton(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{"Nouveaux traitements"}</li>
                                 <li>{`Lors de la dernière étape, il est possible d'exporter les réglages en JSON. 
                                 Cela permet de les réutiliser en déposant le fichier JSON en même temps que les fichiers XML ou CSV.`}</li>
                                 <li>
@@ -92,4 +93,4 @@ function StartButton(props: { hasXmlFiles: boolean, classes: any }) {
         </Grid>
     );
 }
-export default withStyles(styles)(StartButton);
+export default withStyles(styles)(StartPage);
