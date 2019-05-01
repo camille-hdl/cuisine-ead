@@ -101,7 +101,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
     render() {
         return (
             <div>
-                <Grid container spacing={24}>
+                <Grid container>
                     <PaperSheet xs={12}>
                         <ErrorCatcher>
                             <AppStepper activeStep={0}>
@@ -170,7 +170,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                 }
                             }}
                         >
-                            <Grid container spacing={24}>
+                            <Grid container>
                                 <PaperSheet xs={12}>
                                     <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
                                         {"Déposer des fichiers"}

@@ -2,12 +2,18 @@
 
 import React, { Suspense, lazy } from "react";
 import MenuBar from "./material/menu-bar.jsx";
-import { List } from "immutable";
+import { List, Map } from "immutable";
 import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import type { AddXmlFileData } from "../types.js";
-import StartButton from "./material/start-button.jsx";
+import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
+
+const muiTheme = createMuiTheme({
+    typography: { useNextVariants: true },
+});
 
 type RouteProps = {
     location: {
@@ -57,12 +63,12 @@ const AsyncSelectRecipes = props => {
         </Suspense>
     );
 };
-const Resultats = lazy(() => import("./resultats.jsx"));
-const AsyncResultats = props => {
+const Results = lazy(() => import("./results.jsx"));
+const AsyncResults = props => {
     return (
         <Suspense fallback={<LoadingComponent />}>
             <ErrorCatcher>
-                <Resultats {...props} />
+                <Results {...props} />
             </ErrorCatcher>
         </Suspense>
     );
@@ -73,13 +79,14 @@ export default class App extends React.PureComponent<Props> {
         const hasXmlFiles = this.props.xmlFiles.size > 0;
         const hasPipeline = this.props.pipeline.size > 0;
         return (
-            <>
+            <MuiThemeProvider theme={muiTheme}>
+                <CssBaseline />
                 <MenuBar version={this.props.version} />
                 <Switch>
                     <Route
                         exact
                         path="/"
-                        render={routeProps => <StartButton hasXmlFiles={hasXmlFiles} {...routeProps} />}
+                        render={routeProps => <StartPage hasXmlFiles={hasXmlFiles} {...routeProps} />}
                     />
                     <Route path="/upload" render={routeProps => <AsyncUploadFiles {...this.props} {...routeProps} />} />
                     <Route
@@ -93,7 +100,7 @@ export default class App extends React.PureComponent<Props> {
                         render={routeProps =>
                             hasXmlFiles ? (
                                 hasPipeline ? (
-                                    <AsyncResultats {...this.props} {...routeProps} />
+                                    <AsyncResults {...this.props} {...routeProps} />
                                 ) : (
                                     <Redirect to="/recettes" />
                                 )
@@ -103,7 +110,7 @@ export default class App extends React.PureComponent<Props> {
                         }
                     />
                 </Switch>
-            </>
+            </MuiThemeProvider>
         );
     }
 }

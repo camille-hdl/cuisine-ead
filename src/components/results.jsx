@@ -1,8 +1,9 @@
 //@flow
 import React from "react";
+import Paper from "@material-ui/core/Paper";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
-import Grid from "./material/grid.jsx";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
 import OutlinedButton from "./material/outlined-button.jsx";
@@ -12,6 +13,7 @@ import FileSaver from "file-saver";
 import { map, uniq } from "ramda";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
+import { withStyles } from "@material-ui/core/styles";
 import { extractCA } from "../lib/recipes.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
@@ -19,10 +21,20 @@ import JSZip from "jszip";
 
 const PreviousStepLink = props => <RouterLink to="/recettes" {...props} data-cy="prev-step-link" />;
 
+const styles = theme => ({
+    downloadBlock: {
+        ...theme.mixins.gutters(),
+        textAlign: "center",
+        height: "250px",
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+    },
+});
+
 /**
  * Download the files after having applied the pipeline to it
  */
-export default class Resultats extends React.PureComponent<Props> {
+class Results extends React.PureComponent<Props & { classes: any }> {
     /**
      * Save the xmlFiles after having applied the pipeline to them
      * in the browser
@@ -108,9 +120,10 @@ export default class Resultats extends React.PureComponent<Props> {
         );
     };
     render() {
+        const { classes } = this.props;
         return (
             <div>
-                <Grid container spacing={24}>
+                <Grid container>
                     <PaperSheet xs={12}>
                         <ErrorCatcher>
                             <AppStepper activeStep={2}>
@@ -118,65 +131,75 @@ export default class Resultats extends React.PureComponent<Props> {
                             </AppStepper>
                         </ErrorCatcher>
                     </PaperSheet>
-                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
-                        <Typography
-                            onClick={this.download}
-                            style={{ cursor: "pointer" }}
-                            variant="h5"
-                            data-cy="download-link"
-                        >
-                            {"Fichiers séparés 📄📄📄"}
-                        </Typography>
-                        <IconButton onClick={this.download}>
-                            <Icon>get_app</Icon>
-                        </IconButton>
-                        <Typography variant="body1">
-                            {
-                                "Votre navigateur vous demandera peut-être la permission de télécharger plusieurs fichiers."
-                            }
-                        </Typography>
-                    </PaperSheet>
-                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
-                        <Typography
-                            onClick={this.downloadZip}
-                            style={{ cursor: "pointer" }}
-                            variant="h5"
-                            data-cy="download-zip-link"
-                        >
-                            {"Archive zip 🎁"}
-                        </Typography>
-                        <IconButton onClick={this.downloadZip}>
-                            <Icon>get_app</Icon>
-                        </IconButton>
-                    </PaperSheet>
-                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
-                        <Typography
-                            onClick={this.downloadControlAccess}
-                            style={{ cursor: "pointer" }}
-                            variant="h5"
-                            data-cy="download-csv-link"
-                        >
-                            {"Controlaccess en .csv 📊"}
-                        </Typography>
-                        <IconButton onClick={this.downloadControlAccess}>
-                            <Icon>get_app</Icon>
-                        </IconButton>
-                    </PaperSheet>
-                    <PaperSheet xs={12} md={3} style={{ textAlign: "center" }}>
-                        <Typography
-                            onClick={this.downloadFullRecipe}
-                            style={{ cursor: "pointer" }}
-                            variant="h5"
-                            data-cy="download-json-link"
-                        >
-                            {"Recette 💌"}
-                        </Typography>
-                        <IconButton onClick={this.downloadFullRecipe}>
-                            <Icon>get_app</Icon>
-                        </IconButton>
-                    </PaperSheet>
+                    <Grid item xs={12} md={3}>
+                        <Paper className={classes.downloadBlock}>
+                            <Typography
+                                onClick={this.download}
+                                style={{ cursor: "pointer" }}
+                                variant="h5"
+                                data-cy="download-link"
+                            >
+                                {"Fichiers séparés 📄📄📄"}
+                            </Typography>
+                            <IconButton onClick={this.download}>
+                                <Icon>get_app</Icon>
+                            </IconButton>
+                            <Typography variant="body1">
+                                {
+                                    "Votre navigateur vous demandera peut-être la permission de télécharger plusieurs fichiers."
+                                }
+                            </Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <Paper className={classes.downloadBlock}>
+                            <Typography
+                                onClick={this.downloadZip}
+                                style={{ cursor: "pointer" }}
+                                variant="h5"
+                                data-cy="download-zip-link"
+                            >
+                                {"Archive zip 🎁"}
+                            </Typography>
+                            <IconButton onClick={this.downloadZip}>
+                                <Icon>get_app</Icon>
+                            </IconButton>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <Paper className={classes.downloadBlock}>
+                            <Typography
+                                onClick={this.downloadControlAccess}
+                                style={{ cursor: "pointer" }}
+                                variant="h5"
+                                data-cy="download-csv-link"
+                            >
+                                {"Controlaccess en .csv 📊"}
+                            </Typography>
+                            <IconButton onClick={this.downloadControlAccess}>
+                                <Icon>get_app</Icon>
+                            </IconButton>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <Paper className={classes.downloadBlock}>
+                            <Typography
+                                onClick={this.downloadFullRecipe}
+                                style={{ cursor: "pointer" }}
+                                variant="h5"
+                                data-cy="download-json-link"
+                            >
+                                {"Recette 💌"}
+                            </Typography>
+                            <IconButton onClick={this.downloadFullRecipe}>
+                                <Icon>get_app</Icon>
+                            </IconButton>
+                        </Paper>
+                    </Grid>
                 </Grid>
             </div>
         );
     }
 }
+
+export default withStyles(styles, { withTheme: true })(Results);
