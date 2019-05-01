@@ -478,7 +478,7 @@ export const corrigerGenreformPhysdesc = (doc: any): any => {
     const TABLEAU_ASSEM = "tableau d'assemblage";
     const PLAN_MIN = "plan-minute de conservation";
     const ICO = "iconographie";
-    const NOMENCL = "nomenclature des propriétaire";
+    const NOMENCL = "nomenclature des propriétaires";
 
     const CAs = xpathFilter(doc, "//controlaccess");
     each(CAs, elem => {
