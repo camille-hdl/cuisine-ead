@@ -50,10 +50,24 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "vider_unitdate_normal",
+        {
+            label: "Vider l'attribut 'normal' des unitdate",
+            category: "Suppressions",
+        },
+    ],
+    [
         "nettoyer_type",
         {
             label: "Nettoyer les attributs 'type'",
             complement: "odd type='commentaire', relatedmaterial type='sources-internes' ou 'sources-externes'",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "nettoyer_type_titre",
+        {
+            label: "Nettoyer les attributs 'type=titre'",
             category: "Suppressions",
         },
     ],
@@ -64,6 +78,73 @@ const availables: Array<[string, RecipeInfo]> = [
             complement:
                 "'ligeo-branche-standardisadg' si c sans level, 'ligeo-article-standardisadg' si c level='file' ou 'piece'",
             category: "Spécifique",
+        },
+    ],
+    [
+        "corriger_accessrestrict_ligeo",
+        {
+            label: "Corriger les accessrestrict 'modalite-access' ligeo",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "pack_ligeo",
+        {
+            label: "Tous les traitements spécifiques ligéo",
+            complement: "altrender, genreform, accessrestrict",
+            category: "Packs",
+        },
+    ],
+    [
+        "geog_source_geog",
+        {
+            label: "Ajouter source='geogname' sur les geognames sans source",
+            category: "Corrections",
+        },
+    ],
+    [
+        "extent_unit",
+        {
+            label: "Remplacer extent type par unit",
+            complement: "Remplace l'attribut type='nombre elements' par unit='feuille'",
+            category: "Corrections",
+        },
+    ],
+    [
+        "dimensions_type_unit",
+        {
+            label: "Ajouter type et unit sur dimensions",
+            complement: "Ajouter type='hauteur_x_largeur' unit='cm' sur dimensions",
+            category: "Corrections",
+        },
+    ],
+    [
+        "corpname_to_subject",
+        {
+            label: "Remplacer corpname sans attr. par subject",
+            complement: "Remplace les corpname sans attributs par subject source='periode_thesaurus_w'",
+            category: "Corrections",
+        },
+    ],
+    [
+        "subject_ajouter_sourceW",
+        {
+            label: "Ajouter source='thesaurus_w' aux subjects sans source",
+            category: "Corrections",
+        },
+    ],
+    [
+        "corriger_source_contexte",
+        {
+            label: "Remplacer subject source='contexte-historique' par 'periode_thesaurus_w'",
+            category: "Corrections",
+        },
+    ],
+    [
+        "corriger_mat_spec_donnees",
+        {
+            label: "Remplacer materialspec type='données mathématiques' par 'echelle'",
+            category: "Corrections",
         },
     ],
     [
@@ -109,10 +190,38 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "nettoyer_emph_unittitle",
+        {
+            label: "Nettoyer emph italic et super dans les unittitle",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "nettoyer_addressline",
+        {
+            label: "Nettoyer addressline",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "corriger_deplacer_genreform",
+        {
+            label: "Déplacer certains genreform dans physdesc",
+            category: "Spécifique",
+        },
+    ],
+    [
         "supprimer_internal",
         {
             label: "Supprimer les éléments audience='internal'",
             category: "Suppressions",
+        },
+    ],
+    [
+        "ajouter_scopecontent_audience",
+        {
+            label: "Ajouter audience=external sur les scopecontent",
+            category: "Corrections",
         },
     ],
     [
@@ -133,6 +242,13 @@ const availables: Array<[string, RecipeInfo]> = [
         "supprimer_ca_vides",
         {
             label: "Supprimer les controlaccess vides",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "supprimer_head_vides",
+        {
+            label: "Supprimer les head vides",
             category: "Suppressions",
         },
     ],
