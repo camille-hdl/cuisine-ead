@@ -30,6 +30,14 @@ self.addEventListener("activate", function() {
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute([]);
 
+// cache polyfill.io
+workbox.routing.registerRoute(
+    /^https:\/\/polyfill\.io/,
+    workbox.strategies.staleWhileRevalidate({
+        cacheName: "polyfill-io",
+    })
+);
+
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 workbox.routing.registerRoute(
     /^https:\/\/fonts\.googleapis\.com/,
