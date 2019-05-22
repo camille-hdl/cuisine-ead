@@ -88,7 +88,7 @@ export const pipelineFnSelector = createSelector<Map, void, List, Map, PipelineF
     pipelineStateSelector,
     (pipeline: List, executeState: Map): PipelineFn | null => {
         if (pipeline.size <= 0) return null;
-        const recipesFns = pipeline.map(r => getRecipeFn(r.get("key"), executeState)).toArray();
+        const recipesFns = pipeline.map(r => getRecipeFn(r, executeState)).toArray();
         const fn = pipe(...recipesFns);
         return memoizeWith(xmlFile => xmlFile.get("hash"), xmlFile => fn(createNewDoc(xmlFile)));
     }

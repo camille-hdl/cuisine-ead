@@ -4,6 +4,7 @@ type RecipeInfo = {
     label: string,
     category: string,
     complement?: string,
+    defaultArgs?: any,
 };
 
 const availables: Array<[string, RecipeInfo]> = [
@@ -259,6 +260,14 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Corrections",
         },
     ],
+    [
+        "ecraser_publisher",
+        {
+            label: "Ecraser publisher. Sera créé s'il n'existe pas.",
+            category: "Corrections",
+            defaultArgs: { publisher: "" },
+        },
+    ],
 ];
 
 /**
@@ -284,6 +293,14 @@ export const getLabel = (key: string): string => {
 export const getCategory = (key: string): string | null => {
     const info = getInfo(key);
     return info ? info.category : null;
+};
+
+/**
+ * Returns the initial arguments used by the recipe
+ */
+export const getDefaultArgs = (key: string): string | null => {
+    const info = getInfo(key);
+    return info && info.defaultArgs ? info.defaultArgs : {};
 };
 
 /**
