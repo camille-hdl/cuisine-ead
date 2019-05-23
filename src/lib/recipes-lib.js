@@ -299,6 +299,13 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Spécifique",
         },
     ],
+    [
+        "supprimer_physdesc_archdesc",
+        {
+            label: "Supprimer physdesc du archdesc/did",
+            category: "Corrections",
+        },
+    ],
 ];
 
 /**
