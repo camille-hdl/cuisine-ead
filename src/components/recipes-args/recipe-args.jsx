@@ -39,6 +39,18 @@ export default class RecipeArgs extends React.PureComponent<Props> {
                     <TextArg {...this.props} argName="creation" label="Creation" />
                 </EventTrap>
             );
+        if (this.props.recipe === "ecraser_origination")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="origination" label="Origination (xml)" />
+                </EventTrap>
+            );
+        if (this.props.recipe === "ecraser_date")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="date" label="Date (année)" />
+                </EventTrap>
+            );
         return null;
     }
 }

@@ -99,3 +99,15 @@ export const replaceRange = (
         return [newStart, newEnd].join(newSeparator);
     });
 };
+
+/**
+ * Sets the innerHTML property of an elemen within a try catch block
+ */
+export const trySetInnerHTML = (elem: Element, str: string): Element => {
+    try {
+        elem.innerHTML = str;
+    } catch (e) {
+        console.log("xml invalide", elem, str, e);
+    }
+    return elem;
+};

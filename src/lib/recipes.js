@@ -31,7 +31,7 @@ import type { Controlaccess } from "../types.js";
 import { replaceMSChars } from "./ms-chars.js";
 import type { List, Map } from "immutable";
 import { xpathFilter } from "./xml.js";
-import { getRange, replaceRange } from "./utils.js";
+import { getRange, replaceRange, trySetInnerHTML } from "./utils.js";
 
 export type Recipe = (doc: any) => any;
 
@@ -619,14 +619,14 @@ export const ecraserPublisher = (args: Map) => (doc: any): any => {
     if (typeof newPublisher === "undefined") return doc;
     const publisher = last(xpathFilter(doc, "//publisher"));
     if (publisher) {
-        publisher.innerHTML = newPublisher;
+        trySetInnerHTML(publisher, newPublisher);
         return doc;
     }
     // creer un publisher
     const publicationstmt = last(xpathFilter(doc, "//publicationstmt"));
     if (publicationstmt) {
         const publisher = doc.createElement("publisher");
-        publisher.innerHTML = newPublisher;
+        trySetInnerHTML(publisher, newPublisher);
         publicationstmt.appendChild(publisher);
     }
     return doc;
@@ -641,14 +641,14 @@ export const ecraserRepository = (args: Map) => (doc: any): any => {
     if (typeof newRepository === "undefined") return doc;
     const repository = last(xpathFilter(doc, "//repository"));
     if (repository) {
-        repository.innerHTML = newRepository;
+        trySetInnerHTML(repository, newRepository);
         return doc;
     }
     // creer un repository
     const did = last(xpathFilter(doc, "//archdesc/did"));
     if (did) {
         const repository = doc.createElement("repository");
-        repository.innerHTML = newRepository;
+        trySetInnerHTML(repository, newRepository);
         did.appendChild(repository);
     }
     return doc;
@@ -662,15 +662,59 @@ export const ecraserCreation = (args: Map) => (doc: any): any => {
     if (typeof newCreation === "undefined") return doc;
     const creation = last(xpathFilter(doc, "//creation"));
     if (creation) {
-        creation.innerHTML = newCreation;
+        trySetInnerHTML(creation, newCreation);
         return doc;
     }
     // creer un creation
-    const did = last(xpathFilter(doc, "//profiledesc"));
-    if (did) {
+    const profileDesc = last(xpathFilter(doc, "//profiledesc"));
+    if (profileDesc) {
         const creation = doc.createElement("creation");
-        creation.innerHTML = newCreation;
-        did.appendChild(creation);
+        trySetInnerHTML(creation, newCreation);
+        profileDesc.appendChild(creation);
+    }
+    return doc;
+};
+/**
+ * if there is no origination tag, it will be created in archdesc/did
+ * Expects arg `origination` (string, can contain xml).
+ */
+export const ecraserOrigination = (args: Map) => (doc: any): any => {
+    const newOrigination = args.get("origination");
+    if (typeof newOrigination === "undefined") return doc;
+    const origination = last(xpathFilter(doc, "//origination"));
+    if (origination) {
+        trySetInnerHTML(origination, newOrigination);
+        return doc;
+    }
+    // creer un origination
+    const did = last(xpathFilter(doc, "//archdesc/did"));
+    if (did) {
+        const origination = doc.createElement("origination");
+        trySetInnerHTML(origination, newOrigination);
+        did.appendChild(origination);
+    }
+    return doc;
+};
+
+/**
+ * if there is no date tag, it will be created in publicationstmt
+ * Expects arg `date` (string, year).
+ */
+export const ecraserDate = (args: Map) => (doc: any): any => {
+    const newDate = args.get("date");
+    if (typeof newDate === "undefined") return doc;
+    const pubDate = last(xpathFilter(doc, "//publicationstmt/date"));
+    if (pubDate) {
+        trySetInnerHTML(pubDate, newDate);
+        return doc;
+    }
+    // creer un pubDate
+    const publicationstmt = last(xpathFilter(doc, "//publicationstmt"));
+    if (publicationstmt) {
+        const pubDate = doc.createElement("date");
+        trySetInnerHTML(pubDate, newDate);
+        pubDate.setAttribute("normal", newDate);
+        publicationstmt.appendChild(pubDate);
     }
     return doc;
 };
@@ -817,6 +861,8 @@ export const getRecipes = () => {
         { key: "ecraser_publisher", fn: ecraserPublisher },
         { key: "ecraser_repository", fn: ecraserRepository },
         { key: "ecraser_creation", fn: ecraserCreation },
+        { key: "ecraser_origination", fn: ecraserOrigination },
+        { key: "ecraser_date", fn: ecraserDate },
         { key: "modifier_dsc_type", fn: modifierDscOthertype },
         { key: "supprimer_genreform_typir", fn: supprimerGenreformTypir },
         { key: "supprimer_physdesc_archdesc", fn: supprimerPhysDidArchdesc },

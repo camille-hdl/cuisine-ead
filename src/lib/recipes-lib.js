@@ -265,7 +265,7 @@ const availables: Array<[string, RecipeInfo]> = [
         "ecraser_publisher",
         {
             label: "Ecraser publisher. Sera créé s'il n'existe pas.",
-            category: "Corrections",
+            category: "Personnaliser",
             defaultArgs: { publisher: "" },
         },
     ],
@@ -273,7 +273,7 @@ const availables: Array<[string, RecipeInfo]> = [
         "ecraser_repository",
         {
             label: "Ecraser repository. Sera créé s'il n'existe pas.",
-            category: "Corrections",
+            category: "Personnaliser",
             defaultArgs: { repository: "" },
         },
     ],
@@ -281,8 +281,26 @@ const availables: Array<[string, RecipeInfo]> = [
         "ecraser_creation",
         {
             label: "Ecraser creation. Sera créé s'il n'existe pas.",
-            category: "Corrections",
+            category: "Personnaliser",
             defaultArgs: { creation: "" },
+        },
+    ],
+    [
+        "ecraser_origination",
+        {
+            label: "Ecraser origination. Sera créé s'il n'existe pas.",
+            complement: "Peut contenir du xml",
+            category: "Personnaliser",
+            defaultArgs: { origination: "" },
+        },
+    ],
+    [
+        "ecraser_date",
+        {
+            label: "Ecraser date. Sera créé s'il n'existe pas.",
+            complement: "Année (valeur aussi utilisé dans normal)",
+            category: "Personnaliser",
+            defaultArgs: { date: "" },
         },
     ],
     [
