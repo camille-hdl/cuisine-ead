@@ -1,5 +1,5 @@
 //@flow
-import { last, take, forEach } from "ramda";
+import { last, take, forEach, trim, startsWith } from "ramda";
 
 /**
  * Remove the old `encoding` attribute on the `xml` tag of the output.
@@ -54,4 +54,60 @@ export const openFile = (file: File): Promise => {
         };
         reader.readAsText(file);
     });
+};
+
+const rangeRE = /[ /]([0-9]+)-\/?([0-9]+)$/m;
+/**
+ * Takes a string (cote) and returns an array `[start, end]`
+ *
+ * * `3 P 290/1-/3` => `[1, 3]`
+ * * `3 P 290 1-3` => `[1, 3]``
+ * * `3 P 1` => `null`
+ */
+export const getRange = (str: string): [number, number] | null => {
+    const temp = trim(str).match(rangeRE);
+    if (!temp) return null;
+    if (temp.length <= 1) return null;
+    if (typeof temp[1] === "undefined" || typeof temp[2] === "undefined") return null;
+    const debut = temp[1];
+    const fin = temp[2];
+    if (isNaN(debut) || isNaN(fin)) return null;
+    return [+debut, +fin];
+};
+
+const rangeRepRE = /([ /]+?[0-9]+)-(\/?[0-9]+)$/m;
+/**
+ * Change articles in a range.
+ * `replaceRange('3 P 290/1-/100', [2, 200]) // '3 P 290/2-/200'`
+ */
+export const replaceRange = (
+    str: string,
+    newRange: [number, number],
+    addPadding: boolean = false,
+    newSeparator: string = "-"
+): string => {
+    /**
+     * Adds `/` or ` ` prefix if necessary
+     */
+    const pref = (oldStr: string): string => {
+        return startsWith(" /", oldStr) ? " /" : startsWith("/", oldStr) ? "/" : startsWith(" ", oldStr) ? " " : "";
+    };
+    return trim(str).replace(rangeRepRE, (match: string, start: string, end: string) => {
+        const shouldAddPadding = addPadding && !startsWith(" ", start);
+        const newStart = [shouldAddPadding ? " " : "", pref(start), newRange[0]].join("");
+        const newEnd = [pref(end), newRange[1]].join("");
+        return [newStart, newEnd].join(newSeparator);
+    });
+};
+
+/**
+ * Sets the innerHTML property of an elemen within a try catch block
+ */
+export const trySetInnerHTML = (elem: Element, str: string): Element => {
+    try {
+        elem.innerHTML = str;
+    } catch (e) {
+        console.log("xml invalide", elem, str, e);
+    }
+    return elem;
 };

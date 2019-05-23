@@ -10,6 +10,7 @@ import {
     unnest,
     equals,
     find,
+    partition,
     partialRight,
     propEq,
     curry,
@@ -30,6 +31,7 @@ import type { Controlaccess } from "../types.js";
 import { replaceMSChars } from "./ms-chars.js";
 import type { List, Map } from "immutable";
 import { xpathFilter } from "./xml.js";
+import { getRange, replaceRange, trySetInnerHTML } from "./utils.js";
 
 export type Recipe = (doc: any) => any;
 
@@ -38,37 +40,49 @@ export type Recipe = (doc: any) => any;
  */
 type ExecuteState = Map;
 
-export const supprimerLb = (doc: any): any => {
+export const supprimerLb = () => (doc: any): any => {
     const lbs = xpathFilter(doc, "//lb");
     each(lbs, lb => lb.remove());
     return doc;
 };
 
-export const supprimerLabelsVides = (doc: any): any => {
+export const supprimerLabelsVides = () => (doc: any): any => {
     const elems = xpathFilter(doc, '//*[@label=""]');
     each(elems, elem => elem.removeAttribute("label"));
     return doc;
 };
 
-export const remplacePlageSeparator = (doc: any): any => {
-    // d'abord les c level != piece et file
+/**
+ * Reformat unitids, ranges (and some single unitids)
+ * `3 P 290/1-/2` => `3 P 290 /1 à /2`
+ * `3 P 290/1` => `3 P 290 /1`
+ */
+export const remplacePlageSeparator = () => (doc: any): any => {
+    // first c level != piece and file
     let elems = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]/did/unitid|//archdesc/did/unitid');
     each(elems, elem => {
-        elem.innerHTML = "" + elem.innerHTML.replace("-", " à ");
+        const oldUnitid = trim(elem.innerHTML);
+        const range = getRange(oldUnitid);
+        if (range) {
+            elem.innerHTML = replaceRange(oldUnitid, range, true, " à ");
+        }
     });
 
-    // ensuite, on gère les piece et level.
-    // si on trouve une cote avec un dernier element 1-2, on teste si le unitid 1-1 existe
-    // s'il n'existe pas, on est sur une plage
-    elems = filter(c => {
-        const temp = trim(c.innerHTML).split(" ");
-        const tempArticle = last(temp).split("-");
-        if (tempArticle.length > 1 && !isNaN(tempArticle[0]) && !isNaN(tempArticle[1])) {
-            if (+tempArticle[0] < +tempArticle[1]) {
-                // on teste si le même unitid avec l'extension -1 existe
-                let testUnitId = take(temp.length - 1, temp).join(" ");
-                testUnitId = [testUnitId, [tempArticle[0], +tempArticle[1] - 1].join("-")].join(" ");
-                if (!unitidExistsInDoc(doc, testUnitId)) {
+    /**
+     * Then, piece & level
+     * We separates ranges from single unitids
+     */
+    const [ranges, singles] = partition(c => {
+        // on veut trouver une plage
+        const unitid = trim(c.innerHTML);
+        const range = getRange(unitid);
+        if (!range) return false;
+        if (range.length > 1 && !isNaN(range[0]) && !isNaN(range[1])) {
+            if (range[0] < range[1]) {
+                // on teste si le même unitid avec l'extension -1 ou +1 existe
+                const testUnitIdBefore = replaceRange(unitid, [range[0], range[1] - 1]);
+                const testUnitIdAfter = replaceRange(unitid, [range[0], range[1] + 1]);
+                if (!unitidExistsInDoc(doc, testUnitIdBefore) && !unitidExistsInDoc(doc, testUnitIdAfter)) {
                     // on est sur une plage
                     return true;
                 }
@@ -76,13 +90,25 @@ export const remplacePlageSeparator = (doc: any): any => {
         }
         return false;
     }, xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'));
-    each(elems, elem => {
-        elem.innerHTML = "" + elem.innerHTML.replace("-", " à ");
+    each(ranges, elem => {
+        const oldUnitid = trim(elem.innerHTML);
+        const range = getRange(oldUnitid);
+        if (range) {
+            elem.innerHTML = replaceRange(oldUnitid, range, true, " à ");
+        }
+    });
+    /**
+     * We still have to add padding to the singles
+     */
+    each(singles, elem => {
+        elem.innerHTML = trim(elem.innerHTML).replace(/([^ /]+)(\/)/m, (match, prev, sep) => {
+            return [prev, " ", sep].join("");
+        });
     });
     return doc;
 };
 
-export const remplaceExtensionSeparator = (doc: any): any => {
+export const remplaceExtensionSeparator = () => (doc: any): any => {
     // d'abord les c level != piece et file
 
     const elems = filter(c => {
@@ -110,21 +136,21 @@ export const remplaceExtensionSeparator = (doc: any): any => {
     return doc;
 };
 
-export const supprimeComments = (doc: any): any => {
+export const supprimeComments = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//comment()");
     each(elems, comment => comment.remove());
 
     return doc;
 };
 
-export const supprimeControlAccess = (doc: any): any => {
+export const supprimeControlAccess = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//controlaccess/*");
     each(elems, controlaccess => controlaccess.remove());
 
     return doc;
 };
 
-export const ajouterScopecontentAudience = (doc: any): any => {
+export const ajouterScopecontentAudience = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//scopecontent");
     each(elems, elem => {
         if (!elem.hasAttribute("audience")) {
@@ -135,7 +161,7 @@ export const ajouterScopecontentAudience = (doc: any): any => {
     return doc;
 };
 
-export const geognameSourceGeo = (doc: any): any => {
+export const geognameSourceGeo = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//geogname");
     each(elems, elem => {
         if (!elem.hasAttribute("source")) {
@@ -146,7 +172,7 @@ export const geognameSourceGeo = (doc: any): any => {
     return doc;
 };
 
-export const extentUnit = (doc: any): any => {
+export const extentUnit = () => (doc: any): any => {
     const elems = xpathFilter(doc, '//extent[@type="nombre elements"]');
     each(elems, elem => {
         elem.removeAttribute("type");
@@ -155,7 +181,7 @@ export const extentUnit = (doc: any): any => {
     return doc;
 };
 
-export const dimensionsTypeUnit = (doc: any): any => {
+export const dimensionsTypeUnit = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//dimensions");
     each(elems, elem => {
         if (!elem.hasAttribute("type") && !elem.hasAttribute("unit")) {
@@ -166,7 +192,7 @@ export const dimensionsTypeUnit = (doc: any): any => {
     return doc;
 };
 
-export const corpnameToSubjectW = (doc: any): any => {
+export const corpnameToSubjectW = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//corpname");
     each(elems, elem => {
         if (!elem.hasAttributes()) {
@@ -181,7 +207,7 @@ export const corpnameToSubjectW = (doc: any): any => {
     return doc;
 };
 
-export const ajouterSubjectSourceW = (doc: any): any => {
+export const ajouterSubjectSourceW = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//subject");
     each(elems, elem => {
         if (!elem.hasAttribute("source")) {
@@ -191,7 +217,7 @@ export const ajouterSubjectSourceW = (doc: any): any => {
     return doc;
 };
 
-export const corrigerSubjectContexteHisto = (doc: any): any => {
+export const corrigerSubjectContexteHisto = () => (doc: any): any => {
     const elems = xpathFilter(doc, '//subject[@source="contexte-historique"]');
     each(elems, elem => {
         elem.setAttribute("source", "periode_thesaurus_w");
@@ -199,7 +225,7 @@ export const corrigerSubjectContexteHisto = (doc: any): any => {
     return doc;
 };
 
-export const corrigerMatSpecDonnees = (doc: any): any => {
+export const corrigerMatSpecDonnees = () => (doc: any): any => {
     const elems = xpathFilter(doc, '//materialspec[@type="données mathématiques"]');
     each(elems, elem => {
         elem.setAttribute("type", "echelle");
@@ -207,18 +233,18 @@ export const corrigerMatSpecDonnees = (doc: any): any => {
     return doc;
 };
 
-export const replaceUnitDateNd = (doc: any): any => {
+export const replaceUnitDateNd = () => (doc: any): any => {
     const elems = xpathFilter(doc, '//unitdate[@normal="0"]');
     each(elems, elem => elem.setAttribute("normal", "s.d."));
 
     return doc;
 };
 
-export const viderUnitDateNormal = (doc: any): any => {
+export const viderUnitDateNormal = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//unitdate");
     each(elems, elem => {
         if (elem.hasAttribute("normal")) {
-            elem.setAttribute("normal", "");
+            elem.removeAttribute("normal");
         }
     });
 
@@ -226,7 +252,7 @@ export const viderUnitDateNormal = (doc: any): any => {
 };
 
 const capitalizeRE = /( |^|.|;)([A-Z\-']+)( |,|;|.|$)/gm;
-export const capitalizePersname = (doc: any): any => {
+export const capitalizePersname = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//persname");
     each(elems, elem => {
         elem.innerHTML = elem.innerHTML.replace(capitalizeRE, (matched, p1, nom, p3) => {
@@ -238,7 +264,7 @@ export const capitalizePersname = (doc: any): any => {
 };
 
 const whitespaceRE = /(\t|\n *|\r *| {2,})/gm;
-export const supprimeWhitespace = (doc: any): any => {
+export const supprimeWhitespace = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//text()");
     each(elems, elem => {
         if (elem.textContent && elem.textContent.trim() !== "") {
@@ -253,7 +279,7 @@ export const supprimeWhitespace = (doc: any): any => {
     return doc;
 };
 
-export const remplacerCharWindows = (doc: any): any => {
+export const remplacerCharWindows = () => (doc: any): any => {
     const textElems = xpathFilter(doc, "//text()");
     // textes
     each(textElems, elem => {
@@ -274,7 +300,7 @@ export const remplacerCharWindows = (doc: any): any => {
     return doc;
 };
 
-export const nettoyerAttrType = (doc: any): any => {
+export const nettoyerAttrType = () => (doc: any): any => {
     const elems = xpathFilter(
         doc,
         '//odd[@type="commentaire"]|//relatedmaterial[@type="sources-internes"]|//relatedmaterial[@type="sources-externes"]'
@@ -283,7 +309,7 @@ export const nettoyerAttrType = (doc: any): any => {
     return doc;
 };
 
-export const nettoyerAttrTypeTitre = (doc: any): any => {
+export const nettoyerAttrTypeTitre = () => (doc: any): any => {
     const elems = xpathFilter(doc, '//*[@type="titre"]');
     each(elems, elem => elem.removeAttribute("type"));
     return doc;
@@ -292,7 +318,7 @@ export const nettoyerAttrTypeTitre = (doc: any): any => {
 /**
  * Supprimer les unitid[type=cote-de-consultation], enlever les attr type de unitid[type=cote-future]
  */
-export const nettoyerCoteConsultation = (doc: any): any => {
+export const nettoyerCoteConsultation = () => (doc: any): any => {
     const cotesConsults = xpathFilter(doc, '//unitid[@type="cote-de-consultation"]');
     each(cotesConsults, unitid => unitid.remove());
 
@@ -301,7 +327,7 @@ export const nettoyerCoteConsultation = (doc: any): any => {
     return doc;
 };
 
-export const nettoyerUnitTitleEmph = (doc: any): any => {
+export const nettoyerUnitTitleEmph = () => (doc: any): any => {
     const emphs = xpathFilter(doc, '//unittitle/emph[@render="italic"]|//unittitle/emph[@render="super"]');
     each(emphs, element => {
         if (element.childNodes) {
@@ -312,14 +338,10 @@ export const nettoyerUnitTitleEmph = (doc: any): any => {
     });
     return doc;
 };
-export const nettoyerAddressline = (doc: any): any => {
+export const nettoyerAddressline = () => (doc: any): any => {
     const emphs = xpathFilter(doc, "//addressline");
     each(emphs, element => {
-        if (element.childNodes) {
-            element.replaceWith(...element.childNodes);
-        } else {
-            element.remove();
-        }
+        element.remove();
     });
     return doc;
 };
@@ -327,13 +349,13 @@ export const nettoyerAddressline = (doc: any): any => {
 /**
  * Supprimer tous les éléments avec audience=internal
  */
-export const supprimerInternal = (doc: any): any => {
+export const supprimerInternal = () => (doc: any): any => {
     const internals = xpathFilter(doc, '//*[@audience="internal"]');
     each(internals, element => element.remove());
     return doc;
 };
 
-export const completerDidVides = (doc: any): any => {
+export const completerDidVides = () => (doc: any): any => {
     const dids = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
     }, xpathFilter(doc, "//did"));
@@ -349,7 +371,7 @@ export const completerDidVides = (doc: any): any => {
     return doc;
 };
 
-export const supprimerControlaccessVides = (doc: any): any => {
+export const supprimerControlaccessVides = () => (doc: any): any => {
     const controlaccesses = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
     }, xpathFilter(doc, "//controlaccess"));
@@ -357,11 +379,35 @@ export const supprimerControlaccessVides = (doc: any): any => {
     return doc;
 };
 
-export const supprimerHeadVides = (doc: any): any => {
+export const supprimerHeadVides = () => (doc: any): any => {
     const heads = filter(el => {
         return typeof el.childElementCount !== "undefined" && el.childElementCount <= 0;
     }, xpathFilter(doc, "//head"));
     each(heads, element => element.remove());
+    return doc;
+};
+
+export const modifierDscOthertype = () => (doc: any): any => {
+    const dscs = xpathFilter(doc, '//dsc[@type="othertype"]');
+    each(dscs, element => element.removeAttribute("type"));
+    return doc;
+};
+
+export const supprimerGenreformTypir = () => (doc: any): any => {
+    const genreforms = xpathFilter(doc, '//archdesc/controlaccess/genreform[@type="typir"]');
+    each(genreforms, element => element.remove());
+    return doc;
+};
+
+export const supprimerPhysDidArchdesc = () => (doc: any): any => {
+    const physDescs = xpathFilter(doc, "//archdesc/did/physdesc");
+    each(physDescs, element => element.remove());
+    return doc;
+};
+
+export const supprimerLangusage = () => (doc: any): any => {
+    const langusages = xpathFilter(doc, "//eadheader/profiledesc/langusage");
+    each(langusages, element => element.remove());
     return doc;
 };
 
@@ -375,7 +421,7 @@ const getAttributesMap = (element: Element): { [key: string]: string } => {
     return attrs;
 };
 
-export const ajouterLevelFile = (doc: any): any => {
+export const ajouterLevelFile = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//c");
     each(elems, elem => {
         const childrenC = xpathFilter(doc, elem, "c");
@@ -391,7 +437,7 @@ export const ajouterLevelFile = (doc: any): any => {
 /**
  * Si une indexation est présente sur un parent ou au niveau du document, la supprimer
  */
-export const dedoublonnerIndexation = (doc: any): any => {
+export const dedoublonnerIndexation = () => (doc: any): any => {
     const controlaccesses = xpathFilter(doc, "//c/controlaccess");
     each(controlaccesses, controlaccess => {
         if (!controlaccess.children || !controlaccess.parentNode) return;
@@ -429,7 +475,7 @@ export const dedoublonnerIndexation = (doc: any): any => {
 /**
  * Ancienne fonction. à enlever ?
  */
-export const _OLD_ajouterAltRender = (doc: any): any => {
+export const _OLD_ajouterAltRender = () => (doc: any): any => {
     const niveauHaut = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]');
     each(niveauHaut, elem => elem.setAttribute("altrender", "ligeo-branche-standardisadg"));
 
@@ -441,7 +487,7 @@ export const _OLD_ajouterAltRender = (doc: any): any => {
 /**
  * Corriger les attributs level, ajouter les altrender
  */
-export const ajouterAltRender = (doc: any): any => {
+export const ajouterAltRender = () => (doc: any): any => {
     const elems = xpathFilter(doc, "//c");
     each(elems, elem => {
         if (!elem.hasAttributes()) {
@@ -472,7 +518,7 @@ export const ajouterAltRender = (doc: any): any => {
  * mettre un attribut en fonction du contenu,
  * les déplacer dans physdesc si besoin
  */
-export const corrigerGenreformPhysdesc = (doc: any): any => {
+export const corrigerGenreformPhysdesc = () => (doc: any): any => {
     const MATRICE = "matrice cadastrale";
     const ETAT_SECTIONS = "état de sections";
     const TABLEAU_ASSEM = "tableau d'assemblage";
@@ -561,7 +607,7 @@ export const corrigerGenreformPhysdesc = (doc: any): any => {
     return doc;
 };
 
-export const corrigerAccessRestrictLigeo = (doc: any): any => {
+export const corrigerAccessRestrictLigeo = () => (doc: any): any => {
     const accessRestrics = xpathFilter(doc, '//accessrestrict[@type="modalites-acces"]');
     each(accessRestrics, elem => {
         elem.setAttribute("type", "delai");
@@ -571,13 +617,123 @@ export const corrigerAccessRestrictLigeo = (doc: any): any => {
 };
 
 /**
+ * if there is no publisher tag, it will be created in publicationstmt
+ * Expects arg `publisher` (string)
+ */
+export const ecraserPublisher = (args: Map) => (doc: any): any => {
+    const newPublisher = args.get("publisher");
+    if (typeof newPublisher === "undefined") return doc;
+    const publisher = last(xpathFilter(doc, "//publisher"));
+    if (publisher) {
+        trySetInnerHTML(publisher, newPublisher);
+        return doc;
+    }
+    // creer un publisher
+    const publicationstmt = last(xpathFilter(doc, "//publicationstmt"));
+    if (publicationstmt) {
+        const publisher = doc.createElement("publisher");
+        trySetInnerHTML(publisher, newPublisher);
+        publicationstmt.appendChild(publisher);
+    }
+    return doc;
+};
+
+/**
+ * if there is no repository tag, it will be created in archdesc>did
+ * Expects arg `repository` (string)
+ */
+export const ecraserRepository = (args: Map) => (doc: any): any => {
+    const newRepository = args.get("repository");
+    if (typeof newRepository === "undefined") return doc;
+    const repository = last(xpathFilter(doc, "//repository"));
+    if (repository) {
+        trySetInnerHTML(repository, newRepository);
+        return doc;
+    }
+    // creer un repository
+    const did = last(xpathFilter(doc, "//archdesc/did"));
+    if (did) {
+        const repository = doc.createElement("repository");
+        trySetInnerHTML(repository, newRepository);
+        did.appendChild(repository);
+    }
+    return doc;
+};
+/**
+ * if there is no creation tag, it will be created in profiledesc
+ * Expects arg `creation` (string)
+ */
+export const ecraserCreation = (args: Map) => (doc: any): any => {
+    const newCreation = args.get("creation");
+    if (typeof newCreation === "undefined") return doc;
+    const creation = last(xpathFilter(doc, "//creation"));
+    if (creation) {
+        trySetInnerHTML(creation, newCreation);
+        return doc;
+    }
+    // creer un creation
+    const profileDesc = last(xpathFilter(doc, "//profiledesc"));
+    if (profileDesc) {
+        const creation = doc.createElement("creation");
+        trySetInnerHTML(creation, newCreation);
+        profileDesc.appendChild(creation);
+    }
+    return doc;
+};
+/**
+ * if there is no origination tag, it will be created in archdesc/did
+ * Expects arg `origination` (string, can contain xml).
+ */
+export const ecraserOrigination = (args: Map) => (doc: any): any => {
+    const newOrigination = args.get("origination");
+    if (typeof newOrigination === "undefined") return doc;
+    const origination = last(xpathFilter(doc, "//origination"));
+    if (origination) {
+        trySetInnerHTML(origination, newOrigination);
+        return doc;
+    }
+    // creer un origination
+    const did = last(xpathFilter(doc, "//archdesc/did"));
+    if (did) {
+        const origination = doc.createElement("origination");
+        trySetInnerHTML(origination, newOrigination);
+        did.appendChild(origination);
+    }
+    return doc;
+};
+
+/**
+ * if there is no date tag, it will be created in publicationstmt
+ * Expects arg `date` (string, year).
+ */
+export const ecraserDate = (args: Map) => (doc: any): any => {
+    const newDate = args.get("date");
+    if (typeof newDate === "undefined") return doc;
+    const pubDate = last(xpathFilter(doc, "//publicationstmt/date"));
+    if (pubDate) {
+        trySetInnerHTML(pubDate, newDate);
+        return doc;
+    }
+    // creer un pubDate
+    const publicationstmt = last(xpathFilter(doc, "//publicationstmt"));
+    if (publicationstmt) {
+        const pubDate = doc.createElement("date");
+        trySetInnerHTML(pubDate, newDate);
+        pubDate.setAttribute("normal", newDate);
+        publicationstmt.appendChild(pubDate);
+    }
+    return doc;
+};
+
+/**
  * Appliquer tous les traitements spécifiques à ligeo
  */
-export const traitementsLigeo = pipe<any, any, any, any>(
-    ajouterAltRender,
-    corrigerAccessRestrictLigeo,
-    corrigerGenreformPhysdesc
-);
+export const traitementsLigeo = () =>
+    pipe<any, any, any, any>(
+        ajouterAltRender(),
+        corrigerAccessRestrictLigeo(),
+        corrigerGenreformPhysdesc()
+    );
 
 /**
  * Détermine si un unitid de niveau bas existe dans le document
@@ -667,9 +823,10 @@ export const extractCA = (doc: any): Array<Controlaccess> => {
 };
 
 /**
- * Returns an array of 'simple' recipes : functions that take a single DOM `Document` as argument and returns
+ * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
  * the modified `Document`.
- * Each element in the array is an object `{ key: string, fn: (doc: Document) => Document }`
+ * The first function is called with the `args` object of the recipe.
+ * Each element in the array is an object `{ key: string, fn: (args: any) => (doc: Document) => Document }`
  */
 export const getRecipes = () => {
     return [
@@ -707,6 +864,15 @@ export const getRecipes = () => {
         { key: "corriger_mat_spec_donnees", fn: corrigerMatSpecDonnees },
         { key: "corriger_deplacer_genreform", fn: corrigerGenreformPhysdesc },
         { key: "pack_ligeo", fn: traitementsLigeo },
+        { key: "ecraser_publisher", fn: ecraserPublisher },
+        { key: "ecraser_repository", fn: ecraserRepository },
+        { key: "ecraser_creation", fn: ecraserCreation },
+        { key: "ecraser_origination", fn: ecraserOrigination },
+        { key: "ecraser_date", fn: ecraserDate },
+        { key: "modifier_dsc_type", fn: modifierDscOthertype },
+        { key: "supprimer_genreform_typir", fn: supprimerGenreformTypir },
+        { key: "supprimer_physdesc_archdesc", fn: supprimerPhysDidArchdesc },
+        { key: "supprimer_langusage", fn: supprimerLangusage },
     ];
 };
 
@@ -727,13 +893,15 @@ const _findStatefulRecipe = partialRight(find, [getStatefulRecipes()]);
 export const findStatefulRecipe = (key: string): Recipe | undefined => _findStatefulRecipe(propEq("key", key));
 
 /**
- * Given a `recipeKey`, this will return the corresponding function `(doc: Document) => document`
+ * Given a `recipe` (`Map<{key: string, args: any}>`), this will return the corresponding function `(doc: Document) => document`
  * to apply a modification on a DOM `Document`.
  * If the function needs the application state to work, it will be provided automatically.
  */
-export default (recipeKey: string, state: ExecuteState): ((doc: any) => any) => {
+export default (recipe: Map, state: ExecuteState): ((doc: any) => any) => {
+    const recipeKey = recipe.get("key");
+    const recipeArgs = recipe.get("args");
     if (findRecipe(recipeKey)) {
-        return findRecipe(recipeKey).fn;
+        return findRecipe(recipeKey).fn(recipeArgs);
     }
     if (findStatefulRecipe(recipeKey)) {
         return findStatefulRecipe(recipeKey).fn(state);

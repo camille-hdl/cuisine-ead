@@ -13,7 +13,7 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
-var VERSION = "v0.1.4";
+var VERSION = "v0.1.5";
 workbox.core.setCacheNameDetails({
     prefix: "cuisine-ead",
     suffix: VERSION,
@@ -29,6 +29,14 @@ self.addEventListener("activate", function() {
  */
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute([]);
+
+// cache polyfill.io
+workbox.routing.registerRoute(
+    /^https:\/\/polyfill\.io/,
+    workbox.strategies.staleWhileRevalidate({
+        cacheName: "polyfill-io",
+    })
+);
 
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 workbox.routing.registerRoute(

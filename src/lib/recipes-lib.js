@@ -4,6 +4,7 @@ type RecipeInfo = {
     label: string,
     category: string,
     complement?: string,
+    defaultArgs?: any,
 };
 
 const availables: Array<[string, RecipeInfo]> = [
@@ -24,7 +25,8 @@ const availables: Array<[string, RecipeInfo]> = [
     [
         "remplacer_sep_plage",
         {
-            label: "Remplacer '-' par ' à ' dans les unitid plages de cotes",
+            label: "Remplacer '-' par ' à ' dans les unitid",
+            complement: "Transforme '1 P 100/1-/3' en '1 P 100 /1 à /3' ou '1 P 2/1' en '1 P 2 /1'",
             category: "Spécifique",
         },
     ],
@@ -259,6 +261,76 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Corrections",
         },
     ],
+    [
+        "ecraser_publisher",
+        {
+            label: "Ecraser publisher. Sera créé s'il n'existe pas.",
+            category: "Personnaliser",
+            defaultArgs: { publisher: "" },
+        },
+    ],
+    [
+        "ecraser_repository",
+        {
+            label: "Ecraser repository. Sera créé s'il n'existe pas.",
+            category: "Personnaliser",
+            defaultArgs: { repository: "" },
+        },
+    ],
+    [
+        "ecraser_creation",
+        {
+            label: "Ecraser creation. Sera créé s'il n'existe pas.",
+            category: "Personnaliser",
+            defaultArgs: { creation: "" },
+        },
+    ],
+    [
+        "ecraser_origination",
+        {
+            label: "Ecraser origination. Sera créé s'il n'existe pas.",
+            complement: "Peut contenir du xml",
+            category: "Personnaliser",
+            defaultArgs: { origination: "" },
+        },
+    ],
+    [
+        "ecraser_date",
+        {
+            label: "Ecraser date. Sera créé s'il n'existe pas.",
+            complement: "Année (valeur aussi utilisé dans normal)",
+            category: "Personnaliser",
+            defaultArgs: { date: "" },
+        },
+    ],
+    [
+        "modifier_dsc_type",
+        {
+            label: "Enlever type=othertype de dsc",
+            category: "Corrections",
+        },
+    ],
+    [
+        "supprimer_genreform_typir",
+        {
+            label: "Supprimer genreform type=typir",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "supprimer_physdesc_archdesc",
+        {
+            label: "Supprimer physdesc du archdesc/did",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "supprimer_langusage",
+        {
+            label: "Supprimer langusage dans eadheader",
+            category: "Suppressions",
+        },
+    ],
 ];
 
 /**
@@ -284,6 +356,14 @@ export const getLabel = (key: string): string => {
 export const getCategory = (key: string): string | null => {
     const info = getInfo(key);
     return info ? info.category : null;
+};
+
+/**
+ * Returns the initial arguments used by the recipe
+ */
+export const getDefaultArgs = (key: string): string | null => {
+    const info = getInfo(key);
+    return info && info.defaultArgs ? info.defaultArgs : {};
 };
 
 /**

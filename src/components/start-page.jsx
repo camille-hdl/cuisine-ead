@@ -75,7 +75,7 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
-                                <li>{"Nouveaux traitements"}</li>
+                                <li>{"Nouvelle catégorie de traitements : 'Personnaliser'"}</li>
                                 <li>{`Lors de la dernière étape, il est possible d'exporter les réglages en JSON. 
                                 Cela permet de les réutiliser en déposant le fichier JSON en même temps que les fichiers XML ou CSV.`}</li>
                                 <li>
