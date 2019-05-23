@@ -285,6 +285,20 @@ const availables: Array<[string, RecipeInfo]> = [
             defaultArgs: { creation: "" },
         },
     ],
+    [
+        "modifier_dsc_type",
+        {
+            label: "Enlever type=othertype de dsc",
+            category: "Corrections",
+        },
+    ],
+    [
+        "supprimer_genreform_typir",
+        {
+            label: "Supprimer genreform type=typir",
+            category: "Spécifique",
+        },
+    ],
 ];
 
 /**

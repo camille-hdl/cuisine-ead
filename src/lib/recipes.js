@@ -387,6 +387,18 @@ export const supprimerHeadVides = () => (doc: any): any => {
     return doc;
 };
 
+export const modifierDscOthertype = () => (doc: any): any => {
+    const dscs = xpathFilter(doc, '//dsc[@type="othertype"]');
+    each(dscs, element => element.removeAttribute("type"));
+    return doc;
+};
+
+export const supprimerGenreformTypir = () => (doc: any): any => {
+    const genreforms = xpathFilter(doc, '//archdesc/controlaccess/genreform[@type="typir"]');
+    each(genreforms, element => element.remove());
+    return doc;
+};
+
 const getAttributesMap = (element: Element): { [key: string]: string } => {
     const attrs = {};
     if (element.hasAttributes()) {
@@ -799,6 +811,8 @@ export const getRecipes = () => {
         { key: "ecraser_publisher", fn: ecraserPublisher },
         { key: "ecraser_repository", fn: ecraserRepository },
         { key: "ecraser_creation", fn: ecraserCreation },
+        { key: "modifier_dsc_type", fn: modifierDscOthertype },
+        { key: "supprimer_genreform_typir", fn: supprimerGenreformTypir },
     ];
 };
 
