@@ -321,7 +321,14 @@ const availables: Array<[string, RecipeInfo]> = [
         "supprimer_physdesc_archdesc",
         {
             label: "Supprimer physdesc du archdesc/did",
-            category: "Corrections",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "supprimer_langusage",
+        {
+            label: "Supprimer langusage dans eadheader",
+            category: "Suppressions",
         },
     ],
 ];

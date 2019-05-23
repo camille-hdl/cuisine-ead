@@ -405,6 +405,12 @@ export const supprimerPhysDidArchdesc = () => (doc: any): any => {
     return doc;
 };
 
+export const supprimerLangusage = () => (doc: any): any => {
+    const langusages = xpathFilter(doc, "//eadheader/profiledesc/langusage");
+    each(langusages, element => element.remove());
+    return doc;
+};
+
 const getAttributesMap = (element: Element): { [key: string]: string } => {
     const attrs = {};
     if (element.hasAttributes()) {
@@ -866,6 +872,7 @@ export const getRecipes = () => {
         { key: "modifier_dsc_type", fn: modifierDscOthertype },
         { key: "supprimer_genreform_typir", fn: supprimerGenreformTypir },
         { key: "supprimer_physdesc_archdesc", fn: supprimerPhysDidArchdesc },
+        { key: "supprimer_langusage", fn: supprimerLangusage },
     ];
 };
 
