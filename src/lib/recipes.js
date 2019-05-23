@@ -341,11 +341,7 @@ export const nettoyerUnitTitleEmph = () => (doc: any): any => {
 export const nettoyerAddressline = () => (doc: any): any => {
     const emphs = xpathFilter(doc, "//addressline");
     each(emphs, element => {
-        if (element.childNodes) {
-            element.replaceWith(...element.childNodes);
-        } else {
-            element.remove();
-        }
+        element.remove();
     });
     return doc;
 };
