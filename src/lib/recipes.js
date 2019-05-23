@@ -10,6 +10,7 @@ import {
     unnest,
     equals,
     find,
+    partition,
     partialRight,
     propEq,
     curry,
@@ -30,6 +31,7 @@ import type { Controlaccess } from "../types.js";
 import { replaceMSChars } from "./ms-chars.js";
 import type { List, Map } from "immutable";
 import { xpathFilter } from "./xml.js";
+import { getRange, replaceRange } from "./utils.js";
 
 export type Recipe = (doc: any) => any;
 
@@ -50,25 +52,37 @@ export const supprimerLabelsVides = () => (doc: any): any => {
     return doc;
 };
 
+/**
+ * Reformat unitids, ranges (and some single unitids)
+ * `3 P 290/1-/2` => `3 P 290 /1 à /2`
+ * `3 P 290/1` => `3 P 290 /1`
+ */
 export const remplacePlageSeparator = () => (doc: any): any => {
-    // d'abord les c level != piece et file
+    // first c level != piece and file
     let elems = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]/did/unitid|//archdesc/did/unitid');
     each(elems, elem => {
-        elem.innerHTML = "" + elem.innerHTML.replace("-", " à ");
+        const oldUnitid = trim(elem.innerHTML);
+        const range = getRange(oldUnitid);
+        if (range) {
+            elem.innerHTML = replaceRange(oldUnitid, range, true, " à ");
+        }
     });
 
-    // ensuite, on gère les piece et level.
-    // si on trouve une cote avec un dernier element 1-2, on teste si le unitid 1-1 existe
-    // s'il n'existe pas, on est sur une plage
-    elems = filter(c => {
-        const temp = trim(c.innerHTML).split(" ");
-        const tempArticle = last(temp).split("-");
-        if (tempArticle.length > 1 && !isNaN(tempArticle[0]) && !isNaN(tempArticle[1])) {
-            if (+tempArticle[0] < +tempArticle[1]) {
-                // on teste si le même unitid avec l'extension -1 existe
-                let testUnitId = take(temp.length - 1, temp).join(" ");
-                testUnitId = [testUnitId, [tempArticle[0], +tempArticle[1] - 1].join("-")].join(" ");
-                if (!unitidExistsInDoc(doc, testUnitId)) {
+    /**
+     * Then, piece & level
+     * We separates ranges from single unitids
+     */
+    const [ranges, singles] = partition(c => {
+        // on veut trouver une plage
+        const unitid = trim(c.innerHTML);
+        const range = getRange(unitid);
+        if (!range) return false;
+        if (range.length > 1 && !isNaN(range[0]) && !isNaN(range[1])) {
+            if (range[0] < range[1]) {
+                // on teste si le même unitid avec l'extension -1 ou +1 existe
+                const testUnitIdBefore = replaceRange(unitid, [range[0], range[1] - 1]);
+                const testUnitIdAfter = replaceRange(unitid, [range[0], range[1] + 1]);
+                if (!unitidExistsInDoc(doc, testUnitIdBefore) && !unitidExistsInDoc(doc, testUnitIdAfter)) {
                     // on est sur une plage
                     return true;
                 }
@@ -76,8 +90,20 @@ export const remplacePlageSeparator = () => (doc: any): any => {
         }
         return false;
     }, xpathFilter(doc, '//c[@level="file"]/did/unitid|//c[@level="piece"]/did/unitid'));
-    each(elems, elem => {
-        elem.innerHTML = "" + elem.innerHTML.replace("-", " à ");
+    each(ranges, elem => {
+        const oldUnitid = trim(elem.innerHTML);
+        const range = getRange(oldUnitid);
+        if (range) {
+            elem.innerHTML = replaceRange(oldUnitid, range, true, " à ");
+        }
+    });
+    /**
+     * We still have to add padding to the singles
+     */
+    each(singles, elem => {
+        elem.innerHTML = trim(elem.innerHTML).replace(/([^ /]+)(\/)/m, (match, prev, sep) => {
+            return [prev, " ", sep].join("");
+        });
     });
     return doc;
 };
