@@ -593,9 +593,8 @@ export const corrigerAccessRestrictLigeo = () => (doc: any): any => {
 };
 
 /**
- * Définir un publisher fourni.
- * Si la balise publisher n'est pas présente, elle sera créée dans publicationstmt
- * Attend un paramètre `publisher` (string)
+ * if there is no publisher tag, it will be created in publicationstmt
+ * Expects arg `publisher` (string)
  */
 export const ecraserPublisher = (args: Map) => (doc: any): any => {
     const newPublisher = args.get("publisher");
@@ -611,6 +610,28 @@ export const ecraserPublisher = (args: Map) => (doc: any): any => {
         const publisher = doc.createElement("publisher");
         publisher.innerHTML = newPublisher;
         publicationstmt.appendChild(publisher);
+    }
+    return doc;
+};
+
+/**
+ * if there is no repository tag, it will be created in archdesc>did
+ * Expects arg `repository` (string)
+ */
+export const ecraserRepository = (args: Map) => (doc: any): any => {
+    const newRepository = args.get("repository");
+    if (typeof newRepository === "undefined") return doc;
+    const repository = last(xpathFilter(doc, "//repository"));
+    if (repository) {
+        repository.innerHTML = newRepository;
+        return doc;
+    }
+    // creer un repository
+    const did = last(xpathFilter(doc, "//archdesc/did"));
+    if (did) {
+        const repository = doc.createElement("repository");
+        repository.innerHTML = newRepository;
+        did.appendChild(repository);
     }
     return doc;
 };
@@ -755,6 +776,7 @@ export const getRecipes = () => {
         { key: "corriger_deplacer_genreform", fn: corrigerGenreformPhysdesc },
         { key: "pack_ligeo", fn: traitementsLigeo },
         { key: "ecraser_publisher", fn: ecraserPublisher },
+        { key: "ecraser_repository", fn: ecraserRepository },
     ];
 };
 

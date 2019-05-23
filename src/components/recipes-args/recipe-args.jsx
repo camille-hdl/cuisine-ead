@@ -2,6 +2,7 @@
 import React from "react";
 import { Map } from "immutable";
 import EcraserPublisherArgs from "./ecraser-publisher-args.jsx";
+import EcraserRepositoryArgs from "./ecraser-repository-args.jsx";
 
 export type Props = {
     recipe: string,
@@ -25,6 +26,12 @@ export default class RecipeArgs extends React.PureComponent<Props> {
             return (
                 <EventTrap>
                     <EcraserPublisherArgs {...this.props} />
+                </EventTrap>
+            );
+        if (this.props.recipe === "ecraser_repository")
+            return (
+                <EventTrap>
+                    <EcraserRepositoryArgs {...this.props} />
                 </EventTrap>
             );
         return null;
