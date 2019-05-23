@@ -277,6 +277,14 @@ const availables: Array<[string, RecipeInfo]> = [
             defaultArgs: { repository: "" },
         },
     ],
+    [
+        "ecraser_creation",
+        {
+            label: "Ecraser creation. Sera créé s'il n'existe pas.",
+            category: "Corrections",
+            defaultArgs: { creation: "" },
+        },
+    ],
 ];
 
 /**

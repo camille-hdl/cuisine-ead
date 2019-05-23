@@ -635,6 +635,27 @@ export const ecraserRepository = (args: Map) => (doc: any): any => {
     }
     return doc;
 };
+/**
+ * if there is no creation tag, it will be created in profiledesc
+ * Expects arg `creation` (string)
+ */
+export const ecraserCreation = (args: Map) => (doc: any): any => {
+    const newCreation = args.get("creation");
+    if (typeof newCreation === "undefined") return doc;
+    const creation = last(xpathFilter(doc, "//creation"));
+    if (creation) {
+        creation.innerHTML = newCreation;
+        return doc;
+    }
+    // creer un creation
+    const did = last(xpathFilter(doc, "//profiledesc"));
+    if (did) {
+        const creation = doc.createElement("creation");
+        creation.innerHTML = newCreation;
+        did.appendChild(creation);
+    }
+    return doc;
+};
 
 /**
  * Appliquer tous les traitements spécifiques à ligeo
@@ -777,6 +798,7 @@ export const getRecipes = () => {
         { key: "pack_ligeo", fn: traitementsLigeo },
         { key: "ecraser_publisher", fn: ecraserPublisher },
         { key: "ecraser_repository", fn: ecraserRepository },
+        { key: "ecraser_creation", fn: ecraserCreation },
     ];
 };
 

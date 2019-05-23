@@ -16,12 +16,12 @@ type State = {
     tempValue: string,
 };
 
-class EcraserRepositoryArgs extends React.Component<Props & { classes: any }, State> {
+class TextArg extends React.Component<Props & { classes: any, argName: string, label: string }, State> {
     updateTO: any;
-    constructor(props: Props & { classes: any }) {
+    constructor(props: Props & { classes: any, argName: string, label: string }) {
         super(props);
         this.state = {
-            tempValue: props.args.get("repository"),
+            tempValue: props.args.get(props.argName),
         };
         this.updateTO = null;
     }
@@ -29,10 +29,10 @@ class EcraserRepositoryArgs extends React.Component<Props & { classes: any }, St
         if (this.updateTO) clearTimeout(this.updateTO);
     }
     render() {
-        const { classes } = this.props;
+        const { classes, argName, label } = this.props;
         return (
             <TextField
-                label="Repository"
+                label={label}
                 value={this.state.tempValue}
                 className={classes.textField}
                 onChange={ev => {
@@ -40,7 +40,7 @@ class EcraserRepositoryArgs extends React.Component<Props & { classes: any }, St
                     this.setState({ tempValue: value });
                     if (this.updateTO) clearTimeout(this.updateTO);
                     this.updateTO = setTimeout(() => {
-                        this.props.setArgs(this.props.args.set("repository", value));
+                        this.props.setArgs(this.props.args.set(argName, value));
                     }, 250);
                 }}
                 margin="normal"
@@ -49,4 +49,4 @@ class EcraserRepositoryArgs extends React.Component<Props & { classes: any }, St
     }
 }
 
-export default withStyles(styles)(EcraserRepositoryArgs);
+export default withStyles(styles)(TextArg);

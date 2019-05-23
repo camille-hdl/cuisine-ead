@@ -1,8 +1,7 @@
 //@flow
 import React from "react";
 import { Map } from "immutable";
-import EcraserPublisherArgs from "./ecraser-publisher-args.jsx";
-import EcraserRepositoryArgs from "./ecraser-repository-args.jsx";
+import TextArg from "./text-arg.jsx";
 
 export type Props = {
     recipe: string,
@@ -25,13 +24,19 @@ export default class RecipeArgs extends React.PureComponent<Props> {
         if (this.props.recipe === "ecraser_publisher")
             return (
                 <EventTrap>
-                    <EcraserPublisherArgs {...this.props} />
+                    <TextArg {...this.props} argName="publisher" label="Publisher" />
                 </EventTrap>
             );
         if (this.props.recipe === "ecraser_repository")
             return (
                 <EventTrap>
-                    <EcraserRepositoryArgs {...this.props} />
+                    <TextArg {...this.props} argName="repository" label="Repository" />
+                </EventTrap>
+            );
+        if (this.props.recipe === "ecraser_creation")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="creation" label="Creation" />
                 </EventTrap>
             );
         return null;
