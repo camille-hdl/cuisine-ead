@@ -50,5 +50,6 @@ test("replaceRange", () => {
 
 test("replaceRange - padding and separator", () => {
     expect(replaceRange("3 P 290/1-/3", [2, 3], true, " à ")).toEqual("3 P 290 /2 à /3");
-    expect(replaceRange("3 P 290 1-/3", [2, 3], true, " à ")).toEqual("3 P 290 2 à /3");
+    expect(replaceRange("3 P 290 1-/3", [2, 3], true, " à ")).toEqual("3 P 290 /2 à /3");
+    expect(replaceRange("3 P 290 /1-3", [2, 3], true, " à ")).toEqual("3 P 290 /2 à /3");
 });

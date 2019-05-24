@@ -339,8 +339,8 @@ export const nettoyerUnitTitleEmph = () => (doc: any): any => {
     return doc;
 };
 export const nettoyerAddressline = () => (doc: any): any => {
-    const emphs = xpathFilter(doc, "//addressline");
-    each(emphs, element => {
+    const adresses = xpathFilter(doc, "//address");
+    each(adresses, element => {
         element.remove();
     });
     return doc;
@@ -498,13 +498,13 @@ export const ajouterAltRender = () => (doc: any): any => {
             if (attrs.level === "file") {
                 elem.setAttribute("altrender", "ligeo-article-standardisadg");
                 elem.setAttribute("level", "item");
-            } else if (attrs.level === "item") {
+            } else if (attrs.level === "recordgrp") {
                 elem.setAttribute("altrender", "ligeo-simple-standardisadg");
                 elem.setAttribute("level", "file");
             } else if (attrs.level === "series" || attrs.level === "subseries") {
                 elem.setAttribute("altrender", "ligeo-branche-iconographieisadg");
                 elem.setAttribute("level", "file");
-            } else if (attrs.level === "recordgrp") {
+            } else if (attrs.level === "item") {
                 elem.setAttribute("altrender", "ligeo-branche-iconographieisadg");
                 elem.setAttribute("level", "item");
             }
@@ -712,6 +712,7 @@ export const ecraserDate = (args: Map) => (doc: any): any => {
     const pubDate = last(xpathFilter(doc, "//publicationstmt/date"));
     if (pubDate) {
         trySetInnerHTML(pubDate, newDate);
+        pubDate.setAttribute("normal", newDate);
         return doc;
     }
     // creer un pubDate
