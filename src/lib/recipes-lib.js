@@ -26,7 +26,7 @@ const availables: Array<[string, RecipeInfo]> = [
         "remplacer_sep_plage",
         {
             label: "Remplacer '-' par ' à ' dans les unitid",
-            complement: "Transforme '1 P 100/1-/3' en '1 P 100 /1 à /3' ou '1 P 2/1' en '1 P 2 /1'",
+            complement: "Transforme '1 P 100/1-3' en '1 P 100 /1 à /3' ou '1 P 2/1' en '1 P 2 /1'",
             category: "Spécifique",
         },
     ],
@@ -201,7 +201,7 @@ const availables: Array<[string, RecipeInfo]> = [
     [
         "nettoyer_addressline",
         {
-            label: "Nettoyer addressline",
+            label: "Nettoyer address",
             category: "Suppressions",
         },
     ],

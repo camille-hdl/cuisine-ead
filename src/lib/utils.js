@@ -89,13 +89,27 @@ export const replaceRange = (
     /**
      * Adds `/` or ` ` prefix if necessary
      */
-    const pref = (oldStr: string): string => {
-        return startsWith(" /", oldStr) ? " /" : startsWith("/", oldStr) ? "/" : startsWith(" ", oldStr) ? " " : "";
-    };
+    const pref = addPadding
+        ? (oldStr: string, pos: string): string => {
+              const padding = addPadding && pos === "start" ? " " : "";
+              return startsWith(" /", oldStr)
+                  ? " /"
+                  : startsWith("/", oldStr)
+                  ? padding + "/"
+                  : padding + (addPadding ? "/" : "");
+          }
+        : (oldStr: string): string => {
+              return startsWith(" /", oldStr)
+                  ? " /"
+                  : startsWith("/", oldStr)
+                  ? "/"
+                  : startsWith(" ", oldStr)
+                  ? " "
+                  : "";
+          };
     return trim(str).replace(rangeRepRE, (match: string, start: string, end: string) => {
-        const shouldAddPadding = addPadding && !startsWith(" ", start);
-        const newStart = [shouldAddPadding ? " " : "", pref(start), newRange[0]].join("");
-        const newEnd = [pref(end), newRange[1]].join("");
+        const newStart = [pref(start, "start"), newRange[0]].join("");
+        const newEnd = [pref(end, "end"), newRange[1]].join("");
         return [newStart, newEnd].join(newSeparator);
     });
 };
