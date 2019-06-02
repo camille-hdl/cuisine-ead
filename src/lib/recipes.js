@@ -65,6 +65,10 @@ export const remplacePlageSeparator = () => (doc: any): any => {
         const range = getRange(oldUnitid);
         if (range) {
             elem.innerHTML = replaceRange(oldUnitid, range, true, " à ");
+        } else {
+            elem.innerHTML = trim(elem.innerHTML).replace(/([^ /]+)(\/)/m, (match, prev, sep) => {
+                return [prev, " ", sep].join("");
+            });
         }
     });
 
