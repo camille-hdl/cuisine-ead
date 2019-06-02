@@ -501,11 +501,14 @@ export const ajouterAltRender = () => (doc: any): any => {
             } else if (attrs.level === "recordgrp") {
                 elem.setAttribute("altrender", "ligeo-simple-standardisadg");
                 elem.setAttribute("level", "file");
-            } else if (attrs.level === "series" || attrs.level === "subseries") {
+            } else if (attrs.level === "series") {
                 elem.setAttribute("altrender", "ligeo-branche-iconographieisadg");
                 elem.setAttribute("level", "file");
+            } else if (attrs.level === "subseries") {
+                elem.setAttribute("altrender", "ligeo-simple-iconographieisadg");
+                elem.setAttribute("level", "file");
             } else if (attrs.level === "item") {
-                elem.setAttribute("altrender", "ligeo-branche-iconographieisadg");
+                elem.setAttribute("altrender", "ligeo-article-iconographieisadg");
                 elem.setAttribute("level", "item");
             }
         }
