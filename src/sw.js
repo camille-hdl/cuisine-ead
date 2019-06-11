@@ -13,7 +13,7 @@
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
-var VERSION = "v0.1.7";
+var VERSION = "v0.1.8";
 workbox.core.setCacheNameDetails({
     prefix: "cuisine-ead",
     suffix: VERSION,

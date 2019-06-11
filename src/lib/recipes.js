@@ -578,9 +578,7 @@ export const corrigerGenreformPhysdesc = () => (doc: any): any => {
          * Si on a iconographie + un autre genreform
          */
         if (genreformMap[ICO] && genreformMap[ICO].length > 0) {
-            let deplacerIco = false;
             if (genreformMap[TABLEAU_ASSEM] && genreformMap[TABLEAU_ASSEM].length) {
-                deplacerIco = true;
                 each(genreformMap[TABLEAU_ASSEM], el => {
                     el.setAttribute("source", "genreform");
                     el.setAttribute("type", "genre");
@@ -588,19 +586,16 @@ export const corrigerGenreformPhysdesc = () => (doc: any): any => {
                 });
             }
             if (genreformMap[PLAN_MIN] && genreformMap[PLAN_MIN].length) {
-                deplacerIco = true;
                 each(genreformMap[PLAN_MIN], el => {
                     el.setAttribute("source", "genreform");
                     el.setAttribute("type", "genre");
                     physdesc.appendChild(el);
                 });
             }
-            if (deplacerIco) {
-                each(genreformMap[ICO], el => {
-                    el.setAttribute("type", "nature");
-                    physdesc.appendChild(el);
-                });
-            }
+            each(genreformMap[ICO], el => {
+                el.setAttribute("type", "nature");
+                physdesc.appendChild(el);
+            });
         }
         if (newPhysdesc && physdesc.hasChildNodes()) {
             const did = last(xpathFilter(doc, elem, "parent::c/did"));
