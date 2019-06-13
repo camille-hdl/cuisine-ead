@@ -530,6 +530,7 @@ export const corrigerGenreformPhysdesc = () => (doc: any): any => {
     const ETAT_SECTIONS = "état de sections";
     const TABLEAU_ASSEM = "tableau d'assemblage";
     const PLAN_MIN = "plan-minute de conservation";
+    const LISTE = "liste";
     const ICO = "iconographie";
     const NOMENCL = "nomenclature des propriétaires";
 
@@ -587,6 +588,13 @@ export const corrigerGenreformPhysdesc = () => (doc: any): any => {
             }
             if (genreformMap[PLAN_MIN] && genreformMap[PLAN_MIN].length) {
                 each(genreformMap[PLAN_MIN], el => {
+                    el.setAttribute("source", "genreform");
+                    el.setAttribute("type", "genre");
+                    physdesc.appendChild(el);
+                });
+            }
+            if (genreformMap[LISTE] && genreformMap[LISTE].length) {
+                each(genreformMap[LISTE], el => {
                     el.setAttribute("source", "genreform");
                     el.setAttribute("type", "genre");
                     physdesc.appendChild(el);
