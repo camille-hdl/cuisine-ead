@@ -40,6 +40,7 @@ const UploadLink = props => <RouterLink to="/upload" {...props} />;
  */
 function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
     const [changelogExpanded, toggleChangelog] = useState(false);
+    const [csvExampleExpanded, toggleCsvExampleExpanded] = useState(false);
     const { hasXmlFiles, classes } = props;
     return (
         <Grid container className={classes.root}>
@@ -75,6 +76,7 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{"Corrections controlaccess par csv : il est possible d'ajouter des attributs"}</li>
                                 <li>{"Nouvelle catégorie de traitements : 'Personnaliser'"}</li>
                                 <li>{`Lors de la dernière étape, il est possible d'exporter les réglages en JSON. 
                                 Cela permet de les réutiliser en déposant le fichier JSON en même temps que les fichiers XML ou CSV.`}</li>
@@ -86,6 +88,89 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                                 <li>{`Lorsqu'un fichier est déposé, les sauts de ligne CRLF sont convertis en LF 
                                 pour améliorer la comparaison`}</li>
                             </ul>
+                        </Typography>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+            </Grid>
+            <Grid item xs={12}>
+                <ExpansionPanel
+                    expanded={csvExampleExpanded}
+                    onChange={() => toggleCsvExampleExpanded(!csvExampleExpanded)}
+                >
+                    <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
+                        <Typography className={classes.changelogHeading}>
+                            Exemple de csv de correction controlaccess
+                        </Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <Typography className={classes.changelog}>
+                            <pre>{`controlaccess,valeur corrigée,valeur originale
+persname,"Osterman, John",john osterman
+subject=>geogname,"Marseille, France",marseille
+subject=>occupation[role=nouveau rôle][data-custom=attribut custom],Le Nouveau Terme,Ancien terme
+"geogname[@role=""bâtiment""]=>persname[role=nouveau rôle]",le maire,Mairie
+geogname,,toulon`}</pre>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>1</th>
+                                        <th>controlaccess</th>
+                                        <th>Valeur corrigée</th>
+                                        <th>Valeur originale</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>persname</td>
+                                        <td>{'"Osterman, John"'}</td>
+                                        <td>john osterman</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>{"subject=>geogname"}</td>
+                                        <td>{'"Marseille, France"'}</td>
+                                        <td>marseille</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>{"subject=>occupation[role=nouveau rôle][data-custom=attribut custom]"}</td>
+                                        <td>Le Nouveau Terme</td>
+                                        <td>Ancien terme</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>{'"geogname[@role=""bâtiment""]=>persname[role=nouveau rôle]"'}</td>
+                                        <td>le maire</td>
+                                        <td>Mairie</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>geogname</td>
+                                        <td />
+                                        <td>toulon</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <hr />
+                            Explications:
+                            <br />
+                            <ol>
+                                <li>{"La première ligne est ignorée"}</li>
+                                <li>{"Exemple simple : remplacement de valeur d'une balise"}</li>
+                                <li>{"Remplacement d'une balise par une autre"}</li>
+                                <li>
+                                    {
+                                        "Remplacement d'une balise par une autre, modification de la valeur, ajout d'attributs"
+                                    }
+                                </li>
+                                <li>
+                                    {
+                                        "Remplacement d'une balise avec condition xpath, modification de la balise, ajout d'attributs, modification de la valeur"
+                                    }
+                                </li>
+                                <li>{"Le terme geogname 'toulon' est supprimé"}</li>
+                            </ol>
                         </Typography>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
