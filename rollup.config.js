@@ -22,9 +22,9 @@ const getPluginsConfig = (prod, mini) => {
             dest: outputDir + "vendor",
         }),
         nodeResolve({
-            jsnext: true,
-            browser: true,
-            preferBuiltins: false,
+            mainFields: ["module", "main", "browser"],
+            dedupe: ["react", "react-dom"],
+            preferBuiltins: true,
         }),
         replace({
             "process.env.NODE_ENV": JSON.stringify(prod ? "production" : "development"),
