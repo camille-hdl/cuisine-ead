@@ -10,6 +10,7 @@ import {
     previewXmlStringSelector,
     outputPipelineFnSelector,
     fullRecipeSelector,
+    correctionsNbSelector,
 } from "./selectors.js";
 
 export const mapStateToProps = (state: Map) => {
@@ -25,6 +26,7 @@ export const mapStateToProps = (state: Map) => {
         previewXmlString: previewXmlStringSelector(state),
         previewEnabled: state.get("previewEnabled"),
         fullRecipe: fullRecipeSelector(state),
+        correctionsNb: correctionsNbSelector(state),
     };
 };
 

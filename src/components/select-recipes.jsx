@@ -42,6 +42,7 @@ type Props = {
     xmlFiles: List,
     previewEnabled: boolean,
     corrections: Map,
+    correctionsNb: number,
     togglePreview: (p: boolean) => void,
     pipelineFn: (doc: any) => any,
     outputPipelineFn: (doc: any) => any,
@@ -88,7 +89,7 @@ export default function SelectRecipes(props: Props) {
                         <RecipeList {...props} availableRecipes={availableRecipes} />
                         <Divider />
                         <Typography variant="h6">{`${
-                            props.corrections.size
+                            props.correctionsNb
                         } corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                         <Divider />
@@ -159,7 +160,7 @@ export default function SelectRecipes(props: Props) {
                     }, recipesByCategories)}
                     <PaperSheet xs={12} sm={6} key={"stateful-recipes"}>
                         <Typography variant="h6">{`${
-                            props.corrections.size
+                            props.correctionsNb
                         } corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                     </PaperSheet>

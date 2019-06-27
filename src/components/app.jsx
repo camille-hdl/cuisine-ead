@@ -32,6 +32,7 @@ export type Props = {
     previewXmlString: string | null,
     previewEnabled: boolean,
     fullRecipe: Map,
+    correctionsNb: number,
     pipelineFn: (doc: any) => any,
     outputPipelineFn: (xmlStr: string) => string,
     addXmlFile: (info: AddXmlFileData) => void,

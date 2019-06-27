@@ -31,7 +31,7 @@ import type { Controlaccess } from "../types.js";
 import { replaceMSChars } from "./ms-chars.js";
 import type { List, Map } from "immutable";
 import { xpathFilter } from "./xml.js";
-import { getRange, replaceRange, trySetInnerHTML } from "./utils.js";
+import { getRange, replaceRange, trySetInnerHTML, getTagAndAttributes } from "./utils.js";
 
 export type Recipe = (doc: any) => any;
 
@@ -799,10 +799,13 @@ const correctionControlAccess = curry<ExecuteState, any>(
                     if (correction.get(terme).size > 0) {
                         correction.get(terme).forEach(nouveauTerme => {
                             const nouveauControlAccess = nouveauTerme.last();
-                            const el = doc.createElement(nouveauControlAccess);
+                            const { tag, attributes } = getTagAndAttributes(nouveauControlAccess);
+                            const el = doc.createElement(tag);
                             el.innerHTML = nouveauTerme.first();
-                            // put back the attributes
+                            // set the old attributes back
                             each(attrs, (attrValue, attrName) => el.setAttribute(attrName, attrValue));
+                            // add new attributes
+                            each(attributes, nouvelAttr => el.setAttribute(nouvelAttr[0], nouvelAttr[1]));
                             parent.appendChild(el);
                         });
                     }

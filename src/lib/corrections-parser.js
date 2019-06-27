@@ -7,6 +7,18 @@ const SEPARATOR = "/";
 const CA_SEPARATOR = "=>";
 
 /**
+ * Checks if the line is valid : has enough columns
+ */
+const checkLine = (line: any): boolean => {
+    if (typeof line.length === "undefined") return false;
+    if (line.length < 3) return false;
+    if (typeof line[0].split !== "function") return false;
+    if (typeof line[1].split !== "function") return false;
+    if (typeof line[2].split !== "function") return false;
+    return true;
+};
+
+/**
  * Find corrections for controlaccess tags
  * Returns a Map such as:
  * ```js
@@ -23,6 +35,8 @@ const CA_SEPARATOR = "=>";
 export default function updateCorrections(data: Array<Line>, initialCorrections: Map): Map {
     const newMap = {};
     forEach(line => {
+        // verifier la ligne
+        if (!checkLine(line)) return;
         const cas = line[0].split(CA_SEPARATOR);
         const originalCA = head(cas);
         const destinationCA = last(cas);

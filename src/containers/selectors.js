@@ -152,3 +152,14 @@ export const fullRecipeSelector = createSelector<Map, void, string, List, List, 
         });
     }
 );
+
+/**
+ * Returns the total number of corrections to be performed
+ */
+export const correctionsNbSelector = createSelector<Map, void, Map, number>(
+    correctionsSelector,
+    corrections =>
+        corrections.reduce((sum, terms, controlaccess) => {
+            return sum + terms.size;
+        }, 0)
+);

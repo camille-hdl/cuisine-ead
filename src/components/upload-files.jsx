@@ -17,6 +17,7 @@ import {
 } from "ramda";
 import { readXml } from "../lib/xml.js";
 import { openFile } from "../lib/utils.js";
+import type { AddXmlFileData } from "../types.js";
 import Papa from "papaparse";
 import PaperSheet from "./material/paper-sheet.jsx";
 import { List, Map, fromJS } from "immutable";
@@ -62,6 +63,7 @@ type Props = {
     corrections: Map,
     pipeline: List,
     outputPipeline: List,
+    correctionsNb: number,
     setPipeline: (pipeline: List) => void,
     setOutputPipeline: (pipeline: List) => void,
     addXmlFile: (info: AddXmlFileData) => void,
@@ -191,6 +193,15 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                         <BigIcon icon={"arrow_downward"} />
                                     )}
                                 </PaperSheet>
+                                {this.props.correctionsNb > 0 ? (
+                                    <PaperSheet xs={12}>
+                                        <Typography variant="h5" align="center" style={{ opacity: 0.5 }}>
+                                            {`${this.props.correctionsNb} correction${
+                                                this.props.correctionsNb > 1 ? "s" : ""
+                                            } de controlaccess`}
+                                        </Typography>
+                                    </PaperSheet>
+                                ) : null}
                             </Grid>
                         </Dropzone>
                     </div>
