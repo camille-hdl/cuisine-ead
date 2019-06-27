@@ -1,5 +1,5 @@
 //@flow
-import { last, take, forEach, trim, startsWith } from "ramda";
+import { last, head, tail, take, forEach, trim, startsWith } from "ramda";
 
 /**
  * Remove the old `encoding` attribute on the `xml` tag of the output.
@@ -124,4 +124,28 @@ export const trySetInnerHTML = (elem: Element, str: string): Element => {
         console.log("xml invalide", elem, str, e);
     }
     return elem;
+};
+
+/**
+ * Regular expression to match attributes in xpath-style syntax
+ */
+const attrsRE = /\[([^[\]]+)=([^[\]]+)/gm;
+/**
+ * Given a string `subject[role=role1][data-thing=thing1]`, returns an object:
+ * `{ tag: "subject", attributes: [ ["role", "role1"], ["data-thing", "thing1"] ] }`
+ */
+export const getTagAndAttributes = (str: string): { tag: string, attributes: Array<[string, string]> } => {
+    const tag = head(str.split("[")) || "";
+    const attributes = [];
+    if (str.split("[").length > 1) {
+        // has attributes
+        const attrString = ["", ...tail(str.split("["))].join("[");
+        let res = null;
+        while ((res = attrsRE.exec(attrString)) !== null) {
+            if (res && res.length >= 3) {
+                attributes.push([res[1], res[2]]);
+            }
+        }
+    }
+    return { tag, attributes };
 };

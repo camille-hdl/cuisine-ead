@@ -1,25 +1,31 @@
 /* eslint-disable */
-import { cleanOutputEncoding, genNewFilename, escapeCell, getRange, replaceRange } from "../../src/lib/utils.js";
+import {
+    cleanOutputEncoding,
+    genNewFilename,
+    escapeCell,
+    getRange,
+    replaceRange,
+    getTagAndAttributes,
+} from "../../src/lib/utils.js";
 
 test("cleanOutputEncoding - windows-1252", () => {
     expect(cleanOutputEncoding("<?xml encoding='Windows-1252' ?>", "windows-1252")).toEqual("<?xml  ?>");
-    expect(cleanOutputEncoding("<?xml encoding=\"windows-1252\" ?>", "windows-1252")).toEqual("<?xml  ?>");
+    expect(cleanOutputEncoding('<?xml encoding="windows-1252" ?>', "windows-1252")).toEqual("<?xml  ?>");
 });
 
 test("cleanOutputEncoding - ISO-8859-1", () => {
     expect(cleanOutputEncoding("<?xml encoding='iso-8859-1' ?>", "iso-8859-1")).toEqual("<?xml  ?>");
-    expect(cleanOutputEncoding("<?xml encoding=\"iso-8859-1\" ?>", "iso-8859-1")).toEqual("<?xml  ?>");
+    expect(cleanOutputEncoding('<?xml encoding="iso-8859-1" ?>', "iso-8859-1")).toEqual("<?xml  ?>");
     expect(cleanOutputEncoding("<?xml encoding='ISO-8859-1' ?>", "iso-8859-1")).toEqual("<?xml  ?>");
-    expect(cleanOutputEncoding("<?xml encoding=\"ISO-8859-1\" ?>", "iso-8859-1")).toEqual("<?xml  ?>");
+    expect(cleanOutputEncoding('<?xml encoding="ISO-8859-1" ?>', "iso-8859-1")).toEqual("<?xml  ?>");
 });
 
-
 test("cleanOutputEncoding - utf8", () => {
-    expect(cleanOutputEncoding("<?xml encoding=\"UTF-8\" ?>", "utf-8")).toEqual("<?xml  ?>");
+    expect(cleanOutputEncoding('<?xml encoding="UTF-8" ?>', "utf-8")).toEqual("<?xml  ?>");
     expect(cleanOutputEncoding("<?xml encoding='UTF-8' ?>", "utf-8")).toEqual("<?xml  ?>");
     expect(cleanOutputEncoding("<?xml encoding='utf-8' ?>", "utf-8")).toEqual("<?xml  ?>");
     expect(cleanOutputEncoding("<?xml encoding='utf8' ?>", "utf-8")).toEqual("<?xml  ?>");
-    expect(cleanOutputEncoding("<?xml encoding=\"utf8\" ?>", "utf-8")).toEqual("<?xml  ?>");
+    expect(cleanOutputEncoding('<?xml encoding="utf8" ?>', "utf-8")).toEqual("<?xml  ?>");
 });
 
 test("genNewFilename", () => {
@@ -29,8 +35,8 @@ test("genNewFilename", () => {
 
 test("escapeCell", () => {
     expect(escapeCell("123")).toEqual('"123"');
-    expect(escapeCell("aze\"rty")).toEqual('"aze""rty"');
-    expect(escapeCell("aze \"rt az \"\" l'aze- ay")).toEqual('"aze ""rt az "" l\'aze- ay"');
+    expect(escapeCell('aze"rty')).toEqual('"aze""rty"');
+    expect(escapeCell('aze "rt az "" l\'aze- ay')).toEqual('"aze ""rt az "" l\'aze- ay"');
 });
 
 test("getRange", () => {
@@ -52,4 +58,19 @@ test("replaceRange - padding and separator", () => {
     expect(replaceRange("3 P 290/1-/3", [2, 3], true, " à ")).toEqual("3 P 290 /2 à /3");
     expect(replaceRange("3 P 290 1-/3", [2, 3], true, " à ")).toEqual("3 P 290 /2 à /3");
     expect(replaceRange("3 P 290 /1-3", [2, 3], true, " à ")).toEqual("3 P 290 /2 à /3");
+});
+
+test("getTagAndAttributes", () => {
+    expect(getTagAndAttributes("subject[role=crime][role2=azé huhu 123]")).toEqual({
+        tag: "subject",
+        attributes: [["role", "crime"], ["role2", "azé huhu 123"]],
+    });
+    expect(getTagAndAttributes("subject[data-truc=bidule][role2=]")).toEqual({
+        tag: "subject",
+        attributes: [["data-truc", "bidule"]],
+    });
+    expect(getTagAndAttributes("persname")).toEqual({
+        tag: "persname",
+        attributes: [],
+    });
 });
