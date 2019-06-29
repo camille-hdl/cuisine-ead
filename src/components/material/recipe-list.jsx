@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import { List as ImmutableList, Map, fromJS } from "immutable";
 import { map } from "ramda";
 import Switch from "@material-ui/core/Switch";
-import { getLabel, getComplement, getDefaultArgs } from "../../lib/recipes-lib.js";
+import { getLabel, getComplement, getDefaultArgs } from "../../lib/recipes/recipes-lib.js";
 import RecipeArgs from "../recipes-args/recipe-args.jsx";
 
 const styles = theme => ({

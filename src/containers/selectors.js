@@ -1,7 +1,7 @@
 //@flow
 import { createSelector } from "reselect";
 import { Map, List } from "immutable";
-import getRecipeFn from "../lib/recipes.js";
+import getRecipeFn from "../lib/recipes/index.js";
 import getOutputRecipeFn from "../lib/output-recipes.js";
 import { pipe, compose, memoizeWith, take, split, identity, join } from "ramda";
 
