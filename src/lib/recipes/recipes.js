@@ -1,44 +1,30 @@
 //@flow
-import {
-    forEach,
-    filter,
-    last,
-    head,
-    take,
-    trim,
-    map as Rmap,
-    unnest,
-    equals,
-    find,
-    partition,
-    partialRight,
-    propEq,
-    curry,
-    pipe,
-} from "ramda";
+/**
+ * This file contains functions to transform or extract information from xml-ead `Document`s
+ */
+import { forEach, filter, last, take, trim, map as Rmap, equals, find, partition, curry, pipe } from "ramda";
 /**
  * Functions were written using lodashes `each`,
  * this deals with it
  */
-const each = (list, fn) => {
+const each = (list: Array<any> | { [key: string]: any }, fn) => {
     return forEach(fn, list);
 };
-const map = (list, fn) => {
+const map = (list: Array<any>, fn): Array<any> => {
     return Rmap(fn, list);
 };
 import capitalize from "capitalize";
-import type { Controlaccess } from "../types.js";
-import { replaceMSChars } from "./ms-chars.js";
-import type { List, Map } from "immutable";
-import { xpathFilter } from "./xml.js";
-import { getRange, replaceRange, trySetInnerHTML, getTagAndAttributes } from "./utils.js";
+import { replaceMSChars } from "../ms-chars.js";
+import { List, Map } from "immutable";
+import { xpathFilter } from "../xml.js";
+import { getRange, replaceRange, trySetInnerHTML, getTagAndAttributes } from "../utils.js";
 
 export type Recipe = (doc: any) => any;
 
 /**
  * Contains a single property: `corrections: Map`
  */
-type ExecuteState = Map;
+export type ExecuteState = Map;
 
 export const supprimerLb = () => (doc: any): any => {
     const lbs = xpathFilter(doc, "//lb");
@@ -415,7 +401,7 @@ export const supprimerLangusage = () => (doc: any): any => {
     return doc;
 };
 
-const getAttributesMap = (element: Element): { [key: string]: string } => {
+export const getAttributesMap = (element: Element): { [key: string]: string } => {
     const attrs = {};
     if (element.hasAttributes()) {
         for (let attr of element.attributes) {
@@ -749,7 +735,7 @@ export const traitementsLigeo = () =>
 /**
  * Détermine si un unitid de niveau bas existe dans le document
  */
-const unitidExistsInDoc = (doc: any, unitid: string): boolean => {
+export const unitidExistsInDoc = (doc: any, unitid: string): boolean => {
     let nsResolver = doc.createNSResolver(
         doc.ownerDocument == null ? doc.documentElement : doc.ownerDocument.documentElement
     );
@@ -774,7 +760,7 @@ const unitidExistsInDoc = (doc: any, unitid: string): boolean => {
  * Corriger les controlacces à partir des corrections fournies par csv
  * This function is curryable
  */
-const correctionControlAccess = curry<ExecuteState, any>(
+export const correctionControlAccess = curry<ExecuteState, any>(
     (state: ExecuteState, doc: any): any => {
         state.get("corrections").forEach((correction: Map, controlaccess: string) => {
             if (!controlaccess || controlaccess.trim() === "") return;
@@ -816,109 +802,29 @@ const correctionControlAccess = curry<ExecuteState, any>(
     }
 );
 
-export const extractCA = (doc: any): Array<Controlaccess> => {
+/**
+ * Extracts controlaccess children with their attributes
+ * we use Immutable.js data structures for performance.
+ * Each element in the final List is a List with 3 elements:
+ * `[tagName, content, attribute:value]`.
+ * If a tag has N attributes, it will output N elements in the final List.
+ */
+export const extractCA = (doc: any): List<List> => {
     const elems = xpathFilter(doc, "//controlaccess/*");
-    return unnest(
+    return List(
         map(filter(elem => elem.innerHTML.trim && elem.innerHTML.trim() !== "", elems), elem => {
-            const attrs = [];
+            let attrs = List([]);
             if (elem.hasAttributes()) {
                 const a = elem.attributes;
                 for (let i = 0, l = a.length; i < l; i++) {
-                    attrs.push([a[i].name, a[i].value].join(":"));
+                    attrs = attrs.push([a[i].name, a[i].value].join(":"));
                 }
             }
-            if (attrs.length <= 0) {
-                return [[elem.tagName, elem.innerHTML.trim(), ""]];
+            if (attrs.size <= 0) {
+                return List([List([elem.tagName, elem.innerHTML.trim(), ""])]);
             } else {
-                return map(attrs, attr => [elem.tagName, elem.innerHTML.trim(), attr]);
+                return attrs.map(attr => List([elem.tagName, elem.innerHTML.trim(), attr]));
             }
         })
-    );
-};
-
-/**
- * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
- * the modified `Document`.
- * The first function is called with the `args` object of the recipe.
- * Each element in the array is an object `{ key: string, fn: (args: any) => (doc: Document) => Document }`
- */
-export const getRecipes = () => {
-    return [
-        { key: "supprimer_lb", fn: supprimerLb },
-        { key: "supprimer_label_vide", fn: supprimerLabelsVides },
-        { key: "remplacer_sep_plage", fn: remplacePlageSeparator },
-        { key: "remplacer_sep_ext", fn: remplaceExtensionSeparator },
-        { key: "supprimer_commentaire", fn: supprimeComments },
-        { key: "remplacer_date_0", fn: replaceUnitDateNd },
-        { key: "vider_unitdate_normal", fn: viderUnitDateNormal },
-        { key: "nettoyer_type", fn: nettoyerAttrType },
-        { key: "nettoyer_type_titre", fn: nettoyerAttrTypeTitre },
-        { key: "ajouter_altrender", fn: ajouterAltRender },
-        { key: "corriger_accessrestrict_ligeo", fn: corrigerAccessRestrictLigeo },
-        { key: "capitalize_persname", fn: capitalizePersname },
-        { key: "supprimer_whitespace", fn: supprimeWhitespace },
-        { key: "remplacer_windows", fn: remplacerCharWindows },
-        { key: "supprimer_controlaccess", fn: supprimeControlAccess },
-        { key: "nettoyer_cotes_consultation", fn: nettoyerCoteConsultation },
-        { key: "nettoyer_emph_unittitle", fn: nettoyerUnitTitleEmph },
-        { key: "nettoyer_addressline", fn: nettoyerAddressline },
-        { key: "supprimer_internal", fn: supprimerInternal },
-        { key: "ajouter_scopecontent_audience", fn: ajouterScopecontentAudience },
-        { key: "completer_did_vides", fn: completerDidVides },
-        { key: "dedoublonner_indexation", fn: dedoublonnerIndexation },
-        { key: "supprimer_ca_vides", fn: supprimerControlaccessVides },
-        { key: "supprimer_head_vides", fn: supprimerHeadVides },
-        { key: "ajouter_level_file", fn: ajouterLevelFile },
-        { key: "geog_source_geog", fn: geognameSourceGeo },
-        { key: "extent_unit", fn: extentUnit },
-        { key: "dimensions_type_unit", fn: dimensionsTypeUnit },
-        { key: "corpname_to_subject", fn: corpnameToSubjectW },
-        { key: "subject_ajouter_sourceW", fn: ajouterSubjectSourceW },
-        { key: "corriger_source_contexte", fn: corrigerSubjectContexteHisto },
-        { key: "corriger_mat_spec_donnees", fn: corrigerMatSpecDonnees },
-        { key: "corriger_deplacer_genreform", fn: corrigerGenreformPhysdesc },
-        { key: "pack_ligeo", fn: traitementsLigeo },
-        { key: "ecraser_publisher", fn: ecraserPublisher },
-        { key: "ecraser_repository", fn: ecraserRepository },
-        { key: "ecraser_creation", fn: ecraserCreation },
-        { key: "ecraser_origination", fn: ecraserOrigination },
-        { key: "ecraser_date", fn: ecraserDate },
-        { key: "modifier_dsc_type", fn: modifierDscOthertype },
-        { key: "supprimer_genreform_typir", fn: supprimerGenreformTypir },
-        { key: "supprimer_physdesc_archdesc", fn: supprimerPhysDidArchdesc },
-        { key: "supprimer_langusage", fn: supprimerLangusage },
-    ];
-};
-
-const _findRecipe = partialRight(find, [getRecipes()]);
-export const findRecipe = (key: string): Recipe | undefined => _findRecipe(propEq("key", key));
-
-/**
- * Returns an array of 'stateful' recipes : functions that take a DOM `Document` and the app state
- * as arguments, and return the modified `Document`.
- * * Each element in the array is an object `{ key: string, fn: (state: ExecuteState, doc: Document) => Document }` where `fn` is `curry`ed
- * * The `state` Map contains a property `corrections: Map`.
- */
-export const getStatefulRecipes = () => {
-    return [{ key: "correction_controlaccess", fn: correctionControlAccess }];
-};
-
-const _findStatefulRecipe = partialRight(find, [getStatefulRecipes()]);
-export const findStatefulRecipe = (key: string): Recipe | undefined => _findStatefulRecipe(propEq("key", key));
-
-/**
- * Given a `recipe` (`Map<{key: string, args: any}>`), this will return the corresponding function `(doc: Document) => document`
- * to apply a modification on a DOM `Document`.
- * If the function needs the application state to work, it will be provided automatically.
- */
-export default (recipe: Map, state: ExecuteState): ((doc: any) => any) => {
-    const recipeKey = recipe.get("key");
-    const recipeArgs = recipe.get("args");
-    if (findRecipe(recipeKey)) {
-        return findRecipe(recipeKey).fn(recipeArgs);
-    }
-    if (findStatefulRecipe(recipeKey)) {
-        return findStatefulRecipe(recipeKey).fn(state);
-    }
-    throw new Error("Unknown recipe: " + recipeKey);
+    ).flatten(true);
 };

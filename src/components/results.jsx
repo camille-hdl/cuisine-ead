@@ -3,6 +3,7 @@ import React from "react";
 import Paper from "@material-ui/core/Paper";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
+import { Set } from "immutable";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
@@ -14,7 +15,7 @@ import { map, uniq } from "ramda";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { withStyles } from "@material-ui/core/styles";
-import { extractCA } from "../lib/recipes.js";
+import { extractCA } from "../lib/recipes/recipes.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
 import JSZip from "jszip";
@@ -85,13 +86,13 @@ class Results extends React.PureComponent<Props & { classes: any }> {
         }
     };
     /**
-     * Export controlaccess tags and their content in a csv file
+     * Export controlaccess tags and their content in a csv file.
+     * We use `Immutable.Set` for performance.
      */
     downloadControlAccess = () => {
         const controlaccesses = this.props.xmlFiles.reduce((acc: Array<any>, xmlFile: Map): Array<any> => {
-            const output = this.props.pipelineFn(xmlFile);
-            return [...acc, ...extractCA(output)];
-        }, []);
+            return acc.concat(extractCA(this.props.pipelineFn(xmlFile)).toSet());
+        }, Set([]));
         FileSaver.saveAs(
             new Blob(
                 [
@@ -99,7 +100,7 @@ class Results extends React.PureComponent<Props & { classes: any }> {
                         ["controlaccess", "valeur", "attribut"].join(";"),
                         ...map(ligne => {
                             return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
-                        }, uniq(controlaccesses)),
+                        }, controlaccesses.toJS()),
                     ].join("\n"),
                 ],
                 { type: "text/plain;charset=utf-8" }

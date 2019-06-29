@@ -3,7 +3,7 @@ import React from "react";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
 import Grid from "./material/grid.jsx";
-import { getRecipes, getStatefulRecipes } from "../lib/recipes.js";
+import { getRecipes, getStatefulRecipes } from "../lib/recipes/index.js";
 import { getRecipes as getOutputRecipes } from "../lib/output-recipes.js";
 import RecipeList from "./material/recipe-list.jsx";
 import OutputRecipeList from "./material/output-recipe-list.jsx";
@@ -22,7 +22,7 @@ import useMedia from "react-use/lib/useMedia";
 import ErrorCatcher from "./error-catcher.jsx";
 import AppStepper from "./material/stepper.jsx";
 import SelectPreviewFile from "./material/select-preview.jsx";
-import { getCategory } from "../lib/recipes-lib.js";
+import { getCategory } from "../lib/recipes/recipes-lib.js";
 
 const availableRecipes = getRecipes();
 const availaleStatefulRecipes = getStatefulRecipes();

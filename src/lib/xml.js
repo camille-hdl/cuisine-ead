@@ -75,7 +75,7 @@ export const readXml = (file: any, loadCallback: (doc: any) => void) => {
 /**
  * `xpathFilter(doc, query)` ou `xpathFilter(doc, node, query)`
  */
-export const xpathFilter = (doc: any, ...args: [string] | [Element, string]): Array<any> => {
+export const xpathFilter = (doc: any, ...args: [string] | [Element, string]): Array<Element> => {
     const query = args.length === 1 ? head(args) : last(args);
     const contextNode = args.length > 1 ? head(args) : doc;
     let nsResolver = doc.createNSResolver(
