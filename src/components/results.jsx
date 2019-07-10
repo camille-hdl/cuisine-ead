@@ -33,6 +33,12 @@ const styles = theme => ({
 });
 
 /**
+ * Byte order mark
+ * https://stackoverflow.com/questions/17879198/adding-utf-8-bom-to-string-blob
+ */
+const BOM = "\ufeff";
+
+/**
  * Download the files after having applied the pipeline to it
  */
 class Results extends React.PureComponent<Props & { classes: any }> {
@@ -96,14 +102,15 @@ class Results extends React.PureComponent<Props & { classes: any }> {
         FileSaver.saveAs(
             new Blob(
                 [
-                    [
-                        ["controlaccess", "valeur", "attribut"].join(";"),
-                        ...map(ligne => {
-                            return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
-                        }, controlaccesses.toJS()),
-                    ].join("\n"),
+                    BOM +
+                        [
+                            ["controlaccess", "valeur", "attribut"].join(";"),
+                            ...map(ligne => {
+                                return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
+                            }, controlaccesses.toJS()),
+                        ].join("\n"),
                 ],
-                { type: "text/plain;charset=utf-8" }
+                { type: "text/plain;charset=utf-8+bom" }
             ),
             "controlaccess.csv"
         );
