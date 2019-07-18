@@ -1,4 +1,8 @@
 //@flow
+/**
+ * Component implementing `componentDidCatch`
+ */
+
 import React from "react";
 import ErrorMessage from "./material/error-message.jsx";
 
@@ -9,7 +13,6 @@ type Props = {
 type State = {
     hasError: boolean,
 };
-
 export default class ErrorCatcher extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);

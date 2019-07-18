@@ -1,4 +1,8 @@
 //@flow
+/**
+ * Homepage, start button and help text
+ */
+
 import React, { useState } from "react";
 import { NavLink as RouterLink } from "react-router-dom";
 import OutlinedButton from "./material/outlined-button.jsx";
@@ -40,9 +44,6 @@ const styles = {
 };
 const UploadLink = props => <RouterLink to="/upload" {...props} />;
 
-/**
- * homepage and start button
- */
 function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
     const [changelogExpanded, toggleChangelog] = useState(false);
     const [csvExampleExpanded, toggleCsvExampleExpanded] = useState(false);
