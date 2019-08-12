@@ -68,6 +68,7 @@ const getPluginsConfig = (prod, mini) => {
                     "MuiThemeProvider",
                 ],
                 "./node_modules/react-is/index.js": ["isValidElementType"],
+                "./node_modules/react-redux/node_modules/react-is/index.js": ["isValidElementType"],
             },
         }),
         babel({
