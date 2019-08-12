@@ -6,6 +6,7 @@ if (!jschardet) throw "jschardet missing";
 
 let wasmInstance = null;
 /**
+ * Returns the WASM instance, after having created it if necessary.
  * We only need to create the WASM instance once
  */
 const getWASMInstance = (callback: (instance: any) => void) => {
@@ -73,7 +74,8 @@ export const readXml = (file: any, loadCallback: (doc: any) => void) => {
 };
 
 /**
- * `xpathFilter(doc, query)` ou `xpathFilter(doc, node, query)`
+ * Wrapper around `Document.evaluate`. Returns an array without `null` values.
+ * `xpathFilter(doc, query)` or `xpathFilter(doc, node, query)`
  */
 export const xpathFilter = (doc: any, ...args: [string] | [Element, string]): Array<Element> => {
     const query = args.length === 1 ? head(args) : last(args);

@@ -1,4 +1,9 @@
 //@flow
+/**
+ * View on which the user downloads
+ * the files after having applied the pipeline of recipes
+ */
+
 import React from "react";
 import Paper from "@material-ui/core/Paper";
 import PaperSheet from "./material/paper-sheet.jsx";
@@ -11,7 +16,7 @@ import OutlinedButton from "./material/outlined-button.jsx";
 import AppStepper from "./material/stepper.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 import FileSaver from "file-saver";
-import { map, uniq } from "ramda";
+import { map } from "ramda";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { withStyles } from "@material-ui/core/styles";
@@ -38,9 +43,6 @@ const styles = theme => ({
  */
 const BOM = "\ufeff";
 
-/**
- * Download the files after having applied the pipeline to it
- */
 class Results extends React.PureComponent<Props & { classes: any }> {
     /**
      * Save the xmlFiles after having applied the pipeline to them
@@ -115,6 +117,10 @@ class Results extends React.PureComponent<Props & { classes: any }> {
             "controlaccess.csv"
         );
     };
+    /**
+     * Returns a json representation of the pipeline + outputPipeline
+     * so that the user can re-use it as a preset
+     */
     getFullRecipe = (): string => {
         return JSON.stringify(this.props.fullRecipe.toJS());
     };

@@ -1,6 +1,6 @@
 //@flow
 /**
- * Functions applied *after* xml documents have been serialized to strings
+ * Functions applied *after* xml documents have been serialized to strings.
  */
 
 import format from "./xml-formatter.js";

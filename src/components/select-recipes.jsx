@@ -1,4 +1,9 @@
 //@flow
+/**
+ * View on which the user picks which operation to add to the pipeline and
+ * preview the changes on a file
+ */
+
 import React from "react";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
@@ -27,6 +32,10 @@ import { getCategory } from "../lib/recipes/recipes-lib.js";
 const availableRecipes = getRecipes();
 const availaleStatefulRecipes = getStatefulRecipes();
 const categories = sortBy(ascend)(uniq(map(r => getCategory(r.key), availableRecipes)));
+/**
+ * Partition recipes by category
+ * for presentation
+ */
 const recipesByCategories = map(c => {
     return {
         category: c,
@@ -34,6 +43,10 @@ const recipesByCategories = map(c => {
     };
 }, categories);
 const availableOutputRecipes = getOutputRecipes();
+
+/**
+ * See src/components/app.jsx
+ */
 type Props = {
     pipeline: List,
     outputPipeline: List,
@@ -53,9 +66,6 @@ type Props = {
 const PreviousStepLink = props => <RouterLink to="/upload" {...props} data-cy="prev-step-link" />;
 const NextStepLink = props => <RouterLink to="/resultats" {...props} data-cy="next-step-link" />;
 
-/**
- * Pick which operation to add to the pipeline and preview the changes on a file
- */
 export default function SelectRecipes(props: Props) {
     const isWide = useMedia("(min-width: 920px");
     const backLink = <OutlinedButton linkComponent={PreviousStepLink}>{"← fichiers"}</OutlinedButton>;

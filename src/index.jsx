@@ -12,6 +12,9 @@ import { BrowserRouter } from "react-router-dom";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 import { version } from "../package.json";
 
+/**
+ * See src/components/app.jsx for details on each store property
+ */
 export const getInitialState = () => {
     return {
         version: version,
