@@ -188,37 +188,42 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                 }
                             }}
                         >
-                            <Grid container>
-                                <PaperSheet xs={12}>
-                                    <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
-                                        {"Déposer des fichiers"}
-                                    </Typography>
-                                    <Typography variant="h4" align="center" style={{ opacity: 0.5 }}>
-                                        {"xml-ead ou csv (corrections)"}
-                                    </Typography>
-                                    {this.props.xmlFiles.size > 0 ? (
-                                        <PaperSheet xs={12} data-cy="file-list">
-                                            <FileList
-                                                xmlFiles={this.props.xmlFiles}
-                                                onRemove={xmlFile => {
-                                                    this.props.removeXmlFile(xmlFile.get("hash"));
-                                                }}
-                                            />
+                            {({ getRootProps, getInputProps }) => (
+                                <div {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    <Grid container>
+                                        <PaperSheet xs={12}>
+                                            <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
+                                                {"Déposer des fichiers"}
+                                            </Typography>
+                                            <Typography variant="h4" align="center" style={{ opacity: 0.5 }}>
+                                                {"xml-ead ou csv (corrections)"}
+                                            </Typography>
+                                            {this.props.xmlFiles.size > 0 ? (
+                                                <PaperSheet xs={12} data-cy="file-list">
+                                                    <FileList
+                                                        xmlFiles={this.props.xmlFiles}
+                                                        onRemove={xmlFile => {
+                                                            this.props.removeXmlFile(xmlFile.get("hash"));
+                                                        }}
+                                                    />
+                                                </PaperSheet>
+                                            ) : (
+                                                <BigIcon icon={"arrow_downward"} />
+                                            )}
                                         </PaperSheet>
-                                    ) : (
-                                        <BigIcon icon={"arrow_downward"} />
-                                    )}
-                                </PaperSheet>
-                                {this.props.correctionsNb > 0 ? (
-                                    <PaperSheet xs={12}>
-                                        <Typography variant="h5" align="center" style={{ opacity: 0.5 }}>
-                                            {`${this.props.correctionsNb} correction${
-                                                this.props.correctionsNb > 1 ? "s" : ""
-                                            } de controlaccess`}
-                                        </Typography>
-                                    </PaperSheet>
-                                ) : null}
-                            </Grid>
+                                        {this.props.correctionsNb > 0 ? (
+                                            <PaperSheet xs={12}>
+                                                <Typography variant="h5" align="center" style={{ opacity: 0.5 }}>
+                                                    {`${this.props.correctionsNb} correction${
+                                                        this.props.correctionsNb > 1 ? "s" : ""
+                                                    } de controlaccess`}
+                                                </Typography>
+                                            </PaperSheet>
+                                        ) : null}
+                                    </Grid>
+                                </div>
+                            )}
                         </Dropzone>
                     </div>
                 </ErrorCatcher>

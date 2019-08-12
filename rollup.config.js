@@ -53,8 +53,10 @@ const getPluginsConfig = (prod, mini) => {
                     "useImperativeHandle",
                     "useDebugValue",
                     "memo",
+                    "forwardRef",
+                    "Fragment",
                 ],
-                "./node_modules/react-dom/index.js": ["findDOMNode"],
+                "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates"],
                 "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS"],
                 "./node_modules/babel-runtime/node_modules/core-js/library/modules/es6.object.to-string.js": [
                     "default",
@@ -68,7 +70,10 @@ const getPluginsConfig = (prod, mini) => {
                     "MuiThemeProvider",
                 ],
                 "./node_modules/react-is/index.js": ["isValidElementType"],
-                "./node_modules/react-redux/node_modules/react-is/index.js": ["isValidElementType"],
+                "./node_modules/react-redux/node_modules/react-is/index.js": [
+                    "isValidElementType",
+                    "isContextConsumer",
+                ],
             },
         }),
         babel({
