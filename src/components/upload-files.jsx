@@ -189,7 +189,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                             }}
                         >
                             {({ getRootProps, getInputProps }) => (
-                                <div {...getRootProps()}>
+                                <div data-cy="dropzone" {...getRootProps()}>
                                     <input {...getInputProps()} />
                                     <Grid container>
                                         <PaperSheet xs={12}>
