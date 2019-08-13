@@ -14,7 +14,13 @@ describe('Happy path', function () {
         }
     });
     it("Add and modify a file", function () {
-        
+        cy.on('uncaught:exception', (err, runnable) => {
+            /**
+             * DO NOT REMOVE
+             * otherwise cypress crashes with electron
+             */
+            return false
+        });
         cy.visit('/');
         cy.get("h1").should("contain", "Cuisine EAD");
 
