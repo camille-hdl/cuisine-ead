@@ -1,5 +1,8 @@
 //@flow
-
+/**
+ * Main component of the app.
+ * Handles routing and views
+ */
 import React, { Suspense, lazy } from "react";
 import MenuBar from "./material/menu-bar.jsx";
 import { List, Map } from "immutable";
@@ -15,6 +18,9 @@ const muiTheme = createMuiTheme({
     typography: { useNextVariants: true },
 });
 
+/**
+ * react-router Route
+ */
 type RouteProps = {
     location: {
         pathname: string,
@@ -22,29 +28,87 @@ type RouteProps = {
     history: any,
     match: any,
 };
+
+/**
+ * Props provided by the container src/containers/app.jsx
+ */
 export type Props = {
+    /**
+     * Version of the app.
+     * Can be use to validate restored state.
+     */
     version: string,
+    /**
+     * List of Files to be processed
+     */
     xmlFiles: List,
+    /**
+     * List of recipes (and their settings) to apply to `Document`s
+     */
     pipeline: List,
+    /**
+     * List of recipes to apply to xml strings (applied after `pipeline`)
+     */
     outputPipeline: List,
+    /**
+     * Map of corrections to apply to the files
+     * see src/lib/corrections-parser.js
+     */
     corrections: Map,
+    /**
+     * File currectly being previewed.
+     */
     previewXmlFile: Map | null,
+    /**
+     * String reprensentation of the file being previewed
+     */
     previewXmlString: string | null,
     previewEnabled: boolean,
+    /**
+     * Object representation of the pipeline, outputPipeline and version.
+     * Can be exported to JSON
+     */
     fullRecipe: Map,
+    /**
+     * Approximate number of available corrections (to be displayed)
+     */
     correctionsNb: number,
+    /**
+     * Function that maps `Document`s to processed `Document`s,
+     * given the current recipes and settings
+     */
     pipelineFn: (doc: any) => any,
+    /**
+     * Function that maps xml strings to processed xml strings,
+     * givent the current settings
+     */
     outputPipelineFn: (xmlStr: string) => string,
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
+    /**
+     * Updates the recipes to apply to `Document`s
+     */
     setPipeline: (p: List) => void,
+    /**
+     * Updates the recipes to apply to xml strings
+     */
     setOutputPipeline: (p: List) => void,
+    /**
+     * Defines which file is being previewed
+     */
     setPreviewHash: (h: string) => void,
     togglePreview: (p: boolean) => void,
+    /**
+     * Updates the corrections map
+     */
     updateCorrections: (corrections: Array<string>) => void,
 } & RouteProps;
 
 const UploadFiles = lazy(() => import("./upload-files.jsx"));
+/**
+ * View on which the user can drag & drop files
+ * to be processed
+ */
 const AsyncUploadFiles = function AsyncUploadFiles(props) {
     return (
         <Suspense fallback={<LoadingComponent />}>
@@ -55,6 +119,10 @@ const AsyncUploadFiles = function AsyncUploadFiles(props) {
     );
 };
 const SelectRecipes = lazy(() => import("./select-recipes.jsx"));
+/**
+ * View on which the user chooses which recipes they want
+ * to apply
+ */
 const AsyncSelectRecipes = props => {
     return (
         <Suspense fallback={<LoadingComponent />}>
@@ -65,6 +133,9 @@ const AsyncSelectRecipes = props => {
     );
 };
 const Results = lazy(() => import("./results.jsx"));
+/**
+ * View on which the user can download processed files
+ */
 const AsyncResults = props => {
     return (
         <Suspense fallback={<LoadingComponent />}>
@@ -75,6 +146,10 @@ const AsyncResults = props => {
     );
 };
 
+/**
+ * Main component.
+ * Handles react-router and displays the current view
+ */
 export default class App extends React.PureComponent<Props> {
     render() {
         const hasXmlFiles = this.props.xmlFiles.size > 0;

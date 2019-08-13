@@ -4,7 +4,15 @@
  * Add a file, add a few recipes, go to the last page
  */
 describe('Happy path', function () {
-   
+    beforeEach(() => {
+        if (window.navigator && navigator.serviceWorker) {
+          navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(registration => {
+              registration.unregister();
+            });
+          });
+        }
+    });
     it("Add and modify a file", function () {
         
         cy.visit('/');
@@ -18,6 +26,7 @@ describe('Happy path', function () {
             dataTransfer: {
                 files: [
                 ],
+                types:["Files"]
             },
         };
         cy.fixture('example-ead.xml', 'base64').then((picture) => {
@@ -26,11 +35,7 @@ describe('Happy path', function () {
                 dropEvent.dataTransfer.files.push(testFile);
             });
         });
-        cy.on('uncaught:exception', (err, runnable) => {
-            return false
-        });
-        cy.get('[data-cy=file-uploader]').children().trigger('drop', dropEvent);
-        cy.upload_file('example-ead.xml', '[data-cy=file-uploader] [type="file"]', "application/xml");
+        cy.get('[data-cy=dropzone]').trigger('drop', dropEvent);
         /**
          * The file should have been added
          */

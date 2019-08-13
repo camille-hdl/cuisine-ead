@@ -1,4 +1,12 @@
 //@flow
+/**
+ * View on which the user can add files via drag & drop or explorer
+ *
+ * * xml-ead files to process
+ * * csv files for corrections
+ * * json files to use recipe presets
+ */
+
 import React from "react";
 import Dropzone from "react-dropzone";
 import {
@@ -30,7 +38,14 @@ import OutlinedButton from "./material/outlined-button.jsx";
 import AppStepper from "./material/stepper.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 
+/**
+ * mime-types for xml files (assuming xml-EAD)
+ */
 const xmlTypes = ["application/xml", "text/xml"];
+/**
+ * mime-types for CSV files,
+ * assuming the format is compatible with corrections
+ */
 const csvTypes = [
     "text/plain",
     "text/csv",
@@ -58,6 +73,9 @@ const mergeDeepAll = reduce(
     {}
 );
 
+/**
+ * See src/components/app.jsx
+ */
 type Props = {
     xmlFiles: List,
     corrections: Map,
@@ -72,9 +90,7 @@ type Props = {
 };
 
 const NextStepLink = props => <RouterLink to="/recettes" {...props} data-cy="next-step-link" />;
-/**
- * Add xml, csv and json files
- */
+
 export default class UploadFiles extends React.PureComponent<Props> {
     /**
      * If the user provides a JSON file, we use it as a preset of recipes
@@ -172,37 +188,42 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                 }
                             }}
                         >
-                            <Grid container>
-                                <PaperSheet xs={12}>
-                                    <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
-                                        {"Déposer des fichiers"}
-                                    </Typography>
-                                    <Typography variant="h4" align="center" style={{ opacity: 0.5 }}>
-                                        {"xml-ead ou csv (corrections)"}
-                                    </Typography>
-                                    {this.props.xmlFiles.size > 0 ? (
-                                        <PaperSheet xs={12} data-cy="file-list">
-                                            <FileList
-                                                xmlFiles={this.props.xmlFiles}
-                                                onRemove={xmlFile => {
-                                                    this.props.removeXmlFile(xmlFile.get("hash"));
-                                                }}
-                                            />
+                            {({ getRootProps, getInputProps }) => (
+                                <div data-cy="dropzone" {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    <Grid container>
+                                        <PaperSheet xs={12}>
+                                            <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
+                                                {"Déposer des fichiers"}
+                                            </Typography>
+                                            <Typography variant="h4" align="center" style={{ opacity: 0.5 }}>
+                                                {"xml-ead ou csv (corrections)"}
+                                            </Typography>
+                                            {this.props.xmlFiles.size > 0 ? (
+                                                <PaperSheet xs={12} data-cy="file-list">
+                                                    <FileList
+                                                        xmlFiles={this.props.xmlFiles}
+                                                        onRemove={xmlFile => {
+                                                            this.props.removeXmlFile(xmlFile.get("hash"));
+                                                        }}
+                                                    />
+                                                </PaperSheet>
+                                            ) : (
+                                                <BigIcon icon={"arrow_downward"} />
+                                            )}
                                         </PaperSheet>
-                                    ) : (
-                                        <BigIcon icon={"arrow_downward"} />
-                                    )}
-                                </PaperSheet>
-                                {this.props.correctionsNb > 0 ? (
-                                    <PaperSheet xs={12}>
-                                        <Typography variant="h5" align="center" style={{ opacity: 0.5 }}>
-                                            {`${this.props.correctionsNb} correction${
-                                                this.props.correctionsNb > 1 ? "s" : ""
-                                            } de controlaccess`}
-                                        </Typography>
-                                    </PaperSheet>
-                                ) : null}
-                            </Grid>
+                                        {this.props.correctionsNb > 0 ? (
+                                            <PaperSheet xs={12}>
+                                                <Typography variant="h5" align="center" style={{ opacity: 0.5 }}>
+                                                    {`${this.props.correctionsNb} correction${
+                                                        this.props.correctionsNb > 1 ? "s" : ""
+                                                    } de controlaccess`}
+                                                </Typography>
+                                            </PaperSheet>
+                                        ) : null}
+                                    </Grid>
+                                </div>
+                            )}
                         </Dropzone>
                     </div>
                 </ErrorCatcher>

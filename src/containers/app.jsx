@@ -14,6 +14,10 @@ import {
 } from "./selectors.js";
 
 export const mapStateToProps = (state: Map) => {
+    /**
+     * see src/components/app.jsx for details
+     * on each property
+     */
     return {
         version: state.get("version"),
         xmlFiles: state.get("xmlFiles"),

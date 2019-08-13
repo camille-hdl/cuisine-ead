@@ -1,4 +1,7 @@
 //@flow
+/**
+ * Redux action creators
+ */
 
 import type { Map, List } from "immutable";
 import type { AddXmlFileData } from "../types.js";

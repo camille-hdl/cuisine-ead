@@ -28,10 +28,16 @@ const updateCorrectionsReducer = (state: Map, data: Array<string>): Map => {
     return state.set("corrections", updateCorrections(data, state.get("corrections")));
 };
 
+/**
+ * changes the settings of `pipeline` (functions applied to `Documents`)
+ */
 const setPipelineReducer = (state: Map, data: List): Map => {
     return state.set("pipeline", data);
 };
 
+/**
+ * Changes the settings of `oututPipeline` (functions applied to xml strings)
+ */
 const setOutputPipelinereducer = (state: Map, data: List): Map => {
     return state.set("outputPipeline", data);
 };
