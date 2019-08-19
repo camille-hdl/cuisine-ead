@@ -30,7 +30,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.2",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "^24.9.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "cypress": "^3.4.1",
     "eslint": "^6.1.0",
