@@ -98,9 +98,7 @@ export default function SelectRecipes(props: Props) {
                         </div>
                         <RecipeList {...props} availableRecipes={availableRecipes} />
                         <Divider />
-                        <Typography variant="h6">{`${
-                            props.correctionsNb
-                        } corrections de controlaccess disponibles`}</Typography>
+                        <Typography variant="h6">{`${props.correctionsNb} corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                         <Divider />
                         <Typography variant="h6">{"Assaisonnements"}</Typography>
@@ -169,9 +167,7 @@ export default function SelectRecipes(props: Props) {
                         );
                     }, recipesByCategories)}
                     <PaperSheet xs={12} sm={6} key={"stateful-recipes"}>
-                        <Typography variant="h6">{`${
-                            props.correctionsNb
-                        } corrections de controlaccess disponibles`}</Typography>
+                        <Typography variant="h6">{`${props.correctionsNb} corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                     </PaperSheet>
                     <PaperSheet xs={12} sm={6} key={"output-recipes"}>

@@ -18,7 +18,8 @@
     "cypress:install": "cypress install",
     "jest": "jest",
     "predeploy": "CI=1 npm i cypress",
-    "deploy": "npm run build"
+    "deploy": "npm run build",
+    "prettier": "prettier --write src/**/*.{js,jsx}"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",

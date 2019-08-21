@@ -125,7 +125,6 @@ export default function format(xml, options) {
     options.collapseContent = options.collapseContent === true;
     options.newLine = options.newLine || NEWLINE;
 
-
     var parsedXml = parse(xml, { stripComments: options.stripComments });
 
     var output = { content: "", level: 0, options: options };
