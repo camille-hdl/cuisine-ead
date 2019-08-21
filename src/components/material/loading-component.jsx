@@ -9,7 +9,7 @@ const styles = theme => ({
     },
 });
 
-function LoadingComponent(props) {
+function LoadingComponent(props: { classes: { [className: string]: string } }) {
     const { classes } = props;
     return (
         <div>

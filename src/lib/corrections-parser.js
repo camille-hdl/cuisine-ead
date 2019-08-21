@@ -32,7 +32,7 @@ const checkLine = (line: any): boolean => {
  * }
  * ```
  */
-export default function updateCorrections(data: Array<Line>, initialCorrections: Map): Map {
+export default function updateCorrections(data: Array<Line>, initialCorrections: Map<string, any>): Map<string, any> {
     const newMap = {};
     forEach(line => {
         // verifier la ligne
@@ -55,5 +55,10 @@ export default function updateCorrections(data: Array<Line>, initialCorrections:
             );
         }
     }, data);
-    return initialCorrections.mergeDeep(fromJS(newMap));
+    const newImmutableMap = fromJS(newMap);
+    if (Map.isMap(newImmutableMap)) {
+        return initialCorrections.mergeDeep(newImmutableMap);
+    } else {
+        throw new Error("newImmutableMap isn't a Immutable.Map");
+    }
 }

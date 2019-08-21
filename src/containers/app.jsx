@@ -2,7 +2,7 @@
 import * as actions from "../actions.js";
 import { connect } from "react-redux";
 import App from "../components/app.jsx";
-import type { Map, List } from "immutable";
+import type { Map } from "immutable";
 import { withRouter } from "react-router-dom";
 import {
     previewXmlFileSliceSelector,

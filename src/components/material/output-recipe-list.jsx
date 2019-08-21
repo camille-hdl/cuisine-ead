@@ -27,9 +27,9 @@ const styles = theme => ({
 
 type Props = {
     availableRecipes: Array<{ key: string, label: string }>,
-    outputPipeline: List,
+    outputPipeline: ImmutableList<Map<string, mixed>>,
     classes: any,
-    setOutputPipeline: (outputPipeline: List) => void,
+    setOutputPipeline: (outputPipeline: ImmutableList<Map<string, mixed>>) => void,
 };
 
 /**

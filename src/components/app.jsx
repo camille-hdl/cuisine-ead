@@ -41,24 +41,24 @@ export type Props = {
     /**
      * List of Files to be processed
      */
-    xmlFiles: List,
+    xmlFiles: List<Map<string, mixed>>,
     /**
      * List of recipes (and their settings) to apply to `Document`s
      */
-    pipeline: List,
+    pipeline: List<Map<string, mixed>>,
     /**
      * List of recipes to apply to xml strings (applied after `pipeline`)
      */
-    outputPipeline: List,
+    outputPipeline: List<Map<string, mixed>>,
     /**
      * Map of corrections to apply to the files
      * see src/lib/corrections-parser.js
      */
-    corrections: Map,
+    corrections: Map<string, Map<string, mixed>>,
     /**
      * File currectly being previewed.
      */
-    previewXmlFile: Map | null,
+    previewXmlFile: Map<string, mixed> | null,
     /**
      * String reprensentation of the file being previewed
      */
@@ -68,7 +68,7 @@ export type Props = {
      * Object representation of the pipeline, outputPipeline and version.
      * Can be exported to JSON
      */
-    fullRecipe: Map,
+    fullRecipe: Map<string, mixed>,
     /**
      * Approximate number of available corrections (to be displayed)
      */
@@ -77,7 +77,7 @@ export type Props = {
      * Function that maps `Document`s to processed `Document`s,
      * given the current recipes and settings
      */
-    pipelineFn: (doc: any) => any,
+    pipelineFn: (doc: Map<string, mixed>) => Document,
     /**
      * Function that maps xml strings to processed xml strings,
      * givent the current settings
@@ -88,11 +88,11 @@ export type Props = {
     /**
      * Updates the recipes to apply to `Document`s
      */
-    setPipeline: (p: List) => void,
+    setPipeline: (p: List<Map<string, mixed>>) => void,
     /**
      * Updates the recipes to apply to xml strings
      */
-    setOutputPipeline: (p: List) => void,
+    setOutputPipeline: (p: List<Map<string, mixed>>) => void,
     /**
      * Defines which file is being previewed
      */

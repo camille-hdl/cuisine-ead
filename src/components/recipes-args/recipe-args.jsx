@@ -5,8 +5,8 @@ import TextArg from "./text-arg.jsx";
 
 export type Props = {
     recipe: string,
-    args: Map,
-    setArgs: (args: Map) => void,
+    args: Map<string, mixed>,
+    setArgs: (args: Map<string, mixed>) => void,
 };
 
 function EventTrap(props: { children?: any }) {

@@ -20,14 +20,28 @@ const styles = theme => ({
 /**
  * Retourne le texte de la balise "titleproper"
  */
-const getTitleProper = (doc: any): string => {
+const getTitleProper = (doc: Document): string => {
     const tags = xpathFilter(doc, "//titleproper");
     return tags.length > 0 && head(tags) ? head(tags).textContent : "";
 };
 
-function SelectPreviewFile(props: { classes: any, xmlFiles: IList, previewHash: string | null }) {
+function SelectPreviewFile(props: {
+    classes: any,
+    xmlFiles: IList<Map<string, mixed>>,
+    previewHash: string | null,
+    previewXmlFile: Map<string, mixed> | null,
+    setPreviewHash: (hash: string | null) => void,
+}) {
     const { classes } = props;
     const [anchorEl, setAnchorEl] = useState(null);
+    const selectedFile = props.previewXmlFile ? props.previewXmlFile : props.xmlFiles.first();
+    if (!selectedFile) {
+        return null;
+    }
+    const selectedDocument = selectedFile.get("doc");
+    if (!(selectedDocument instanceof Document)) {
+        return null;
+    }
     return (
         <div className={classes.root}>
             <List component="nav">
@@ -40,13 +54,7 @@ function SelectPreviewFile(props: { classes: any, xmlFiles: IList, previewHash: 
                 >
                     <ListItemText
                         primary={"Fichier sélectionné"}
-                        secondary={
-                            props.previewXmlFile
-                                ? getTitleProper(props.previewXmlFile.get("doc")) ||
-                                  props.previewXmlFile.get("filename")
-                                : getTitleProper(props.xmlFiles.first().get("doc")) ||
-                                  props.xmlFiles.first().get("filename")
-                        }
+                        secondary={getTitleProper(selectedDocument) || selectedFile.get("filename")}
                     />
                 </ListItem>
             </List>
@@ -58,22 +66,25 @@ function SelectPreviewFile(props: { classes: any, xmlFiles: IList, previewHash: 
                     setAnchorEl(null);
                 }}
             >
-                {map(
-                    xmlFile => (
+                {map(xmlFile => {
+                    const hash = xmlFile.get("hash") ? String(xmlFile.get("hash")) : String(Math.random());
+                    const doc = xmlFile.get("doc");
+                    const filename =
+                        typeof xmlFile.get("filename") === "string" ? xmlFile.get("filename") : "no-filename";
+                    return (
                         <MenuItem
-                            key={xmlFile.get("hash")}
+                            key={hash}
                             disabled={false}
                             selected={xmlFile.get("hash") === props.previewHash}
                             onClick={ev => {
-                                props.setPreviewHash(xmlFile.get("hash"));
+                                props.setPreviewHash(hash);
                                 setAnchorEl(null);
                             }}
                         >
-                            {getTitleProper(xmlFile.get("doc")) || xmlFile.get("filename")}
+                            {doc instanceof Document ? getTitleProper(doc) || filename : filename}
                         </MenuItem>
-                    ),
-                    props.xmlFiles.toArray()
-                )}
+                    );
+                }, props.xmlFiles.toArray())}
             </Menu>
         </div>
     );

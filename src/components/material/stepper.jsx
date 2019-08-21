@@ -11,7 +11,7 @@ const styles = theme => ({
     },
     buttonContainer: {
         display: "flex",
-    }
+    },
 });
 
 function getSteps() {

@@ -4,7 +4,7 @@
  */
 
 import type { Map, List } from "immutable";
-import type { AddXmlFileData } from "../types.js";
+import type { AddXmlFileData } from "./types.js";
 export const ADD_XML_FILE = "ADD_XML_FILE";
 export const REMOVE_XML_FILE = "REMOVE_XML_FILE";
 export const UPDATE_CORRECTIONS = "UPDATE_CORRECTIONS";
@@ -24,11 +24,11 @@ export const updateCorrections = (data: Array<string>) => {
     return { type: UPDATE_CORRECTIONS, data: data };
 };
 
-export const setPipeline = (data: List) => {
+export const setPipeline = (data: List<any>) => {
     return { type: SET_PIPELINE, data: data };
 };
 
-export const setOutputPipeline = (data: List) => {
+export const setOutputPipeline = (data: List<any>) => {
     return { type: SET_OUTPUT_PIPELINE, data: data };
 };
 

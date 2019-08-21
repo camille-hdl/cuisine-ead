@@ -1,3 +1,4 @@
+//@flow
 /**
  * Taken from https://github.com/chrisbottin/xml-formatter
  * modifications:
@@ -104,7 +105,31 @@ function processDeclaration(declaration, output) {
         appendContent(output, "?>");
     }
 }
-
+type FormatOptionsInput = {
+    debug?: boolean | typeof undefined,
+    indentation?: string | typeof undefined,
+    stripComments?: boolean | typeof undefined,
+    collapseContent?: boolean | typeof undefined,
+    newLine?: string | typeof undefined,
+};
+type FormatOptions = {
+    debug: boolean,
+    indentation: string,
+    stripComments: boolean,
+    collapseContent: boolean,
+    newLine: string,
+};
+const applyDefaults = (options: FormatOptionsInput): FormatOptions => {
+    const defaults = {
+        debug: false,
+        indentation: "    ",
+        stripComments: true,
+        collapseContent: true,
+        newLine: NEWLINE,
+    };
+    const output = { ...defaults, ...options };
+    return output;
+};
 /**
  * Converts the given XML into human readable format.
  *
@@ -117,13 +142,8 @@ function processDeclaration(declaration, output) {
  *  @config {Boolean} [collapseContent=false] True to keep content in the same line as the element. Only works if element contains at least one text node
  * @returns {string}
  */
-export default function format(xml, options) {
-    options = options || {};
-    options.debug = options.debug === true;
-    options.indentation = options.indentation || "    ";
-    options.stripComments = options.stripComments === true;
-    options.collapseContent = options.collapseContent === true;
-    options.newLine = options.newLine || NEWLINE;
+export default function format(xml: string, inputOptions: FormatOptionsInput) {
+    const options = applyDefaults(inputOptions);
 
     var parsedXml = parse(xml, { stripComments: options.stripComments });
 
