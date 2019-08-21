@@ -1,5 +1,7 @@
 //@flow
 
+export type EncodingString = string;
+
 /**
  * Describes a File to be processed.
  */
@@ -7,11 +9,11 @@ export type AddXmlFileData = {
     /**
      * Original character encoding of the file
      */
-    encoding: string,
+    encoding: EncodingString,
     /**
      * `Document`
      */
-    doc: any,
+    doc: Document,
     /**
      * Original filename
      */

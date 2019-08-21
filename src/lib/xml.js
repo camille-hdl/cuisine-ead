@@ -1,15 +1,18 @@
 //@flow
 import xxhash from "xxhash-wasm";
-import { head, last } from "ramda";
 const jschardet = window && window.jschardet ? window.jschardet : null;
 if (!jschardet) throw "jschardet missing";
-
+import type { EncodingString } from "../types.js";
+type Hasher = {
+    h64: (input: string) => string,
+    h32: (input: string) => string,
+};
 let wasmInstance = null;
 /**
  * Returns the WASM instance, after having created it if necessary.
  * We only need to create the WASM instance once
  */
-const getWASMInstance = (callback: (instance: any) => void) => {
+const getWASMInstance = (callback: (instance: Hasher) => void) => {
     if (wasmInstance) {
         callback(wasmInstance);
     } else {
@@ -25,12 +28,13 @@ const getWASMInstance = (callback: (instance: any) => void) => {
  * and pretends it's `windows-1252` instead.
  * If no decoder is available, it defaults to `iso-8859-1`
  */
-export const getDecoder = (encoding: string) => {
+export const getDecoder = (encoding: string): TextDecoder => {
     let actualEncoding = encoding;
     if (actualEncoding === "windows-1255") {
         actualEncoding = "windows-1252";
     }
     try {
+        //$FlowFixMe
         const decoder = new TextDecoder(actualEncoding);
         return decoder;
     } catch (e) {
@@ -39,18 +43,24 @@ export const getDecoder = (encoding: string) => {
         return new TextDecoder("iso-8859-1");
     }
 };
-
+type DocData = {
+    encoding: EncodingString,
+    doc: Document,
+    string: string,
+    hash: string,
+};
 /**
  * Given a text `File`, it
  * * detects it's charset with jschardet
  * * decodes it to utf-8 if necessary
  * * parses it to a DOM document
  * * creates a unique hash from it's content (using xxhash)
- * * calls `loadCallback` with `{ doc: DOMDocument, encoding: string, string: string, hash: string}` as it's first argument
+ * * calls `loadCallback` with `{ doc: Document, encoding: string, string: string, hash: string}` as it's first argument
  */
-export const readXml = (file: any, loadCallback: (doc: any) => void) => {
+export const readXml = (file: File, loadCallback: (doc: DocData) => void) => {
     const reader = new FileReader();
     reader.onload = () => {
+        if (!(reader.result instanceof ArrayBuffer)) return;
         const parser = new DOMParser();
         const buffer = new Uint8Array(reader.result);
         let str = "";
@@ -63,6 +73,11 @@ export const readXml = (file: any, loadCallback: (doc: any) => void) => {
         const xmlString = normalizeXmlString(decoder.decode(buffer));
         getWASMInstance(hasher => {
             loadCallback({
+                /**
+                 * non-standard Document.evaluate & Document.createNSREsolver
+                 * make flow unhappy
+                 */
+                //$FlowFixMe
                 doc: parser.parseFromString(xmlString, "application/xml"),
                 encoding: info.encoding,
                 string: xmlString,
@@ -73,17 +88,45 @@ export const readXml = (file: any, loadCallback: (doc: any) => void) => {
     reader.readAsArrayBuffer(file);
 };
 
+type XpathFilterArgs = { query: string, contextNode: ?Element | Document };
+type XpathFilterInput = Array<Element | string>;
+/**
+ * deals with "polymorphism" of `xpathFilter`
+ * `xpathFilter(doc, query)` or `xpathFilter(doc, node, query)`
+ */
+const extractXpathFilterArgs = (doc: Document, args: XpathFilterInput): XpathFilterArgs => {
+    let query = "";
+    let contextNode = doc;
+    if (args[0] instanceof Element && typeof args[1] === "string") {
+        contextNode = args[0];
+        query = args[1];
+    } else if (typeof args[0] === "string") {
+        query = args[0];
+    }
+    return { query, contextNode };
+};
+
 /**
  * Wrapper around `Document.evaluate`. Returns an array without `null` values.
  * `xpathFilter(doc, query)` or `xpathFilter(doc, node, query)`
  */
-export const xpathFilter = (doc: any, ...args: [string] | [Element, string]): Array<Element> => {
-    const query = args.length === 1 ? head(args) : last(args);
-    const contextNode = args.length > 1 ? head(args) : doc;
-    let nsResolver = doc.createNSResolver(
-        doc.ownerDocument == null ? doc.documentElement : doc.ownerDocument.documentElement
-    );
-    let xpathResult = doc.evaluate(query, contextNode, nsResolver, XPathResult.ANY_TYPE, null);
+export const xpathFilter = (doc: Document, ...args: XpathFilterInput): Array<Element> => {
+    const { query, contextNode } = extractXpathFilterArgs(doc, args);
+    const node =
+        doc.ownerDocument && doc.ownerDocument.documentElement
+            ? doc.ownerDocument.documentElement
+            : doc.documentElement;
+    if (!node) {
+        console.log("invalid document", doc);
+        return [];
+    }
+    /**
+     * Document.evaluate & createNSResolver are non-standard
+     */
+    //$FlowFixMe
+    let nsResolver = doc.createNSResolver(node);
+    //$FlowFixMe
+    let xpathResult = doc.evaluate(query, contextNode, nsResolver, window.XPathResult.ANY_TYPE, null);
     let c;
     let elems = [];
     do {
