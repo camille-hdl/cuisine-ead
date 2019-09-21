@@ -1,6 +1,11 @@
 # Cuisine EAD 🍲
 [![Build Status](https://travis-ci.org/camille-hdl/cuisine-ead.svg?branch=master)](https://travis-ci.org/camille-hdl/cuisine-ead) 
 
+A tool for batch editing xml-ead files in the browser.
+
+## What? Why? How?
+
+[blog post](https://camillehdl.dev/cuisine-ead/)
 
 ## Development
 
