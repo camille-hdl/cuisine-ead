@@ -82,6 +82,7 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{"Nouveaux traitements (origination>name, span)"}</li>
                                 <li>{"Amélioration des performances de l'export controlaccess"}</li>
                                 <li>{"Corrections controlaccess par csv : il est possible d'ajouter des attributs"}</li>
                                 <li>{"Nouvelle catégorie de traitements : 'Personnaliser'"}</li>
