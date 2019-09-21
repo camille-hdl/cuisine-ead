@@ -442,6 +442,26 @@ export const supprimerLangusage = () => (doc: Document): Document => {
     return doc;
 };
 
+/**
+ * Changes `origination/name` to `origination/corpname`
+ */
+export const fixOriginationName = () => (doc: Document): Document => {
+    const names = xpathFilter(doc, "//origination/name");
+    each(names, name => {
+        const corpname = doc.createElement("corpname");
+        if (name.childNodes) {
+            each(name.childNodes, c => corpname.appendChild(c));
+        }
+        if (name.hasAttributes()) {
+            for (let attr of name.attributes) {
+                corpname.setAttribute(attr.name, attr.value);
+            }
+        }
+        name.replaceWith(corpname);
+    });
+    return doc;
+};
+
 export const getAttributesMap = (element: window.Element): { [key: string]: string } => {
     const attrs = {};
     if (element.hasAttributes()) {

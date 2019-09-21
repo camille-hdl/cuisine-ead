@@ -90,6 +90,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "remplacer_ori_name_corpname",
+        {
+            label: "Remplacer origination>name par origination>corpname",
+            category: "Spécifique",
+        },
+    ],
+    [
         "pack_ligeo",
         {
             label: "Tous les traitements spécifiques ligéo",
