@@ -33,6 +33,7 @@ export const getRecipes = () => {
         { key: "nettoyer_cotes_consultation", fn: r.nettoyerCoteConsultation },
         { key: "nettoyer_emph_unittitle", fn: r.nettoyerUnitTitleEmph },
         { key: "nettoyer_addressline", fn: r.nettoyerAddressline },
+        { key: "nettoyer_span", fn: r.nettoyerSpan },
         { key: "supprimer_internal", fn: r.supprimerInternal },
         { key: "ajouter_scopecontent_audience", fn: r.ajouterScopecontentAudience },
         { key: "completer_did_vides", fn: r.completerDidVides },

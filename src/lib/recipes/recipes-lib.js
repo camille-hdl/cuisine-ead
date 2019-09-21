@@ -206,6 +206,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "nettoyer_span",
+        {
+            label: "Nettoyer les spans (conserver le contenu)",
+            category: "Suppressions",
+        },
+    ],
+    [
         "corriger_deplacer_genreform",
         {
             label: "Déplacer certains genreform dans physdesc",

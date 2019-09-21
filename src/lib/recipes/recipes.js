@@ -336,6 +336,9 @@ export const nettoyerCoteConsultation = () => (doc: Document): Document => {
     return doc;
 };
 
+/**
+ * Remove certain `<emph>` tags in unittitles, but keep the content
+ */
 export const nettoyerUnitTitleEmph = () => (doc: Document): Document => {
     const emphs = xpathFilter(doc, '//unittitle/emph[@render="italic"]|//unittitle/emph[@render="super"]');
     each(emphs, element => {
@@ -347,6 +350,25 @@ export const nettoyerUnitTitleEmph = () => (doc: Document): Document => {
     });
     return doc;
 };
+
+/**
+ * Remove `<span>` tags but keep their content
+ */
+export const nettoyerSpan = () => (doc: Document): Document => {
+    const spans = xpathFilter(doc, "//span");
+    each(spans, element => {
+        if (element.childNodes) {
+            element.replaceWith(...element.childNodes);
+        } else {
+            element.remove();
+        }
+    });
+    return doc;
+};
+
+/**
+ * Remove `<address>` tags
+ */
 export const nettoyerAddressline = () => (doc: Document): Document => {
     const adresses = xpathFilter(doc, "//address");
     each(adresses, element => {
