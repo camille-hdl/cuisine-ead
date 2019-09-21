@@ -31,6 +31,8 @@ import { getCategory } from "../lib/recipes/recipes-lib.js";
 
 const availableRecipes = getRecipes();
 const availaleStatefulRecipes = getStatefulRecipes();
+//TODO: fix flow
+//$FlowFixMe
 const categories = sortBy(ascend)(uniq(map(r => getCategory(r.key), availableRecipes)));
 /**
  * Partition recipes by category
@@ -39,6 +41,7 @@ const categories = sortBy(ascend)(uniq(map(r => getCategory(r.key), availableRec
 const recipesByCategories = map(c => {
     return {
         category: c,
+        //$FlowFixMe
         recipes: sortBy(ascend)(filter(r => equals(c, getCategory(r.key)), availableRecipes)),
     };
 }, categories);
@@ -48,19 +51,19 @@ const availableOutputRecipes = getOutputRecipes();
  * See src/components/app.jsx
  */
 type Props = {
-    pipeline: List,
-    outputPipeline: List,
-    previewXmlFile: Map | null,
+    pipeline: List<Map<string, mixed>>,
+    outputPipeline: List<Map<string, mixed>>,
+    previewXmlFile: Map<string, mixed> | null,
     previewXmlString: string | null,
-    xmlFiles: List,
+    xmlFiles: List<Map<string, mixed>>,
     previewEnabled: boolean,
-    corrections: Map,
+    corrections: Map<string, mixed>,
     correctionsNb: number,
     togglePreview: (p: boolean) => void,
     pipelineFn: (doc: any) => any,
     outputPipelineFn: (doc: any) => any,
-    setPipeline: (p: List) => void,
-    setOutputPipeline: (p: List) => void,
+    setPipeline: (p: List<mixed>) => void,
+    setOutputPipeline: (p: List<mixed>) => void,
     setPreviewHash: (h: string) => void,
 };
 const PreviousStepLink = props => <RouterLink to="/upload" {...props} data-cy="prev-step-link" />;
@@ -98,9 +101,7 @@ export default function SelectRecipes(props: Props) {
                         </div>
                         <RecipeList {...props} availableRecipes={availableRecipes} />
                         <Divider />
-                        <Typography variant="h6">{`${
-                            props.correctionsNb
-                        } corrections de controlaccess disponibles`}</Typography>
+                        <Typography variant="h6">{`${props.correctionsNb} corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                         <Divider />
                         <Typography variant="h6">{"Assaisonnements"}</Typography>
@@ -169,9 +170,7 @@ export default function SelectRecipes(props: Props) {
                         );
                     }, recipesByCategories)}
                     <PaperSheet xs={12} sm={6} key={"stateful-recipes"}>
-                        <Typography variant="h6">{`${
-                            props.correctionsNb
-                        } corrections de controlaccess disponibles`}</Typography>
+                        <Typography variant="h6">{`${props.correctionsNb} corrections de controlaccess disponibles`}</Typography>
                         <RecipeList {...props} availableRecipes={availaleStatefulRecipes} />
                     </PaperSheet>
                     <PaperSheet xs={12} sm={6} key={"output-recipes"}>

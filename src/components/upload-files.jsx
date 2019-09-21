@@ -77,13 +77,13 @@ const mergeDeepAll = reduce(
  * See src/components/app.jsx
  */
 type Props = {
-    xmlFiles: List,
-    corrections: Map,
-    pipeline: List,
-    outputPipeline: List,
+    xmlFiles: List<Map<string, mixed>>,
+    corrections: Map<string, mixed>,
+    pipeline: List<Map<string, mixed>>,
+    outputPipeline: List<Map<string, mixed>>,
     correctionsNb: number,
-    setPipeline: (pipeline: List) => void,
-    setOutputPipeline: (pipeline: List) => void,
+    setPipeline: (pipeline: List<Map<string, mixed>>) => void,
+    setOutputPipeline: (pipeline: List<Map<string, mixed>>) => void,
     addXmlFile: (info: AddXmlFileData) => void,
     removeXmlFile: (hash: string) => void,
     updateCorrections: (corrections: Array<string>) => void,
@@ -99,12 +99,14 @@ export default class UploadFiles extends React.PureComponent<Props> {
         console.log("import", inputJson);
         if (inputJson.pipeline && inputJson.pipeline.length > 0) {
             const inputRecipes = fromJS(inputJson.pipeline);
-            /**
-             * Don't add duplicates
-             */
-            const recipesKeys = this.props.pipeline.map(p => p.get("key"));
-            const usableRecipes = inputRecipes.filter(ir => !recipesKeys.includes(ir.get("key")));
-            this.props.setPipeline(this.props.pipeline.concat(usableRecipes));
+            if (List.isList(inputRecipes)) {
+                /**
+                 * Don't add duplicates
+                 */
+                const recipesKeys = this.props.pipeline.map(p => p.get("key"));
+                const usableRecipes = inputRecipes.filter(ir => !recipesKeys.includes(ir.get("key")));
+                this.props.setPipeline(this.props.pipeline.concat(usableRecipes));
+            }
         }
         if (inputJson.outputPipeline && inputJson.outputPipeline.length > 0) {
             const inputRecipes = fromJS(inputJson.outputPipeline);

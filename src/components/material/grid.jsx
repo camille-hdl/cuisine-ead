@@ -2,6 +2,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import type { ChildrenArray } from "react";
 
 const styles = theme => ({
     root: {
@@ -9,35 +10,12 @@ const styles = theme => ({
     },
 });
 
-function FullWidthGrid(props) {
+function FullWidthGrid(props: { children?: ChildrenArray<any>, classes: { [className: string]: string } }) {
     const { classes, children } = props;
 
     return (
         <div className={classes.root}>
-            <Grid container>
-                {children}
-                {/* <Grid item xs={12}>
-                    <Paper className={classes.paper}>xs=12</Paper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid> */}
-            </Grid>
+            <Grid container>{children}</Grid>
         </div>
     );
 }

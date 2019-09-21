@@ -7,7 +7,7 @@
 import React from "react";
 import Paper from "@material-ui/core/Paper";
 import PaperSheet from "./material/paper-sheet.jsx";
-import type { List, Map } from "immutable";
+import type { Map } from "immutable";
 import { Set } from "immutable";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -37,6 +37,15 @@ const styles = theme => ({
     },
 });
 
+const isTuple = (input: mixed): boolean %checks => {
+    return (
+        Array.isArray(input) &&
+        typeof input[0] === "string" &&
+        typeof input[1] === "string" &&
+        typeof input[2] === "string"
+    );
+};
+
 /**
  * Byte order mark
  * https://stackoverflow.com/questions/17879198/adding-utf-8-bom-to-string-blob
@@ -53,13 +62,15 @@ class Results extends React.PureComponent<Props & { classes: any }> {
             // telecharger
             const output = this.props.pipelineFn(xmlFile);
             const serializer = new XMLSerializer();
+            const encoding = xmlFile.get("encoding");
+            const filename = xmlFile.get("filename");
             let str = cleanOutputEncoding(
                 this.props.outputPipelineFn(serializer.serializeToString(output)),
-                xmlFile.get("encoding")
+                typeof encoding === "string" ? encoding : ""
             );
             FileSaver.saveAs(
                 new Blob([str], { type: "application/xml;charset=utf-8" }),
-                genNewFilename(xmlFile.get("filename"))
+                typeof filename === "string" ? genNewFilename(filename) : genNewFilename("default_filename.xml")
             );
         });
     };
@@ -69,15 +80,23 @@ class Results extends React.PureComponent<Props & { classes: any }> {
     downloadZip = () => {
         const zip = new JSZip();
         const promises = this.props.xmlFiles.map(xmlFile => {
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 setTimeout(() => {
                     const output = this.props.pipelineFn(xmlFile);
                     const serializer = new XMLSerializer();
+                    const encoding = xmlFile.get("encoding");
+                    const filename = xmlFile.get("filename");
                     const str = cleanOutputEncoding(
                         this.props.outputPipelineFn(serializer.serializeToString(output)),
-                        xmlFile.get("encoding")
+                        typeof encoding === "string" ? encoding : ""
                     );
-                    resolve({ filename: genNewFilename(xmlFile.get("filename")), str: str });
+                    resolve({
+                        filename:
+                            typeof filename === "string"
+                                ? genNewFilename(filename)
+                                : genNewFilename("default_filename.xml"),
+                        str: str,
+                    });
                 }, 0);
             });
         });
@@ -98,7 +117,7 @@ class Results extends React.PureComponent<Props & { classes: any }> {
      * We use `Immutable.Set` for performance.
      */
     downloadControlAccess = () => {
-        const controlaccesses = this.props.xmlFiles.reduce((acc: Array<any>, xmlFile: Map): Array<any> => {
+        const controlaccesses = this.props.xmlFiles.reduce((acc: Set<any>, xmlFile: Map<string, mixed>): Set<any> => {
             return acc.concat(extractCA(this.props.pipelineFn(xmlFile)).toSet());
         }, Set([]));
         FileSaver.saveAs(
@@ -108,7 +127,10 @@ class Results extends React.PureComponent<Props & { classes: any }> {
                         [
                             ["controlaccess", "valeur", "attribut"].join(";"),
                             ...map(ligne => {
-                                return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
+                                if (isTuple(ligne)) {
+                                    return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
+                                }
+                                return ["", "", ""].join(";");
                             }, controlaccesses.toJS()),
                         ].join("\n"),
                 ],

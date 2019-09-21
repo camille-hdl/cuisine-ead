@@ -1,11 +1,10 @@
 //@flow
 import React from "react";
-import type { ReactInstance, Children } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-
+import type { Element, ChildrenArray } from "react";
 const styles = theme => ({
     root: {
         ...theme.mixins.gutters(),
@@ -14,7 +13,7 @@ const styles = theme => ({
     },
 });
 
-function PaperSheet(props: { classes: any, header?: ReactInstance | string, children?: Children }) {
+function PaperSheet(props: { classes: any, header?: Element<any> | string, children?: ChildrenArray<any> }) {
     const { classes, header, children, ...rest } = props;
 
     return (

@@ -5,7 +5,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
 import { List as ImmutableList, Map, fromJS } from "immutable";
 import { map } from "ramda";
 import Switch from "@material-ui/core/Switch";
@@ -30,9 +29,9 @@ const styles = theme => ({
 
 type Props = {
     availableRecipes: Array<{ key: string }>,
-    pipeline: List,
+    pipeline: ImmutableList<Map<string, mixed>>,
     classes: any,
-    setPipeline: (pipeline: List) => void,
+    setPipeline: (pipeline: ImmutableList<Map<string, mixed>>) => void,
 };
 
 /**
@@ -75,7 +74,7 @@ class RecipeList extends React.PureComponent<Props> {
                                                         args={this.props.pipeline
                                                             .find(r => r.get("key") === recipe.key)
                                                             .get("args")}
-                                                        setArgs={(args: Map) => {
+                                                        setArgs={(args: Map<string, mixed>) => {
                                                             /**
                                                              * Updates the arguments of the recipe in the pipeline
                                                              */

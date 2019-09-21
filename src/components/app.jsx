@@ -10,7 +10,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import type { AddXmlFileData } from "../types.js";
+import type { AddXmlFileData, StateProps } from "../types.js";
 import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 
@@ -32,52 +32,7 @@ type RouteProps = {
 /**
  * Props provided by the container src/containers/app.jsx
  */
-export type Props = {
-    /**
-     * Version of the app.
-     * Can be use to validate restored state.
-     */
-    version: string,
-    /**
-     * List of Files to be processed
-     */
-    xmlFiles: List,
-    /**
-     * List of recipes (and their settings) to apply to `Document`s
-     */
-    pipeline: List,
-    /**
-     * List of recipes to apply to xml strings (applied after `pipeline`)
-     */
-    outputPipeline: List,
-    /**
-     * Map of corrections to apply to the files
-     * see src/lib/corrections-parser.js
-     */
-    corrections: Map,
-    /**
-     * File currectly being previewed.
-     */
-    previewXmlFile: Map | null,
-    /**
-     * String reprensentation of the file being previewed
-     */
-    previewXmlString: string | null,
-    previewEnabled: boolean,
-    /**
-     * Object representation of the pipeline, outputPipeline and version.
-     * Can be exported to JSON
-     */
-    fullRecipe: Map,
-    /**
-     * Approximate number of available corrections (to be displayed)
-     */
-    correctionsNb: number,
-    /**
-     * Function that maps `Document`s to processed `Document`s,
-     * given the current recipes and settings
-     */
-    pipelineFn: (doc: any) => any,
+export type Props = StateProps & {
     /**
      * Function that maps xml strings to processed xml strings,
      * givent the current settings
@@ -88,11 +43,11 @@ export type Props = {
     /**
      * Updates the recipes to apply to `Document`s
      */
-    setPipeline: (p: List) => void,
+    setPipeline: (p: List<Map<string, mixed>>) => void,
     /**
      * Updates the recipes to apply to xml strings
      */
-    setOutputPipeline: (p: List) => void,
+    setOutputPipeline: (p: List<Map<string, mixed>>) => void,
     /**
      * Defines which file is being previewed
      */

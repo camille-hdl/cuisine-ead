@@ -39,18 +39,25 @@ const escapeReplacer = (match, p1, p2, p3): string => [p1, '""', p3].join("");
 /**
  * Encapsulates strings in `""` and escapes double-quotes
  */
-export const escapeCell = (input: string): string => {
+export const escapeCell = (input: mixed): string => {
+    if (typeof input !== "string") {
+        input = String(input);
+    }
     return '"' + input.replace(escapeRE, escapeReplacer) + '"';
 };
 
 /**
  * Simple Promise wrapper around the FileReader API
  */
-export const openFile = (file: File): Promise => {
-    return new Promise(resolve => {
+export const openFile = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
-            resolve(reader.result);
+            if (typeof reader.result === "string") {
+                resolve(reader.result);
+            } else {
+                reject();
+            }
         };
         reader.readAsText(file);
     });
@@ -98,7 +105,8 @@ export const replaceRange = (
                   ? padding + "/"
                   : padding + (addPadding ? "/" : "");
           }
-        : (oldStr: string): string => {
+        : // eslint-disable-next-line no-unused-vars
+          (oldStr: string, _ignored?: any): string => {
               return startsWith(" /", oldStr)
                   ? " /"
                   : startsWith("/", oldStr)

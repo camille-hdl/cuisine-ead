@@ -8,7 +8,6 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import { List as ImmutableList, Map } from "immutable";
 import { map, head } from "ramda";
@@ -26,9 +25,9 @@ const styles = theme => ({
 });
 
 type Props = {
-    xmlFiles: ImmutableList,
+    xmlFiles: ImmutableList<Map<string, mixed>>,
     classes: any,
-    onRemove: (file: Map) => void,
+    onRemove: (file: Map<string, mixed>) => void,
 };
 
 /**
@@ -49,9 +48,15 @@ class FileList extends React.PureComponent<Props> {
             <div className={classes.root}>
                 <div className={classes.paper}>
                     <List dense={false}>
-                        {map(
-                            xmlFile => (
-                                <ListItem key={xmlFile.get("hash")}>
+                        {map(xmlFile => {
+                            const hash = xmlFile.get("hash") ? String(xmlFile.get("hash")) : String(Math.random());
+                            const doc = xmlFile.get("doc");
+                            const filename = xmlFile.get("filename") ? String(xmlFile.get("filename")) : "no-filename";
+                            const encoding = xmlFile.get("encoding")
+                                ? String(xmlFile.get("encoding"))
+                                : "encodage introuvable";
+                            return (
+                                <ListItem key={hash}>
                                     <ListItemAvatar>
                                         <Avatar>
                                             <Icon>book</Icon>
@@ -59,8 +64,8 @@ class FileList extends React.PureComponent<Props> {
                                     </ListItemAvatar>
                                     <ListItemText
                                         data-cy="file-list-text"
-                                        primary={getTitleProper(xmlFile.get("doc")) || xmlFile.get("filename")}
-                                        secondary={`${xmlFile.get("filename")} - ${xmlFile.get("encoding")}`}
+                                        primary={doc instanceof Document ? getTitleProper(doc) || filename : filename}
+                                        secondary={`${filename} - ${encoding}`}
                                     />
                                     <ListItemSecondaryAction>
                                         <IconButton
@@ -74,9 +79,8 @@ class FileList extends React.PureComponent<Props> {
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
-                            ),
-                            this.props.xmlFiles.toArray()
-                        )}
+                            );
+                        }, this.props.xmlFiles.toArray())}
                     </List>
                 </div>
             </div>

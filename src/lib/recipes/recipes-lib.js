@@ -90,6 +90,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "remplacer_ori_name_corpname",
+        {
+            label: "Remplacer origination>name par origination>corpname",
+            category: "Spécifique",
+        },
+    ],
+    [
         "pack_ligeo",
         {
             label: "Tous les traitements spécifiques ligéo",
@@ -202,6 +209,13 @@ const availables: Array<[string, RecipeInfo]> = [
         "nettoyer_addressline",
         {
             label: "Nettoyer address",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "nettoyer_span",
+        {
+            label: "Nettoyer les spans (conserver le contenu)",
             category: "Suppressions",
         },
     ],
@@ -361,7 +375,7 @@ export const getCategory = (key: string): string | null => {
 /**
  * Returns the initial arguments used by the recipe
  */
-export const getDefaultArgs = (key: string): string | null => {
+export const getDefaultArgs = (key: string): { [argName: string]: any } | null => {
     const info = getInfo(key);
     return info && info.defaultArgs ? info.defaultArgs : {};
 };

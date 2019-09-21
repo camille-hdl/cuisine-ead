@@ -33,6 +33,7 @@ export const getRecipes = () => {
         { key: "nettoyer_cotes_consultation", fn: r.nettoyerCoteConsultation },
         { key: "nettoyer_emph_unittitle", fn: r.nettoyerUnitTitleEmph },
         { key: "nettoyer_addressline", fn: r.nettoyerAddressline },
+        { key: "nettoyer_span", fn: r.nettoyerSpan },
         { key: "supprimer_internal", fn: r.supprimerInternal },
         { key: "ajouter_scopecontent_audience", fn: r.ajouterScopecontentAudience },
         { key: "completer_did_vides", fn: r.completerDidVides },
@@ -49,6 +50,7 @@ export const getRecipes = () => {
         { key: "corriger_mat_spec_donnees", fn: r.corrigerMatSpecDonnees },
         { key: "corriger_deplacer_genreform", fn: r.corrigerGenreformPhysdesc },
         { key: "pack_ligeo", fn: r.traitementsLigeo },
+        { key: "remplacer_ori_name_corpname", fn: r.fixOriginationName },
         { key: "ecraser_publisher", fn: r.ecraserPublisher },
         { key: "ecraser_repository", fn: r.ecraserRepository },
         { key: "ecraser_creation", fn: r.ecraserCreation },
@@ -72,24 +74,31 @@ export const getStatefulRecipes = () => {
 };
 
 const _findRecipe = partialRight(find, [getRecipes()]);
-export const findRecipe = (key: string): Recipe | undefined => _findRecipe(propEq("key", key));
+export const findRecipe = (key: string): { key: string, fn: Recipe } | typeof undefined =>
+    _findRecipe(propEq("key", key));
 
 const _findStatefulRecipe = partialRight(find, [getStatefulRecipes()]);
-export const findStatefulRecipe = (key: string): Recipe | undefined => _findStatefulRecipe(propEq("key", key));
+export const findStatefulRecipe = (key: string): { key: string, fn: Recipe } | typeof undefined =>
+    _findStatefulRecipe(propEq("key", key));
 
 /**
  * Given a `recipe` (`Map<{key: string, args: any}>`), this will return the corresponding function `(doc: Document) => document`
  * to apply a modification on a DOM `Document`.
  * If the function needs the application state to work, it will be provided automatically.
  */
-export default (recipe: Map, state: ExecuteState): ((doc: any) => any) => {
+export default (recipe: Map<string, any>, state: ExecuteState): ((doc: Document) => Document) => {
     const recipeKey = recipe.get("key");
     const recipeArgs = recipe.get("args");
-    if (findRecipe(recipeKey)) {
-        return findRecipe(recipeKey).fn(recipeArgs);
+    if (typeof recipeKey !== "string") {
+        throw new Error("recipeKey should be a string");
     }
-    if (findStatefulRecipe(recipeKey)) {
-        return findStatefulRecipe(recipeKey).fn(state);
+    const foundRecipe = findRecipe(recipeKey);
+    if (foundRecipe) {
+        return foundRecipe.fn(recipeArgs);
+    }
+    const statefulRecipe = findStatefulRecipe(recipeKey);
+    if (statefulRecipe) {
+        return statefulRecipe.fn(state);
     }
     throw new Error("Unknown recipe: " + recipeKey);
 };
