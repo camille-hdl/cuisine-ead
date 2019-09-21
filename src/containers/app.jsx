@@ -12,8 +12,9 @@ import {
     fullRecipeSelector,
     correctionsNbSelector,
 } from "./selectors.js";
+import type { StateRecord, ComputedStateProps } from "../types.js";
 
-export const mapStateToProps = (state: Map) => {
+export const mapStateToProps = (state: StateRecord): ComputedStateProps => {
     /**
      * see src/components/app.jsx for details
      * on each property
@@ -22,6 +23,7 @@ export const mapStateToProps = (state: Map) => {
         version: state.get("version"),
         xmlFiles: state.get("xmlFiles"),
         pipeline: state.get("pipeline"),
+        previewHash: state.get("previewHash"),
         pipelineFn: pipelineFnSelector(state),
         outputPipeline: state.get("outputPipeline"),
         outputPipelineFn: outputPipelineFnSelector(state),
@@ -43,7 +45,7 @@ export const mapDispatchToProps = (dispatch: any) => {
 };
 
 export const AppContainer = withRouter(
-    connect(
+    connect<_, _, ComputedStateProps, _, _, _>(
         mapStateToProps,
         mapDispatchToProps
     )(App)

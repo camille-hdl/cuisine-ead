@@ -10,7 +10,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import type { AddXmlFileData } from "../types.js";
+import type { AddXmlFileData, StateProps } from "../types.js";
 import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 
@@ -32,52 +32,7 @@ type RouteProps = {
 /**
  * Props provided by the container src/containers/app.jsx
  */
-export type Props = {
-    /**
-     * Version of the app.
-     * Can be use to validate restored state.
-     */
-    version: string,
-    /**
-     * List of Files to be processed
-     */
-    xmlFiles: List<Map<string, mixed>>,
-    /**
-     * List of recipes (and their settings) to apply to `Document`s
-     */
-    pipeline: List<Map<string, mixed>>,
-    /**
-     * List of recipes to apply to xml strings (applied after `pipeline`)
-     */
-    outputPipeline: List<Map<string, mixed>>,
-    /**
-     * Map of corrections to apply to the files
-     * see src/lib/corrections-parser.js
-     */
-    corrections: Map<string, Map<string, mixed>>,
-    /**
-     * File currectly being previewed.
-     */
-    previewXmlFile: Map<string, mixed> | null,
-    /**
-     * String reprensentation of the file being previewed
-     */
-    previewXmlString: string | null,
-    previewEnabled: boolean,
-    /**
-     * Object representation of the pipeline, outputPipeline and version.
-     * Can be exported to JSON
-     */
-    fullRecipe: Map<string, mixed>,
-    /**
-     * Approximate number of available corrections (to be displayed)
-     */
-    correctionsNb: number,
-    /**
-     * Function that maps `Document`s to processed `Document`s,
-     * given the current recipes and settings
-     */
-    pipelineFn: (doc: Map<string, mixed>) => Document,
+export type Props = StateProps & {
     /**
      * Function that maps xml strings to processed xml strings,
      * givent the current settings
