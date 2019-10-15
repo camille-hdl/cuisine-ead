@@ -97,6 +97,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "reorg_c_originalsloc",
+        {
+            label: "Réordonner le contenu de <c>: did, originalsloc, scopecontent, ...",
+            category: "Spécifique",
+        },
+    ],
+    [
         "pack_ligeo",
         {
             label: "Tous les traitements spécifiques ligéo",
