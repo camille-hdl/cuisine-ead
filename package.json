@@ -17,7 +17,6 @@
     "cypress:run": "cypress run",
     "cypress:install": "cypress install",
     "jest": "jest",
-    "predeploy": "CI=1 npm i cypress",
     "deploy": "npm run build",
     "prettier": "prettier --write src/**/*.{js,jsx}"
   },
