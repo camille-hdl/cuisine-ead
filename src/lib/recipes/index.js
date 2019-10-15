@@ -60,6 +60,7 @@ export const getRecipes = () => {
         { key: "supprimer_genreform_typir", fn: r.supprimerGenreformTypir },
         { key: "supprimer_physdesc_archdesc", fn: r.supprimerPhysDidArchdesc },
         { key: "supprimer_langusage", fn: r.supprimerLangusage },
+        { key: "reorg_c_originalsloc", fn: r.reordonnerOriginalsLoc },
     ];
 };
 
