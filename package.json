@@ -71,7 +71,7 @@
     "jszip": "^3.2.2",
     "papaparse": "^5.0.1",
     "ramda": "^0.26.1",
-    "react": "^16.10.2",
+    "react": "^16.11.0",
     "react-diff-viewer": "^2.0.1",
     "react-dom": "^16.10.2",
     "react-dropzone": "^10.1.10",
