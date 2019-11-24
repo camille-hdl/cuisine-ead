@@ -19,7 +19,7 @@ export const cleanOutputEncoding = (xmlStr: string, encoding: string): string =>
             str = str.replace("encoding='" + commonEncoding.toLowerCase() + "'", "");
             str = str.replace('encoding="' + commonEncoding.toLowerCase() + '"', "");
         },
-        ["ISO-8859-1", "Windows-1252", "UTF-8", "UTF8"]
+        ["ISO-8859-1", "Windows-1252", "UTF-8", "UTF8", "ISO-8859-7"]
     );
     return str;
 };

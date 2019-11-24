@@ -26,12 +26,16 @@ const getWASMInstance = (callback: (instance: Hasher) => void) => {
  * Returns a TextDecoder for the detected charset.
  * If we get `windows-1255` as an input, we assume an error in jschardet
  * and pretends it's `windows-1252` instead.
+ * We do the same for ISO-8859-7 which is another common false positive.
  * If no decoder is available, it defaults to `iso-8859-1`
  */
 export const getDecoder = (encoding: string): TextDecoder => {
     let actualEncoding = encoding;
     if (actualEncoding === "windows-1255") {
         actualEncoding = "windows-1252";
+    }
+    if (actualEncoding === "ISO-8859-7") {
+        actualEncoding = "ISO-8859-1";
     }
     try {
         //$FlowFixMe
