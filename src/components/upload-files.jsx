@@ -7,7 +7,7 @@
  * * json files to use recipe presets
  */
 
-import React from "react";
+import React, { forwardRef } from "react";
 import Dropzone from "react-dropzone";
 import {
     concat,
@@ -89,7 +89,9 @@ type Props = {
     updateCorrections: (corrections: Array<string>) => void,
 };
 
-const NextStepLink = props => <RouterLink to="/recettes" {...props} data-cy="next-step-link" />;
+const NextStepLink = forwardRef(function NextStepLink(props, ref) {
+    return <RouterLink to="/recettes" {...props} data-cy="next-step-link" ref={ref} />;
+});
 
 export default class UploadFiles extends React.PureComponent<Props> {
     /**

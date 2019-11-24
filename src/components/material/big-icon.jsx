@@ -10,7 +10,7 @@ const styles = theme => ({
         width: "150px",
         opacity: 0.5,
         margin: `auto`,
-        padding: `${theme.spacing.unit * 4}px 0 ${theme.spacing.unit * 2}px`,
+        padding: `${theme.spacing(4)}px 0 ${theme.spacing(2)}px`,
     },
 });
 

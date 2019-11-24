@@ -4,7 +4,7 @@
  * the files after having applied the pipeline of recipes
  */
 
-import React from "react";
+import React, { forwardRef } from "react";
 import Paper from "@material-ui/core/Paper";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { Map } from "immutable";
@@ -25,15 +25,17 @@ import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js
 import type { Props } from "./app.jsx";
 import JSZip from "jszip";
 
-const PreviousStepLink = props => <RouterLink to="/recettes" {...props} data-cy="prev-step-link" />;
+const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
+    return <RouterLink to="/recettes" {...props} data-cy="prev-step-link" ref={ref} />;
+});
 
 const styles = theme => ({
     downloadBlock: {
         ...theme.mixins.gutters(),
         textAlign: "center",
         height: "250px",
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
     },
 });
 
