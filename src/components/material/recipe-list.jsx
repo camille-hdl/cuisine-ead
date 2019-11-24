@@ -20,10 +20,10 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
     },
     margin: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing(2),
     },
     padding: {
-        padding: `0 ${theme.spacing.unit * 2}px`,
+        padding: `0 ${theme.spacing(2)}px`,
     },
 });
 

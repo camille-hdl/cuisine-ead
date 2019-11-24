@@ -15,7 +15,7 @@ import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 
 const muiTheme = createMuiTheme({
-    typography: { useNextVariants: true },
+    typography: {},
 });
 
 /**

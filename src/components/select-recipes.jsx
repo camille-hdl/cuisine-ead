@@ -4,7 +4,7 @@
  * preview the changes on a file
  */
 
-import React from "react";
+import React, { forwardRef } from "react";
 import PaperSheet from "./material/paper-sheet.jsx";
 import type { List, Map } from "immutable";
 import Grid from "./material/grid.jsx";
@@ -66,8 +66,12 @@ type Props = {
     setOutputPipeline: (p: List<mixed>) => void,
     setPreviewHash: (h: string) => void,
 };
-const PreviousStepLink = props => <RouterLink to="/upload" {...props} data-cy="prev-step-link" />;
-const NextStepLink = props => <RouterLink to="/resultats" {...props} data-cy="next-step-link" />;
+const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
+    return <RouterLink to="/upload" {...props} data-cy="prev-step-link" ref={ref} />;
+});
+const NextStepLink = forwardRef(function NextStepLink(props, ref) {
+    return <RouterLink to="/resultats" {...props} data-cy="next-step-link" ref={ref} />;
+});
 
 export default function SelectRecipes(props: Props) {
     const isWide = useMedia("(min-width: 920px");
@@ -112,7 +116,7 @@ export default function SelectRecipes(props: Props) {
                 {props.previewXmlFile && props.pipeline.size > 0 ? (
                     props.previewEnabled ? (
                         <>
-                            <Typography variant="subtitle1" data-cy="preview-warning">
+                            <Typography variant="body1" data-cy="preview-warning">
                                 <strong>
                                     {
                                         "La comparaison ne montre que les ~600 premières lignes pour éviter de bloquer votre navigateur 🐌, ce qui peut provoquer des bizarreries"
