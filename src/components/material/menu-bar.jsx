@@ -1,5 +1,5 @@
 //@flow
-import React from "react";
+import React, { forwardRef } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,7 +16,9 @@ const styles = {
         flexGrow: 1,
     },
 };
-const LinkToIndex = props => <RouterLink {...props} to="/" />;
+const LinkToIndex = forwardRef(function LinkToIndex(props, ref) {
+    return <RouterLink {...props} to="/" ref={ref} />;
+});
 function MenuBar(props: { classes: any, version: string }) {
     const { classes, version } = props;
     return (

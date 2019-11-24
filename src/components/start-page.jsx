@@ -3,7 +3,7 @@
  * Homepage, start button and help text
  */
 
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { NavLink as RouterLink } from "react-router-dom";
 import OutlinedButton from "./material/outlined-button.jsx";
 import Grid from "@material-ui/core/Grid";
@@ -42,7 +42,9 @@ const styles = {
         textAlign: "left",
     },
 };
-const UploadLink = props => <RouterLink to="/upload" {...props} />;
+const UploadLink = forwardRef(function UploadLink(props, ref) {
+    return <RouterLink to="/upload" {...props} ref={ref} />;
+});
 
 function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
     const [changelogExpanded, toggleChangelog] = useState(false);
@@ -61,7 +63,7 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                 </OutlinedButton>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1" className={classes.description}>
+                <Typography variant="body1" className={classes.description}>
                     <ol>
                         <li>Déposer des fichiers XML</li>
                         <li>Choisir des traitements à effectuer</li>

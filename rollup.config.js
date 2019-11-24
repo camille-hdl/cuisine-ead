@@ -55,6 +55,7 @@ const getPluginsConfig = (prod, mini) => {
                     "memo",
                     "forwardRef",
                     "Fragment",
+                    "isValidElement",
                 ],
                 "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates"],
                 "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS", "Record"],
@@ -69,11 +70,12 @@ const getPluginsConfig = (prod, mini) => {
                     "createMuiTheme",
                     "MuiThemeProvider",
                 ],
-                "./node_modules/react-is/index.js": ["isValidElementType"],
+                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment"],
                 "./node_modules/react-redux/node_modules/react-is/index.js": [
                     "isValidElementType",
                     "isContextConsumer",
                 ],
+                "node_modules/@material-ui/utils/node_modules/react-is/index.js": ["ForwardRef"],
             },
         }),
         babel({
