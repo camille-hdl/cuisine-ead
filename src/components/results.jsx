@@ -53,107 +53,111 @@ const isTuple = (input: mixed): boolean %checks => {
  * https://stackoverflow.com/questions/17879198/adding-utf-8-bom-to-string-blob
  */
 const BOM = "\ufeff";
+const getFullRecipe = (props: Props): string => {
+    return JSON.stringify(props.fullRecipe.toJS());
+};
+/**
+ * Downloads the resulting files in separate files, one for each input file.
+ */
+export const downloadResults = (props: Props) => {
+    props.xmlFiles.forEach(xmlFile => {
+        // telecharger
+        const output = props.pipelineFn(xmlFile);
+        const serializer = new XMLSerializer();
+        const encoding = xmlFile.get("encoding");
+        const filename = xmlFile.get("filename");
+        let str = cleanOutputEncoding(
+            props.outputPipelineFn(serializer.serializeToString(output)),
+            typeof encoding === "string" ? encoding : ""
+        );
+        FileSaver.saveAs(
+            new Blob([str], { type: "application/xml;charset=utf-8" }),
+            typeof filename === "string" ? genNewFilename(filename) : genNewFilename("default_filename.xml")
+        );
+    });
+};
+
+/**
+ * Download everything in a single zip archive
+ */
+export const downloadResultsZip = (props: Props) => {
+    const zip = new JSZip();
+    const promises = props.xmlFiles.map(xmlFile => {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                const output = props.pipelineFn(xmlFile);
+                const serializer = new XMLSerializer();
+                const encoding = xmlFile.get("encoding");
+                const filename = xmlFile.get("filename");
+                const str = cleanOutputEncoding(
+                    props.outputPipelineFn(serializer.serializeToString(output)),
+                    typeof encoding === "string" ? encoding : ""
+                );
+                resolve({
+                    filename:
+                        typeof filename === "string"
+                            ? genNewFilename(filename)
+                            : genNewFilename("default_filename.xml"),
+                    str: str,
+                });
+            }, 0);
+        });
+    });
+    if (promises.size > 0) {
+        Promise.all(promises.toArray()).then(outputFiles => {
+            outputFiles.forEach(outputFile => {
+                zip.file(outputFile.filename, outputFile.str);
+            });
+            zip.file("recette.cuisine-ead.json", getFullRecipe(props));
+            zip.generateAsync({ type: "blob" }).then(blob => {
+                FileSaver.saveAs(blob, "EAD cuisiné.zip");
+            });
+        });
+    }
+};
+/**
+ * Export controlaccess tags and their content in a csv file.
+ * We use `Immutable.Set` for performance.
+ */
+export const downloadControlAccesses = (props: Props) => {
+    const controlaccesses = props.xmlFiles.reduce((acc: Set<any>, xmlFile: Map<string, mixed>): Set<any> => {
+        return acc.concat(extractCA(props.pipelineFn(xmlFile)).toSet());
+    }, Set([]));
+    FileSaver.saveAs(
+        new Blob(
+            [
+                BOM +
+                    [
+                        ["controlaccess", "valeur", "attribut"].join(";"),
+                        ...map(ligne => {
+                            if (isTuple(ligne)) {
+                                return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
+                            }
+                            return ["", "", ""].join(";");
+                        }, controlaccesses.toJS()),
+                    ].join("\n"),
+            ],
+            { type: "text/plain;charset=utf-8+bom" }
+        ),
+        "controlaccess.csv"
+    );
+};
 
 class Results extends React.PureComponent<Props & { classes: any }> {
-    /**
-     * Save the xmlFiles after having applied the pipeline to them
-     * in the browser
-     */
-    download = () => {
-        this.props.xmlFiles.forEach(xmlFile => {
-            // telecharger
-            const output = this.props.pipelineFn(xmlFile);
-            const serializer = new XMLSerializer();
-            const encoding = xmlFile.get("encoding");
-            const filename = xmlFile.get("filename");
-            let str = cleanOutputEncoding(
-                this.props.outputPipelineFn(serializer.serializeToString(output)),
-                typeof encoding === "string" ? encoding : ""
-            );
-            FileSaver.saveAs(
-                new Blob([str], { type: "application/xml;charset=utf-8" }),
-                typeof filename === "string" ? genNewFilename(filename) : genNewFilename("default_filename.xml")
-            );
-        });
-    };
-    /**
-     * Download everything in a single zip archive
-     */
-    downloadZip = () => {
-        const zip = new JSZip();
-        const promises = this.props.xmlFiles.map(xmlFile => {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    const output = this.props.pipelineFn(xmlFile);
-                    const serializer = new XMLSerializer();
-                    const encoding = xmlFile.get("encoding");
-                    const filename = xmlFile.get("filename");
-                    const str = cleanOutputEncoding(
-                        this.props.outputPipelineFn(serializer.serializeToString(output)),
-                        typeof encoding === "string" ? encoding : ""
-                    );
-                    resolve({
-                        filename:
-                            typeof filename === "string"
-                                ? genNewFilename(filename)
-                                : genNewFilename("default_filename.xml"),
-                        str: str,
-                    });
-                }, 0);
-            });
-        });
-        if (promises.size > 0) {
-            Promise.all(promises.toArray()).then(outputFiles => {
-                outputFiles.forEach(outputFile => {
-                    zip.file(outputFile.filename, outputFile.str);
-                });
-                zip.file("recette.cuisine-ead.json", this.getFullRecipe());
-                zip.generateAsync({ type: "blob" }).then(blob => {
-                    FileSaver.saveAs(blob, "EAD cuisiné.zip");
-                });
-            });
-        }
-    };
-    /**
-     * Export controlaccess tags and their content in a csv file.
-     * We use `Immutable.Set` for performance.
-     */
-    downloadControlAccess = () => {
-        const controlaccesses = this.props.xmlFiles.reduce((acc: Set<any>, xmlFile: Map<string, mixed>): Set<any> => {
-            return acc.concat(extractCA(this.props.pipelineFn(xmlFile)).toSet());
-        }, Set([]));
-        FileSaver.saveAs(
-            new Blob(
-                [
-                    BOM +
-                        [
-                            ["controlaccess", "valeur", "attribut"].join(";"),
-                            ...map(ligne => {
-                                if (isTuple(ligne)) {
-                                    return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
-                                }
-                                return ["", "", ""].join(";");
-                            }, controlaccesses.toJS()),
-                        ].join("\n"),
-                ],
-                { type: "text/plain;charset=utf-8+bom" }
-            ),
-            "controlaccess.csv"
-        );
-    };
+    download = () => downloadResults(this.props);
+    downloadZip = () => downloadResultsZip(this.props);
+    downloadControlAccess = () => downloadControlAccesses(this.props);
     /**
      * Returns a json representation of the pipeline + outputPipeline
      * so that the user can re-use it as a preset
      */
-    getFullRecipe = (): string => {
-        return JSON.stringify(this.props.fullRecipe.toJS());
-    };
+
     /**
      * Exports the full recipe as JSON
      */
     downloadFullRecipe = () => {
         FileSaver.saveAs(
-            new Blob([this.getFullRecipe()], { type: "application/json;charset=utf-8" }),
+            new Blob([getFullRecipe(this.props)], { type: "application/json;charset=utf-8" }),
             "recette.cuisine-ead.json"
         );
     };

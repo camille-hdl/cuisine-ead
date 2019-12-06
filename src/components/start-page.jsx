@@ -84,19 +84,15 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>
+                                    {
+                                        "Des boutons en bas à droite permettent de télécharger les controlaccess sans avoir de recette"
+                                    }
+                                </li>
                                 <li>{"Nouveaux traitements (origination>name, span)"}</li>
                                 <li>{"Amélioration des performances de l'export controlaccess"}</li>
                                 <li>{"Corrections controlaccess par csv : il est possible d'ajouter des attributs"}</li>
                                 <li>{"Nouvelle catégorie de traitements : 'Personnaliser'"}</li>
-                                <li>{`Lors de la dernière étape, il est possible d'exporter les réglages en JSON. 
-                                Cela permet de les réutiliser en déposant le fichier JSON en même temps que les fichiers XML ou CSV.`}</li>
-                                <li>
-                                    {`Traitements en sortie ("assaisonnements") : suppression des lignes vides,
-                                    indentation automatique (lent)`}
-                                </li>
-                                <li>Recettes regroupées par catégories</li>
-                                <li>{`Lorsqu'un fichier est déposé, les sauts de ligne CRLF sont convertis en LF 
-                                pour améliorer la comparaison`}</li>
                             </ul>
                         </Typography>
                     </ExpansionPanelDetails>

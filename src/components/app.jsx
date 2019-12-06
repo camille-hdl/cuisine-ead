@@ -10,9 +10,10 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import type { AddXmlFileData, StateProps } from "../types.js";
+import type { AddXmlFileData, ComputedStateProps } from "../types.js";
 import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
+import FloatingButtons from "./floating-buttons.jsx";
 
 const muiTheme = createMuiTheme({
     typography: {},
@@ -32,7 +33,7 @@ type RouteProps = {
 /**
  * Props provided by the container src/containers/app.jsx
  */
-export type Props = StateProps & {
+export type Props = ComputedStateProps & {
     /**
      * Function that maps xml strings to processed xml strings,
      * givent the current settings
@@ -141,6 +142,7 @@ export default class App extends React.PureComponent<Props> {
                         }
                     />
                 </Switch>
+                <FloatingButtons {...this.props} />
             </MuiThemeProvider>
         );
     }

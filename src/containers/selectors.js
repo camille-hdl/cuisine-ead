@@ -4,7 +4,8 @@ import { Map, List } from "immutable";
 import getRecipeFn from "../lib/recipes/index.js";
 import getOutputRecipeFn from "../lib/output-recipes.js";
 import { pipe, compose, memoizeWith, take, split, identity, join } from "ramda";
-
+import type { StateRecord } from "../types.js";
+import type { ExecuteState } from "../lib/recipes/recipes.js";
 /**
  * Returns only the first few lines of the file,
  * because rendering the diff is slow and freezes the browser
@@ -22,21 +23,20 @@ const isList = (maybeList: mixed): boolean %checks => {
     return List.isList(maybeList);
 };
 
-export const previewHashSelector = (state: Map<string, mixed>): string | null =>
+export const previewHashSelector = (state: StateRecord): string | null =>
     state.get("previewHash") ? String(state.get("previewHash")) : null;
-export const xmlFilesSelector = (state: Map<string, mixed>): List<Map<string, mixed>> => {
+export const xmlFilesSelector = (state: StateRecord): List<Map<string, mixed>> => {
     const xmlFiles = state.get("xmlFiles");
     if (xmlFiles && isList(xmlFiles)) {
         return xmlFiles;
     }
     return List();
 };
-export const pipelineSelector = (state: Map<string, mixed>): List<Map<string, mixed>> => state.get("pipeline");
-export const outputPipelineSelector = (state: Map<string, mixed>): List<Map<string, mixed>> =>
-    state.get("outputPipeline");
-export const previewEnabledSelector = (state: Map<string, mixed>): boolean => state.get("previewEnabled");
-export const correctionsSelector = (state: Map<string, mixed>): Map<string, mixed> => state.get("corrections");
-export const versionSelector = (state: Map<string, mixed>): string => state.get("version");
+export const pipelineSelector = (state: StateRecord): List<Map<string, mixed>> => state.get("pipeline");
+export const outputPipelineSelector = (state: StateRecord): List<Map<string, mixed>> => state.get("outputPipeline");
+export const previewEnabledSelector = (state: StateRecord): boolean => state.get("previewEnabled");
+export const correctionsSelector = (state: StateRecord): Map<string, mixed> => state.get("corrections");
+export const versionSelector = (state: StateRecord): string => state.get("version");
 
 /**
  * If preview is enabled, we return the selected file, or the first one if none is selected.
@@ -89,10 +89,10 @@ const createNewDoc = (xmlFile: Map<string, mixed>): Document => {
 /**
  * Returns the state required by stateful recipes, such as controlaccess corrections.
  */
-export const pipelineStateSelector = createSelector<Map<string, mixed>, void, Map<string, mixed>, Map<string, mixed>>(
+export const pipelineStateSelector = createSelector<StateRecord, void, Map<string, mixed>, ExecuteState>(
     correctionsSelector,
-    (corrections: Map<string, mixed>): Map<string, mixed> => {
-        return Map<string, mixed>({
+    (corrections: Map<string, mixed>): ExecuteState => {
+        return Map<string, Map<string, any>>({
             corrections,
         });
     }
@@ -107,12 +107,18 @@ type PipelineFn = (xmlFile: Map<string, mixed>) => Document;
  * The function will create a new `Document` every time it's called
  * because the DOM API mutates it.
  */
-export const pipelineFnSelector = createSelector<Map<string, mixed>, void, List, Map<string, mixed>, PipelineFn | null>(
+export const pipelineFnSelector = createSelector<
+    StateRecord,
+    void,
+    List<Map<string, mixed>>,
+    ExecuteState,
+    PipelineFn | null
+>(
     pipelineSelector,
     pipelineStateSelector,
-    (pipeline: List, executeState: Map<string, mixed>): PipelineFn | null => {
-        if (pipeline.size <= 0) return null;
-        const recipesFns = pipeline.map<string, mixed>(r => getRecipeFn(r, executeState)).toArray();
+    (pipeline: List<Map<string, mixed>>, executeState: ExecuteState): PipelineFn | null => {
+        if (pipeline.size <= 0) return memoizeWith(xmlFile => xmlFile.get("hash"), xmlFile => createNewDoc(xmlFile));
+        const recipesFns = pipeline.map<(doc: Document) => Document>(r => getRecipeFn(r, executeState)).toArray();
         const fn = pipe(...recipesFns);
         return memoizeWith(xmlFile => xmlFile.get("hash"), xmlFile => fn(createNewDoc(xmlFile)));
     }
@@ -123,9 +129,9 @@ type OutputPipelineFn = (xmlString: string) => string;
  * Returns a function that applies the selected output recipes (`xmlString => xmlString`) to an xmlString
  * *after* `pipelineFn` has been applied.
  */
-export const outputPipelineFnSelector = createSelector<Map<string, mixed>, void, List, OutputPipelineFn>(
+export const outputPipelineFnSelector = createSelector<StateRecord, void, List<Map<string, mixed>>, OutputPipelineFn>(
     outputPipelineSelector,
-    (outputPipeline: List): OutputPipelineFn | null => {
+    (outputPipeline: List<Map<string, mixed>>): OutputPipelineFn => {
         if (outputPipeline.size <= 0) return (str: string) => str;
         const recipesFns = outputPipeline.map<string, mixed>(r => getOutputRecipeFn(r.get("key"))).toArray();
         const fn = pipe(...recipesFns);
@@ -164,7 +170,7 @@ export const previewXmlStringSelector = createSelector<
  * Returns a Map<string, mixed> containing all the necessary components for this particular recipe.
  * This objet can be exported to JSON, to be re-used later as input.
  */
-export const fullRecipeSelector = createSelector<Map<string, mixed>, void, string, List, List, Map<string, mixed>>(
+export const fullRecipeSelector = createSelector<StateRecord, void, string, List, List, Map<string, mixed>>(
     versionSelector,
     pipelineSelector,
     outputPipelineSelector,
@@ -180,7 +186,7 @@ export const fullRecipeSelector = createSelector<Map<string, mixed>, void, strin
 /**
  * Returns the total number of corrections to be performed
  */
-export const correctionsNbSelector = createSelector<Map<string, mixed>, void, Map<string, mixed>, number>(
+export const correctionsNbSelector = createSelector<StateRecord, void, Map<string, mixed>, number>(
     correctionsSelector,
     corrections =>
         corrections.reduce((sum, terms) => {
