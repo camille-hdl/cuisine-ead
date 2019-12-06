@@ -188,8 +188,11 @@ export const fullRecipeSelector = createSelector<StateRecord, void, string, List
  */
 export const correctionsNbSelector = createSelector<StateRecord, void, Map<string, mixed>, number>(
     correctionsSelector,
-    corrections =>
+    (corrections: Map<string, mixed>): number =>
         corrections.reduce((sum, terms) => {
-            return sum + terms.size;
+            if (terms && typeof terms.size === "number") {
+                return sum + terms.size;
+            }
+            return sum;
         }, 0)
 );

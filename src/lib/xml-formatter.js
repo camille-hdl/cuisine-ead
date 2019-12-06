@@ -106,11 +106,11 @@ function processDeclaration(declaration, output) {
     }
 }
 type FormatOptionsInput = {
-    debug?: boolean | typeof undefined,
-    indentation?: string | typeof undefined,
-    stripComments?: boolean | typeof undefined,
-    collapseContent?: boolean | typeof undefined,
-    newLine?: string | typeof undefined,
+    debug?: boolean,
+    indentation?: string,
+    stripComments?: boolean,
+    collapseContent?: boolean,
+    newLine?: string,
 };
 type FormatOptions = {
     debug: boolean,

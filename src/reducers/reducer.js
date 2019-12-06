@@ -50,6 +50,9 @@ const reducersMap: { [actionType: string]: Reducer } = {
     [SET_PREVIEW_HASH]: (state: StateRecord, data: string) => state.set("previewHash", data),
     [TOGGLE_PREVIEW]: (state: StateRecord, data: boolean) => state.set("previewEnabled", data),
 };
-export default function App(state: StateRecord, action: { type: string, data: AddXmlFileData | any }) {
+export default function App(state: StateRecord | void, action: { type: string, data: AddXmlFileData | any }) {
+    if (!state) {
+        return;
+    }
     return typeof reducersMap[action.type] === "function" ? reducersMap[action.type](state, action.data) : state;
 }
