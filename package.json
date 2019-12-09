@@ -62,7 +62,7 @@
     "workbox-cli": "^4.3.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.7.4",
+    "@babel/runtime": "^7.7.6",
     "@material-ui/core": "^4.6.1",
     "capitalize": "^2.0.0",
     "file-saver": "^2.0.2",
