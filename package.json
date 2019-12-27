@@ -72,7 +72,7 @@
     "papaparse": "^5.1.0",
     "ramda": "^0.26.1",
     "react": "^16.12.0",
-    "react-diff-viewer": "^2.0.5",
+    "react-diff-viewer": "^3.0.1",
     "react-dom": "^16.12.0",
     "react-dropzone": "^10.2.1",
     "react-redux": "^7.1.3",
