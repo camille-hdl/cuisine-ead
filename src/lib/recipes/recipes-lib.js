@@ -112,6 +112,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "suppr_mnesys_internal",
+        {
+            label: "Supprimer les notes mnesysinternal",
+            category: "Spécifique",
+        },
+    ],
+    [
         "geog_source_geog",
         {
             label: "Ajouter source='geogname' sur les geognames sans source",

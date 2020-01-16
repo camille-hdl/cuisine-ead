@@ -722,6 +722,19 @@ export const corrigerAccessRestrictLigeo = () => (doc: Document): Document => {
 };
 
 /**
+ * Mnesys
+ */
+
+/**
+ * Supprimer les note[type=mnesysinternal]
+ */
+export const supprimerMnesysInternal = () => (doc: Document): Document => {
+    const notes = xpathFilter(doc, '//note[@type="mnesysinternal"]');
+    each(notes, note => note.remove());
+    return doc;
+};
+
+/**
  * if there is no publisher tag, it will be created in publicationstmt
  * Expects arg `publisher` (string)
  */
