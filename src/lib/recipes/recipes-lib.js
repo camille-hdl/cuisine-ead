@@ -119,6 +119,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "suppr_accessrestrict_formate",
+        {
+            label: "Supprimer les accessrestrict type=formate",
+            category: "Spécifique",
+        },
+    ],
+    [
         "geog_source_geog",
         {
             label: "Ajouter source='geogname' sur les geognames sans source",
