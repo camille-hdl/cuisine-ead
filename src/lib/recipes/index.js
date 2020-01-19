@@ -51,6 +51,7 @@ export const getRecipes = () => {
         { key: "corriger_deplacer_genreform", fn: r.corrigerGenreformPhysdesc },
         { key: "pack_ligeo", fn: r.traitementsLigeo },
         { key: "suppr_mnesys_internal", fn: r.supprimerMnesysInternal },
+        { key: "suppr_accessrestrict_formate", fn: r.supprimerAccessRestrictFormate },
         { key: "remplacer_ori_name_corpname", fn: r.fixOriginationName },
         { key: "ecraser_publisher", fn: r.ecraserPublisher },
         { key: "ecraser_repository", fn: r.ecraserRepository },

@@ -726,11 +726,50 @@ export const corrigerAccessRestrictLigeo = () => (doc: Document): Document => {
  */
 
 /**
- * Supprimer les note[type=mnesysinternal]
+ * Remove note[type=mnesysinternal]
  */
 export const supprimerMnesysInternal = () => (doc: Document): Document => {
     const notes = xpathFilter(doc, '//note[@type="mnesysinternal"]');
     each(notes, note => note.remove());
+    return doc;
+};
+
+/**
+ * Returns true if `n` doesn't have any childNodes OR
+ * if it has only text nodes that contain nothing but whitespace characters.
+ */
+const nodeIsEmpty = (n: Node): boolean => {
+    if (!n.hasChildNodes()) return true;
+    if (n.childNodes.length > 0) {
+        const hasNonTextNode = filter(child => child.nodeName !== "#text", n.childNodes).length > 0;
+        if (hasNonTextNode) {
+            return false;
+        } else {
+            if (
+                ("" + n.textContent)
+                    .trim()
+                    .replace("\n", "")
+                    .replace("\r\n", "") === ""
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+
+/**
+ * Remove empty accessrestrict[type=formate]
+ */
+export const supprimerAccessRestrictFormate = () => (doc: Document): Document => {
+    const accRestricts = xpathFilter(doc, '//accessrestrict[@type="formate"]');
+    each(accRestricts, accRestrict => {
+        if (nodeIsEmpty(accRestrict)) {
+            accRestrict.remove();
+        }
+    });
     return doc;
 };
 
@@ -848,11 +887,7 @@ export const ecraserDate = (args: Map<string, any>) => (doc: Document): Document
  * Appliquer tous les traitements spécifiques à ligeo
  */
 export const traitementsLigeo = () =>
-    pipe<any, any, any, any>(
-        ajouterAltRender(),
-        corrigerAccessRestrictLigeo(),
-        corrigerGenreformPhysdesc()
-    );
+    pipe<any, any, any, any>(ajouterAltRender(), corrigerAccessRestrictLigeo(), corrigerGenreformPhysdesc());
 
 /**
  * Détermine si un unitid de niveau bas existe dans le document
@@ -941,19 +976,22 @@ export const correctionControlAccess = curry<ExecuteState, Document, Document>(
 export const extractCA = (doc: Document): List<List<string>> => {
     const elems = xpathFilter(doc, "//controlaccess/*");
     return List(
-        map(filter(elem => elem.innerHTML.trim && elem.innerHTML.trim() !== "", elems), elem => {
-            let attrs = List([]);
-            if (elem.hasAttributes()) {
-                const a = elem.attributes;
-                for (let i = 0, l = a.length; i < l; i++) {
-                    attrs = attrs.push([a[i].name, a[i].value].join(":"));
+        map(
+            filter(elem => elem.innerHTML.trim && elem.innerHTML.trim() !== "", elems),
+            elem => {
+                let attrs = List([]);
+                if (elem.hasAttributes()) {
+                    const a = elem.attributes;
+                    for (let i = 0, l = a.length; i < l; i++) {
+                        attrs = attrs.push([a[i].name, a[i].value].join(":"));
+                    }
+                }
+                if (attrs.size <= 0) {
+                    return List([List([elem.tagName, elem.innerHTML.trim(), ""])]);
+                } else {
+                    return attrs.map(attr => List([elem.tagName, elem.innerHTML.trim(), attr]));
                 }
             }
-            if (attrs.size <= 0) {
-                return List([List([elem.tagName, elem.innerHTML.trim(), ""])]);
-            } else {
-                return attrs.map(attr => List([elem.tagName, elem.innerHTML.trim(), attr]));
-            }
-        })
+        )
     ).flatten(true);
 };
