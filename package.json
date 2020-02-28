@@ -19,7 +19,8 @@
     "jest": "jest",
     "predeploy": "CI=1 npm i cypress",
     "deploy": "npm run build",
-    "prettier": "prettier --write src/**/*.{js,jsx}"
+    "prettier": "prettier --write src/**/*.{js,jsx}",
+    "flow": "flow"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

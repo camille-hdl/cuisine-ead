@@ -12,7 +12,7 @@ const styles = theme => ({
 function Outlined(props: { classes: any, children?: any, linkComponent: any }) {
     const { classes, children, linkComponent, ...rest } = props;
     return (
-        <Button component={linkComponent} variant="outlined" color="primary" className={classes.button} {...rest}>
+        <Button {...rest} component={linkComponent} variant="outlined" color="primary" className={classes.button}>
             {children}
         </Button>
     );

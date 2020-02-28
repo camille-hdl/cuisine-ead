@@ -1,5 +1,5 @@
 //@flow
-import { Map, fromJS } from "immutable";
+import { Map, List } from "immutable";
 type Line = [string, string, string];
 import { forEach, concat, filter, map, head, last } from "ramda";
 const compact = filter(val => !!val);
@@ -33,7 +33,7 @@ const checkLine = (line: any): boolean => {
  * ```
  */
 export default function updateCorrections(data: Array<Line>, initialCorrections: Map<string, any>): Map<string, any> {
-    const newMap = {};
+    let newMap = Map();
     forEach(line => {
         // verifier la ligne
         if (!checkLine(line)) return;
@@ -43,21 +43,19 @@ export default function updateCorrections(data: Array<Line>, initialCorrections:
         const replacements = line[1].split(SEPARATOR);
         const term = line[2];
         if (originalCA && replacements && term) {
-            if (typeof newMap[originalCA] === "undefined") {
-                newMap[originalCA] = {};
+            if (!newMap.has(originalCA)) {
+                newMap = newMap.set(originalCA, Map());
             }
-            if (typeof newMap[originalCA][term] === "undefined") {
-                newMap[originalCA][term] = [];
+            if (!newMap.hasIn([originalCA, term])) {
+                newMap = newMap.setIn([originalCA, term], List());
             }
-            newMap[originalCA][term] = concat(
-                newMap[originalCA][term],
-                map(str => [str ? str.trim() : str, destinationCA], compact(replacements))
-            );
+            newMap = newMap.updateIn([originalCA, term], terms => {
+                return terms.concat(List(map(str => [str ? str.trim() : str, destinationCA], compact(replacements))));
+            });
         }
     }, data);
-    const newImmutableMap = fromJS(newMap);
-    if (Map.isMap(newImmutableMap)) {
-        return initialCorrections.mergeDeep(newImmutableMap);
+    if (Map.isMap(newMap)) {
+        return initialCorrections.mergeDeep(newMap);
     } else {
         throw new Error("newImmutableMap isn't a Immutable.Map");
     }

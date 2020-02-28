@@ -22,18 +22,20 @@ const muiTheme = createMuiTheme({
 /**
  * react-router Route
  */
-type RouteProps = {
+type RouteProps = {|
     location: {
         pathname: string,
     },
     history: any,
     match: any,
-};
+|};
 
 /**
  * Props provided by the container src/containers/app.jsx
  */
-export type Props = ComputedStateProps & {
+export type Props = {
+    ...ComputedStateProps,
+    ...RouteProps,
     /**
      * Function that maps xml strings to processed xml strings,
      * givent the current settings
@@ -58,7 +60,7 @@ export type Props = ComputedStateProps & {
      * Updates the corrections map
      */
     updateCorrections: (corrections: Array<string>) => void,
-} & RouteProps;
+};
 
 const UploadFiles = lazy(() => import("./upload-files.jsx"));
 /**
