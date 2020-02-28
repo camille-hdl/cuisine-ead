@@ -472,7 +472,11 @@ export const getAttributesMap = (element: window.Element): { [key: string]: stri
     }
     return attrs;
 };
-
+/**
+ * Add `level=file` attribute on `c` tags satisfying:
+ * * no `c` children
+ * * no existing `level` attribute
+ */
 export const ajouterLevelFile = () => (doc: Document): Document => {
     const elems = xpathFilter(doc, "//c");
     each(elems, elem => {
@@ -482,6 +486,20 @@ export const ajouterLevelFile = () => (doc: Document): Document => {
         if (!attrs.level) {
             elem.setAttribute("level", "file");
         }
+    });
+    return doc;
+};
+
+/**
+ * Add `level=file` attribute on `c` tags satisfying:
+ * * no `c` children
+ */
+export const ajouterLevelFileForce = () => (doc: Document): Document => {
+    const elems = xpathFilter(doc, "//c");
+    each(elems, elem => {
+        const childrenC = xpathFilter(doc, elem, "c");
+        if (childrenC.length > 0) return;
+        elem.setAttribute("level", "file");
     });
     return doc;
 };

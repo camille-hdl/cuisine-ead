@@ -290,6 +290,14 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "ajouter_level_file_force",
+        {
+            label: "Ajouter level=file sur les C de dernier niveau",
+            complement: "Même si elles ont déjà un level",
+            category: "Corrections",
+        },
+    ],
+    [
         "ajouter_level_file",
         {
             label: "Ajouter level=file sur les C de dernier niveau qui n'ont pas de level",

@@ -84,6 +84,7 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{"Nouveau traitement : forcer level=file sur les derniers niveaux"}</li>
                                 <li>{"Nouveau traitement : supprimer les notes 'mnesysinternal'"}</li>
                                 <li>
                                     {
@@ -91,8 +92,6 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                                     }
                                 </li>
                                 <li>{"Nouveaux traitements (origination>name, span)"}</li>
-                                <li>{"Amélioration des performances de l'export controlaccess"}</li>
-                                <li>{"Corrections controlaccess par csv : il est possible d'ajouter des attributs"}</li>
                             </ul>
                         </Typography>
                     </ExpansionPanelDetails>
