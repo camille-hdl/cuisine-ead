@@ -7,7 +7,7 @@ module.exports = {
     ],
     "swDest": "public/js/system/sw.js",
     "swSrc": "./src/sw.js",
-    "modifyUrlPrefix": {
+    "modifyURLPrefix": {
       "js/": "/js/",
       "index.": "/index."
     }

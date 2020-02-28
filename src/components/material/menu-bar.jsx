@@ -29,10 +29,15 @@ function MenuBar(props: { classes: any, version: string }) {
                         {"Cuisine EAD 🍲"}
                     </Typography>
                     <Typography variant="body1" color="inherit">
-                        {`v${version} - `}
-                        <Link href={"https://github.com/camille-hdl/cuisine-ead"} target="_blank" color="inherit">
-                            Github
+                        <Link
+                            href={"https://github.com/camille-hdl/cuisine-ead/issues"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            color="inherit"
+                        >
+                            Demander une fonctionnalité ou signaler un bug
                         </Link>
+                        {` - v${version}`}
                     </Typography>
                 </Toolbar>
             </AppBar>

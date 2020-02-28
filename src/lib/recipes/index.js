@@ -40,6 +40,7 @@ export const getRecipes = () => {
         { key: "dedoublonner_indexation", fn: r.dedoublonnerIndexation },
         { key: "supprimer_ca_vides", fn: r.supprimerControlaccessVides },
         { key: "supprimer_head_vides", fn: r.supprimerHeadVides },
+        { key: "ajouter_level_file_force", fn: r.ajouterLevelFileForce },
         { key: "ajouter_level_file", fn: r.ajouterLevelFile },
         { key: "geog_source_geog", fn: r.geognameSourceGeo },
         { key: "extent_unit", fn: r.extentUnit },
