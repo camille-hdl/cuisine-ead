@@ -1,13 +1,17 @@
 import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
-import nodeResolve from "rollup-plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import nodeResolve from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
 import { terser } from "rollup-plugin-terser";
-import replace from "rollup-plugin-replace";
 import builtins from "rollup-plugin-node-builtins";
 import globals from "rollup-plugin-node-globals";
 import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-cpy";
 import json from "rollup-plugin-json";
+
+
+
+
 
 const outputDir = "./public/js/";
 
@@ -70,7 +74,7 @@ const getPluginsConfig = (prod, mini) => {
                     "createMuiTheme",
                     "MuiThemeProvider",
                 ],
-                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment"],
+                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment", "ForwardRef"],
                 "./node_modules/react-redux/node_modules/react-is/index.js": [
                     "isValidElementType",
                     "isContextConsumer",

@@ -7,7 +7,7 @@ module.exports = {
   ],
   "swDest": "public/js/esm/sw.js",
   "swSrc": "./src/sw.js",
-  "modifyUrlPrefix": {
+  "modifyURLPrefix": {
     "js/": "/js/",
     "index.": "/index."
   }
