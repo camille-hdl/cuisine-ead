@@ -168,7 +168,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                      * CSV files are controlaccess corrections
                                      */
                                     forEach(file => {
-                                        Papa.parse(file, {
+                                        Papa.parse(typeof file.__CYPRESS !== "undefined" ? file.__CYPRESS : file, {
                                             complete: results => {
                                                 this.props.updateCorrections(tail(results.data));
                                             },

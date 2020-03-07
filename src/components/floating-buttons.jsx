@@ -50,6 +50,7 @@ export default function FloatingButtons(props: Props) {
                     color="primary"
                     title="Télécharger les fichiers modifiés"
                     onClick={() => downloadResultsZip(props)}
+                    data-cy="download-results"
                 >
                     <Icon>get_app</Icon>
                 </Fab>
@@ -59,6 +60,7 @@ export default function FloatingButtons(props: Props) {
                     variant="extended"
                     title="Télécharger les controlaccess"
                     onClick={() => downloadControlAccesses(props)}
+                    data-cy="download-ca"
                 >
                     <Icon className={classes.extendedIcon}>get_app</Icon>
                     Controlaccess

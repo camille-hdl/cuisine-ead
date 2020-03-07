@@ -6,7 +6,7 @@
 
 import React, { forwardRef } from "react";
 import PaperSheet from "./material/paper-sheet.jsx";
-import type { List, Map } from "immutable";
+import { List, Map } from "immutable";
 import Grid from "./material/grid.jsx";
 import { getRecipes, getStatefulRecipes } from "../lib/recipes/index.js";
 import { getRecipes as getOutputRecipes } from "../lib/output-recipes.js";
@@ -27,7 +27,8 @@ import useMedia from "react-use/lib/useMedia";
 import ErrorCatcher from "./error-catcher.jsx";
 import AppStepper from "./material/stepper.jsx";
 import SelectPreviewFile from "./material/select-preview.jsx";
-import { getCategory } from "../lib/recipes/recipes-lib.js";
+import { getCategory, getDefaultArgs } from "../lib/recipes/recipes-lib.js";
+import { makeRecipeInPipelineRecord } from "../lib/record-factories.js";
 
 const availableRecipes = getRecipes();
 const availaleStatefulRecipes = getStatefulRecipes();
@@ -84,6 +85,30 @@ export default function SelectRecipes(props: Props) {
             {"résultats →"}
         </OutlinedButton>
     );
+    if (typeof window.Cypress !== "undefined") {
+        window.__CYPRESS_addAllRecipes = () => {
+            props.setPipeline(
+                props.pipeline.concat(
+                    List(
+                        availableRecipes.map(recipe => {
+                            return makeRecipeInPipelineRecord({
+                                key: recipe.key,
+                                args: Map(getDefaultArgs(recipe.key)),
+                            });
+                        })
+                    ),
+                    List(
+                        availaleStatefulRecipes.map(recipe => {
+                            return makeRecipeInPipelineRecord({
+                                key: recipe.key,
+                                args: Map(getDefaultArgs(recipe.key)),
+                            });
+                        })
+                    )
+                )
+            );
+        };
+    }
     if (props.previewEnabled) {
         return (
             <ResponsiveDrawer

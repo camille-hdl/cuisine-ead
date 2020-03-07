@@ -276,7 +276,7 @@
       </p>
      </scopecontent>
     </c>
-    <c id="d_2_7" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_7">
+    <c id="d_2_7" data-cy="CYPRESS_HONEYPOT" xlink:type="simple" xlink:href="http://www.siv.archives-nationales.culture.gouv.fr/siv/UD/FRAN_IR_001885/d_2_7">
     <did>
      <unitid type="cote-de-consultation">153AP/2</unitid>
       <unitid>Dossier 7</unitid>
@@ -284,6 +284,9 @@
       <unitdate calendar="gregorian" era="ce" normal="1942-05-01/1942-05-31">mai 1942</unitdate>
       <physdesc>10 p.</physdesc>
      </did>
+     <controlaccess>
+      <cypressca oriattribute="oriattributevalue">originalvalue</cypressca>
+     </controlaccess>
     </c>
    </c>
   </dsc>
