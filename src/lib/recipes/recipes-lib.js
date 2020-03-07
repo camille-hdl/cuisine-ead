@@ -404,7 +404,7 @@ export const getCategory = (key: string): string | null => {
 /**
  * Returns the initial arguments used by the recipe
  */
-export const getDefaultArgs = (key: string): { [argName: string]: any } | null => {
+export const getDefaultArgs = (key: string): { [argName: string]: any } => {
     const info = getInfo(key);
     return info && info.defaultArgs ? info.defaultArgs : {};
 };

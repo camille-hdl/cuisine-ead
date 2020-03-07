@@ -5,7 +5,7 @@
 import { find, partialRight, propEq } from "ramda";
 import * as r from "./recipes.js";
 import type { Recipe, ExecuteState } from "./recipes.js";
-import type { Map } from "immutable";
+import type { RecipeInPipelineRecord } from "../../types.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -90,7 +90,7 @@ export const findStatefulRecipe = (key: string): { key: string, fn: Recipe } | t
  * to apply a modification on a DOM `Document`.
  * If the function needs the application state to work, it will be provided automatically.
  */
-export default (recipe: Map<string, any>, state: ExecuteState): ((doc: Document) => Document) => {
+export default (recipe: RecipeInPipelineRecord, state: ExecuteState): ((doc: Document) => Document) => {
     const recipeKey = recipe.get("key");
     const recipeArgs = recipe.get("args");
     if (typeof recipeKey !== "string") {

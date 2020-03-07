@@ -5,11 +5,13 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
-import { List as ImmutableList, Map, fromJS } from "immutable";
+import { List as ImmutableList, Map } from "immutable";
 import { map } from "ramda";
 import Switch from "@material-ui/core/Switch";
 import { getLabel, getComplement, getDefaultArgs } from "../../lib/recipes/recipes-lib.js";
 import RecipeArgs from "../recipes-args/recipe-args.jsx";
+import { makeRecipeInPipelineRecord } from "../../lib/record-factories.js";
+import type { RecipeInPipelineRecord } from "../../types.js";
 
 const styles = theme => ({
     root: {
@@ -29,9 +31,9 @@ const styles = theme => ({
 
 type Props = {
     availableRecipes: Array<{ key: string }>,
-    pipeline: ImmutableList<Map<string, mixed>>,
+    pipeline: ImmutableList<RecipeInPipelineRecord>,
     classes: any,
-    setPipeline: (pipeline: ImmutableList<Map<string, mixed>>) => void,
+    setPipeline: (pipeline: ImmutableList<RecipeInPipelineRecord>) => void,
 };
 
 /**
@@ -46,9 +48,9 @@ class RecipeList extends React.PureComponent<Props> {
             this.isChecked(recipe)
                 ? this.props.pipeline.filter(r => r.get("key") !== recipe)
                 : this.props.pipeline.push(
-                      Map({
+                      makeRecipeInPipelineRecord({
                           key: recipe,
-                          args: fromJS(getDefaultArgs(recipe)),
+                          args: Map(getDefaultArgs(recipe)),
                       })
                   )
         );

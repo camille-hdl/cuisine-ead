@@ -23,6 +23,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { extractCA } from "../lib/recipes/recipes.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
+import type { XmlFileRecord } from "../types.js";
 import JSZip from "jszip";
 
 const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
@@ -120,7 +121,7 @@ export const downloadResultsZip = (props: Props) => {
  * We use `Immutable.Set` for performance.
  */
 export const downloadControlAccesses = (props: Props) => {
-    const controlaccesses = props.xmlFiles.reduce((acc: Set<any>, xmlFile: Map<string, mixed>): Set<any> => {
+    const controlaccesses = props.xmlFiles.reduce((acc: Set<any>, xmlFile: XmlFileRecord): Set<any> => {
         return acc.concat(extractCA(props.pipelineFn(xmlFile)).toSet());
     }, Set([]));
     FileSaver.saveAs(

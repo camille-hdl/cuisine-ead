@@ -10,7 +10,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import type { AddXmlFileData, ComputedStateProps } from "../types.js";
+import type { AddXmlFileData, ComputedStateProps, RecipeInPipelineRecord } from "../types.js";
 import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 import FloatingButtons from "./floating-buttons.jsx";
@@ -46,11 +46,11 @@ export type Props = {
     /**
      * Updates the recipes to apply to `Document`s
      */
-    setPipeline: (p: List<Map<string, mixed>>) => void,
+    setPipeline: (p: List<RecipeInPipelineRecord>) => void,
     /**
      * Updates the recipes to apply to xml strings
      */
-    setOutputPipeline: (p: List<Map<string, mixed>>) => void,
+    setOutputPipeline: (p: List<RecipeInPipelineRecord>) => void,
     /**
      * Defines which file is being previewed
      */

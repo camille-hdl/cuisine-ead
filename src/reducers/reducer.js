@@ -9,13 +9,14 @@ import {
     TOGGLE_PREVIEW,
     SET_OUTPUT_PIPELINE,
 } from "../actions.js";
-import type { AddXmlFileData, StateRecord } from "../types.js";
+import type { AddXmlFileData, StateRecord, RecipeInPipelineRecord } from "../types.js";
 import updateCorrections from "../lib/corrections-parser.js";
+import { makeXmlFileRecord } from "../lib/record-factories.js";
 
 const addXmlFileReducer = (state: StateRecord, data: AddXmlFileData): StateRecord => {
     const xmlFiles = state.get("xmlFiles");
     const isDuplicate = xmlFiles.map(f => f.get("hash")).includes(data.hash);
-    return isDuplicate ? state : state.update("xmlFiles", xmlFiles => xmlFiles.push(Map(data)));
+    return isDuplicate ? state : state.update("xmlFiles", xmlFiles => xmlFiles.push(makeXmlFileRecord(data)));
 };
 
 const removeXmlFileReducer = (state: StateRecord, data: string): StateRecord => {
@@ -29,14 +30,14 @@ const updateCorrectionsReducer = (state: StateRecord, data: Array<Line>): StateR
 /**
  * changes the settings of `pipeline` (functions applied to `Documents`)
  */
-const setPipelineReducer = (state: StateRecord, data: List<Map<string, mixed>>): StateRecord => {
+const setPipelineReducer = (state: StateRecord, data: List<RecipeInPipelineRecord>): StateRecord => {
     return state.set("pipeline", data);
 };
 
 /**
  * Changes the settings of `oututPipeline` (functions applied to xml strings)
  */
-const setOutputPipelinereducer = (state: StateRecord, data: List<Map<string, mixed>>): StateRecord => {
+const setOutputPipelinereducer = (state: StateRecord, data: List<RecipeInPipelineRecord>): StateRecord => {
     return state.set("outputPipeline", data);
 };
 

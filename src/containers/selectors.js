@@ -4,7 +4,7 @@ import { Map, List } from "immutable";
 import getRecipeFn from "../lib/recipes/index.js";
 import getOutputRecipeFn from "../lib/output-recipes.js";
 import { pipe, compose, memoizeWith, take, split, identity, join } from "ramda";
-import type { StateRecord } from "../types.js";
+import type { StateRecord, XmlFileRecord, RecipeInPipelineRecord } from "../types.js";
 import type { ExecuteState } from "../lib/recipes/recipes.js";
 /**
  * Returns only the first few lines of the file,
@@ -19,8 +19,7 @@ const isList = (maybeList: mixed): boolean %checks => {
 export const previewHashSelector = (state: StateRecord): string | null =>
     state.get("previewHash") ? String(state.get("previewHash")) : null;
 
-type XmlFileMap = Map<string, mixed>;
-export const xmlFilesSelector = (state: StateRecord): List<XmlFileMap> => {
+export const xmlFilesSelector = (state: StateRecord): List<XmlFileRecord> => {
     const xmlFiles = state.get("xmlFiles");
     if (xmlFiles && isList(xmlFiles)) {
         return xmlFiles;
@@ -28,9 +27,8 @@ export const xmlFilesSelector = (state: StateRecord): List<XmlFileMap> => {
     return List();
 };
 
-type PipelineMap = Map<string, mixed>;
-export const pipelineSelector = (state: StateRecord): List<PipelineMap> => state.get("pipeline");
-export const outputPipelineSelector = (state: StateRecord): List<PipelineMap> => state.get("outputPipeline");
+export const pipelineSelector = (state: StateRecord): List<RecipeInPipelineRecord> => state.get("pipeline");
+export const outputPipelineSelector = (state: StateRecord): List<RecipeInPipelineRecord> => state.get("outputPipeline");
 export const previewEnabledSelector = (state: StateRecord): boolean => state.get("previewEnabled");
 
 type CorrectionsMap = Map<string, mixed>;
@@ -44,14 +42,14 @@ export const previewXmlFileSelector = createSelector<
     Map<string, mixed>,
     void,
     string | null,
-    List<XmlFileMap>,
+    List<XmlFileRecord>,
     boolean,
-    XmlFileMap | null
+    XmlFileRecord | null
 >(
     previewHashSelector,
     xmlFilesSelector,
     previewEnabledSelector,
-    (previewHash: string | null, xmlFiles: List<XmlFileMap>, previewEnabled: boolean): XmlFileMap | null => {
+    (previewHash: string | null, xmlFiles: List<XmlFileRecord>, previewEnabled: boolean): XmlFileRecord | null => {
         if (!previewEnabled) return null;
         if (xmlFiles.size <= 0) return null;
         if (previewHash) {
@@ -77,7 +75,7 @@ export const previewXmlFileSliceSelector = createSelector<
 /**
  * Returns a new `Document` for a given `xmlFile`.
  */
-const createNewDoc = (xmlFile: XmlFileMap): Document => {
+const createNewDoc = (xmlFile: XmlFileRecord): Document => {
     const parser = new DOMParser();
     return parser.parseFromString(xmlFile.get("string"), "application/xml");
 };
@@ -94,7 +92,7 @@ export const pipelineStateSelector = createSelector<StateRecord, void, Map<strin
     }
 );
 
-type PipelineFn = (xmlFile: Map<string, mixed>) => Document;
+type PipelineFn = (xmlFile: XmlFileRecord) => Document;
 /**
  * Returns a memoized function that applies the selected recipes to a `xmlFile` objet.
  * `xmlFile.hash` is used as the cache key.
@@ -103,10 +101,16 @@ type PipelineFn = (xmlFile: Map<string, mixed>) => Document;
  * The function will create a new `Document` every time it's called
  * because the DOM API mutates it.
  */
-export const pipelineFnSelector = createSelector<StateRecord, void, List<PipelineMap>, ExecuteState, PipelineFn | null>(
+export const pipelineFnSelector = createSelector<
+    StateRecord,
+    void,
+    List<RecipeInPipelineRecord>,
+    ExecuteState,
+    PipelineFn | null
+>(
     pipelineSelector,
     pipelineStateSelector,
-    (pipeline: List<PipelineMap>, executeState: ExecuteState): PipelineFn | null => {
+    (pipeline: List<RecipeInPipelineRecord>, executeState: ExecuteState): PipelineFn | null => {
         if (pipeline.size <= 0)
             return memoizeWith(
                 xmlFile => xmlFile.get("hash"),
@@ -128,17 +132,19 @@ type OutputPipelineFn = (xmlString: string) => string;
  * Returns a function that applies the selected output recipes (`xmlString => xmlString`) to an xmlString
  * *after* `pipelineFn` has been applied.
  */
-export const outputPipelineFnSelector = createSelector<StateRecord, void, List<PipelineMap>, OutputPipelineFn>(
-    outputPipelineSelector,
-    (outputPipeline: List<PipelineMap>): OutputPipelineFn => {
-        if (outputPipeline.size <= 0) return (str: string) => str;
-        const recipesFns = outputPipeline
-            .map<(str: string) => string>(r => getOutputRecipeFn(r.get("key")))
-            .toArray();
-        const fn = pipe(...recipesFns);
-        return fn;
-    }
-);
+export const outputPipelineFnSelector = createSelector<
+    StateRecord,
+    void,
+    List<RecipeInPipelineRecord>,
+    OutputPipelineFn
+>(outputPipelineSelector, (outputPipeline: List<RecipeInPipelineRecord>): OutputPipelineFn => {
+    if (outputPipeline.size <= 0) return (str: string) => str;
+    const recipesFns = outputPipeline
+        .map<(str: string) => string>(r => getOutputRecipeFn(r.get("key")))
+        .toArray();
+    const fn = pipe(...recipesFns);
+    return fn;
+});
 
 /**
  * Returns a string representation of the selected xml file
@@ -147,7 +153,7 @@ export const outputPipelineFnSelector = createSelector<StateRecord, void, List<P
 export const previewXmlStringSelector = createSelector<
     Map<string, mixed>,
     void,
-    Map<string, mixed> | null,
+    XmlFileRecord | null,
     PipelineFn | null,
     OutputPipelineFn,
     string | null
@@ -156,7 +162,7 @@ export const previewXmlStringSelector = createSelector<
     pipelineFnSelector,
     outputPipelineFnSelector,
     (
-        xmlFile: Map<string, mixed>,
+        xmlFile: XmlFileRecord,
         pipelineFn: PipelineFn | null,
         outputPipelineFn: (str: string) => string
     ): string | null => {
@@ -175,14 +181,18 @@ export const fullRecipeSelector = createSelector<
     StateRecord,
     void,
     string,
-    List<PipelineMap>,
-    List<PipelineMap>,
+    List<RecipeInPipelineRecord>,
+    List<RecipeInPipelineRecord>,
     Map<string, mixed>
 >(
     versionSelector,
     pipelineSelector,
     outputPipelineSelector,
-    (version: string, pipeline: List<PipelineMap>, outputPipeline: List<PipelineMap>): Map<string, mixed> => {
+    (
+        version: string,
+        pipeline: List<RecipeInPipelineRecord>,
+        outputPipeline: List<RecipeInPipelineRecord>
+    ): Map<string, mixed> => {
         return Map<string, mixed>({
             version: version,
             pipeline: pipeline,

@@ -25,10 +25,10 @@ import {
 } from "ramda";
 import { readXml } from "../lib/xml.js";
 import { openFile } from "../lib/utils.js";
-import type { AddXmlFileData } from "../types.js";
+import type { InputJSONData, InputJSONRaw } from "../types.js";
 import Papa from "papaparse";
 import PaperSheet from "./material/paper-sheet.jsx";
-import { List, Map, fromJS } from "immutable";
+import { List } from "immutable";
 import FileList from "./material/file-list.jsx";
 import BigIcon from "./material/big-icon.jsx";
 import Grid from "./material/grid.jsx";
@@ -37,6 +37,22 @@ import { Link as RouterLink } from "react-router-dom";
 import OutlinedButton from "./material/outlined-button.jsx";
 import AppStepper from "./material/stepper.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
+import { makeInputJSONRecord, makeRecipeInPipelineRecord } from "../lib/record-factories.js";
+
+const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {
+    const output = {
+        version: input.version,
+        pipeline: List(),
+        outputPipeline: List(),
+    };
+    if (input.pipeline) {
+        output.pipeline = List(input.pipeline.map(makeRecipeInPipelineRecord));
+    }
+    if (input.outputPipeline) {
+        output.outputPipeline = List(input.outputPipeline.map(makeRecipeInPipelineRecord));
+    }
+    return output;
+};
 
 /**
  * mime-types for xml files (assuming xml-EAD)
@@ -76,18 +92,7 @@ const mergeDeepAll = reduce(
 /**
  * See src/components/app.jsx
  */
-type Props = {
-    xmlFiles: List<Map<string, mixed>>,
-    corrections: Map<string, mixed>,
-    pipeline: List<Map<string, mixed>>,
-    outputPipeline: List<Map<string, mixed>>,
-    correctionsNb: number,
-    setPipeline: (pipeline: List<Map<string, mixed>>) => void,
-    setOutputPipeline: (pipeline: List<Map<string, mixed>>) => void,
-    addXmlFile: (info: AddXmlFileData) => void,
-    removeXmlFile: (hash: string) => void,
-    updateCorrections: (corrections: Array<string>) => void,
-};
+import type { Props } from "./app.jsx";
 
 const NextStepLink = forwardRef(function NextStepLink(props, ref) {
     return <RouterLink to="/recettes" {...props} data-cy="next-step-link" ref={ref} />;
@@ -97,10 +102,11 @@ export default class UploadFiles extends React.PureComponent<Props> {
     /**
      * If the user provides a JSON file, we use it as a preset of recipes
      */
-    importJson = (inputJson: { version: string | Array<string>, pipeline: Array<any>, outputPipeline: Array<any> }) => {
+    importJson = (inputJson: InputJSONRaw) => {
         console.log("import", inputJson);
-        if (inputJson.pipeline && inputJson.pipeline.length > 0) {
-            const inputRecipes = fromJS(inputJson.pipeline);
+        const inputRecord = makeInputJSONRecord(makeInputJSONData(inputJson));
+        if (inputRecord.get("pipeline") && inputRecord.get("pipeline").size > 0) {
+            const inputRecipes = inputRecord.get("pipeline");
             if (List.isList(inputRecipes)) {
                 /**
                  * Don't add duplicates
@@ -110,8 +116,8 @@ export default class UploadFiles extends React.PureComponent<Props> {
                 this.props.setPipeline(this.props.pipeline.concat(usableRecipes));
             }
         }
-        if (inputJson.outputPipeline && inputJson.outputPipeline.length > 0) {
-            const inputRecipes = fromJS(inputJson.outputPipeline);
+        if (inputRecord.get("outputPipeline") && inputRecord.get("outputPipeline").size > 0) {
+            const inputRecipes = inputRecord.get("outputPipeline");
             /**
              * Don't add duplicates
              */
