@@ -50,7 +50,9 @@ export default function updateCorrections(data: Array<Line>, initialCorrections:
                 newMap = newMap.setIn([originalCA, term], List());
             }
             newMap = newMap.updateIn([originalCA, term], terms => {
-                return terms.concat(List(map(str => [str ? str.trim() : str, destinationCA], compact(replacements))));
+                return terms.concat(
+                    List(map(str => List([str ? str.trim() : str, destinationCA]), compact(replacements)))
+                );
             });
         }
     }, data);

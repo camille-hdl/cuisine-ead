@@ -60,8 +60,9 @@ const getPluginsConfig = (prod, mini) => {
                     "forwardRef",
                     "Fragment",
                     "isValidElement",
+                    "createContext",
                 ],
-                "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates"],
+                "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates", "createPortal"],
                 "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS", "Record"],
                 "./node_modules/babel-runtime/node_modules/core-js/library/modules/es6.object.to-string.js": [
                     "default",
