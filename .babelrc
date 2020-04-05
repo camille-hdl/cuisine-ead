@@ -1,18 +1,11 @@
 {
     "env": {
       "production": {
-        "presets": [["@babel/preset-env", {
-          "modules": false,
-          "targets": {
-            "browsers": [
-              ">0.25%",
-              "not op_mini all"
-            ]
-          }
+        "presets": [["@babel/preset-modules", {
+          "loose": true,
         }],  "@babel/preset-react", "@babel/preset-flow"],
         "plugins": [
           "@babel/plugin-syntax-dynamic-import",
-          "@babel/plugin-proposal-object-rest-spread",
           "@babel/plugin-proposal-class-properties",
           ["transform-imports", {
             "lodash": {
@@ -23,18 +16,11 @@
         ]
       },
       "development": {
-        "presets": [["@babel/preset-env", {
-          "modules": false,
-          "targets": {
-            "browsers": [
-              ">0.25%",
-              "not op_mini all"
-            ]
-          }
+        "presets": [["@babel/preset-modules", {
+          "loose": true,
         }],  "@babel/preset-react", "@babel/preset-flow"],
         "plugins": [
           "@babel/plugin-syntax-dynamic-import",
-          "@babel/plugin-proposal-object-rest-spread",
           "@babel/plugin-proposal-class-properties",
           ["transform-imports", {
             "lodash": {
@@ -46,7 +32,7 @@
       },
       "test": {
         "presets": ["@babel/preset-env",  "@babel/preset-react", "@babel/preset-flow"],
-        "plugins": ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-proposal-class-properties"]
+        "plugins": ["@babel/plugin-proposal-class-properties"]
       }
     }
   }
