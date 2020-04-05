@@ -71,7 +71,7 @@ const getPluginsConfig = (prod, mini) => {
                     "createMuiTheme",
                     "MuiThemeProvider",
                 ],
-                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment", "ForwardRef"],
+                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment", "ForwardRef", "Memo"],
                 "./node_modules/react-redux/node_modules/react-is/index.js": [
                     "isValidElementType",
                     "isContextConsumer",
