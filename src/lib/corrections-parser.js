@@ -2,7 +2,7 @@
 import { Map, List } from "immutable";
 type Line = [string, string, string];
 import { forEach, concat, filter, map, head, last } from "ramda";
-const compact = filter(val => !!val);
+const compact = filter((val) => !!val);
 const SEPARATOR = "/";
 const CA_SEPARATOR = "=>";
 
@@ -34,7 +34,7 @@ const checkLine = (line: any): boolean => {
  */
 export default function updateCorrections(data: Array<Line>, initialCorrections: Map<string, any>): Map<string, any> {
     let newMap = Map();
-    forEach(line => {
+    forEach((line) => {
         // verifier la ligne
         if (!checkLine(line)) return;
         const cas = line[0].split(CA_SEPARATOR);
@@ -49,9 +49,9 @@ export default function updateCorrections(data: Array<Line>, initialCorrections:
             if (!newMap.hasIn([originalCA, term])) {
                 newMap = newMap.setIn([originalCA, term], List());
             }
-            newMap = newMap.updateIn([originalCA, term], terms => {
+            newMap = newMap.updateIn([originalCA, term], (terms) => {
                 return terms.concat(
-                    List(map(str => List([str ? str.trim() : str, destinationCA]), compact(replacements)))
+                    List(map((str) => List([str ? str.trim() : str, destinationCA]), compact(replacements)))
                 );
             });
         }

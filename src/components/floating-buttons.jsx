@@ -6,7 +6,7 @@ import Icon from "@material-ui/core/Icon";
 import type { Props } from "./app.jsx";
 import { downloadResultsZip, downloadControlAccesses } from "./results.jsx";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         position: "fixed",
         bottom: theme.spacing(2),

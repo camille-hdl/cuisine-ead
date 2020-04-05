@@ -53,7 +53,7 @@ export const previewXmlFileSelector = createSelector<
         if (!previewEnabled) return null;
         if (xmlFiles.size <= 0) return null;
         if (previewHash) {
-            const previewFile = xmlFiles.find(f => f.get("hash") === previewHash);
+            const previewFile = xmlFiles.find((f) => f.get("hash") === previewHash);
             return previewFile ? previewFile : xmlFiles.first();
         }
         return xmlFiles.first();
@@ -113,16 +113,16 @@ export const pipelineFnSelector = createSelector<
     (pipeline: List<RecipeInPipelineRecord>, executeState: ExecuteState): PipelineFn | null => {
         if (pipeline.size <= 0)
             return memoizeWith(
-                xmlFile => xmlFile.get("hash"),
-                xmlFile => createNewDoc(xmlFile)
+                (xmlFile) => xmlFile.get("hash"),
+                (xmlFile) => createNewDoc(xmlFile)
             );
         const recipesFns = pipeline
-            .map<(doc: Document) => Document>(r => getRecipeFn(r, executeState))
+            .map<(doc: Document) => Document>((r) => getRecipeFn(r, executeState))
             .toArray();
         const fn = pipe(...recipesFns);
         return memoizeWith(
-            xmlFile => xmlFile.get("hash"),
-            xmlFile => fn(createNewDoc(xmlFile))
+            (xmlFile) => xmlFile.get("hash"),
+            (xmlFile) => fn(createNewDoc(xmlFile))
         );
     }
 );
@@ -140,7 +140,7 @@ export const outputPipelineFnSelector = createSelector<
 >(outputPipelineSelector, (outputPipeline: List<RecipeInPipelineRecord>): OutputPipelineFn => {
     if (outputPipeline.size <= 0) return (str: string) => str;
     const recipesFns = outputPipeline
-        .map<(str: string) => string>(r => getOutputRecipeFn(r.get("key")))
+        .map<(str: string) => string>((r) => getOutputRecipeFn(r.get("key")))
         .toArray();
     const fn = pipe(...recipesFns);
     return fn;
@@ -206,7 +206,7 @@ export const fullRecipeSelector = createSelector<
  */
 export const correctionsNbSelector = createSelector<StateRecord, void, Map<string, mixed>, number>(
     correctionsSelector,
-    corrections =>
+    (corrections) =>
         corrections.reduce((sum, terms) => {
             return sum + terms.size;
         }, 0)

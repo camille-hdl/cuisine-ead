@@ -16,7 +16,7 @@ const getWASMInstance = (callback: (instance: Hasher) => void) => {
     if (wasmInstance) {
         callback(wasmInstance);
     } else {
-        xxhash().then(instance => {
+        xxhash().then((instance) => {
             wasmInstance = instance;
             callback(wasmInstance);
         });
@@ -75,7 +75,7 @@ export const readXml = (file: File, loadCallback: (doc: DocData) => void) => {
         const info = jschardet.detect(str);
         const decoder = getDecoder(info.encoding);
         const xmlString = normalizeXmlString(decoder.decode(buffer));
-        getWASMInstance(hasher => {
+        getWASMInstance((hasher) => {
             loadCallback({
                 /**
                  * non-standard Document.evaluate & Document.createNSREsolver

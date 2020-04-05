@@ -34,16 +34,16 @@ const availableRecipes = getRecipes();
 const availaleStatefulRecipes = getStatefulRecipes();
 //TODO: fix flow
 //$FlowFixMe
-const categories = sortBy(ascend)(uniq(map(r => getCategory(r.key), availableRecipes)));
+const categories = sortBy(ascend)(uniq(map((r) => getCategory(r.key), availableRecipes)));
 /**
  * Partition recipes by category
  * for presentation
  */
-const recipesByCategories = map(c => {
+const recipesByCategories = map((c) => {
     return {
         category: c,
         //$FlowFixMe
-        recipes: sortBy(ascend)(filter(r => equals(c, getCategory(r.key)), availableRecipes)),
+        recipes: sortBy(ascend)(filter((r) => equals(c, getCategory(r.key)), availableRecipes)),
     };
 }, categories);
 const availableOutputRecipes = getOutputRecipes();
@@ -90,7 +90,7 @@ export default function SelectRecipes(props: Props) {
             props.setPipeline(
                 props.pipeline.concat(
                     List(
-                        availableRecipes.map(recipe => {
+                        availableRecipes.map((recipe) => {
                             return makeRecipeInPipelineRecord({
                                 key: recipe.key,
                                 args: Map(getDefaultArgs(recipe.key)),
@@ -98,7 +98,7 @@ export default function SelectRecipes(props: Props) {
                         })
                     ),
                     List(
-                        availaleStatefulRecipes.map(recipe => {
+                        availaleStatefulRecipes.map((recipe) => {
                             return makeRecipeInPipelineRecord({
                                 key: recipe.key,
                                 args: Map(getDefaultArgs(recipe.key)),
@@ -190,7 +190,7 @@ export default function SelectRecipes(props: Props) {
             </Grid>
             <Grid item xs={12}>
                 <Grid container>
-                    {map(r => {
+                    {map((r) => {
                         return (
                             <PaperSheet xs={12} sm={6} key={r.category}>
                                 <Typography variant="h6">{r.category}</Typography>

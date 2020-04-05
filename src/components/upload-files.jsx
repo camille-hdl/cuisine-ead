@@ -111,8 +111,8 @@ export default class UploadFiles extends React.PureComponent<Props> {
                 /**
                  * Don't add duplicates
                  */
-                const recipesKeys = this.props.pipeline.map(p => p.get("key"));
-                const usableRecipes = inputRecipes.filter(ir => !recipesKeys.includes(ir.get("key")));
+                const recipesKeys = this.props.pipeline.map((p) => p.get("key"));
+                const usableRecipes = inputRecipes.filter((ir) => !recipesKeys.includes(ir.get("key")));
                 this.props.setPipeline(this.props.pipeline.concat(usableRecipes));
             }
         }
@@ -121,8 +121,8 @@ export default class UploadFiles extends React.PureComponent<Props> {
             /**
              * Don't add duplicates
              */
-            const recipesKeys = this.props.outputPipeline.map(p => p.get("key"));
-            const usableRecipes = inputRecipes.filter(ir => !recipesKeys.includes(ir.get("key")));
+            const recipesKeys = this.props.outputPipeline.map((p) => p.get("key"));
+            const usableRecipes = inputRecipes.filter((ir) => !recipesKeys.includes(ir.get("key")));
             this.props.setOutputPipeline(this.props.outputPipeline.concat(usableRecipes));
         }
     };
@@ -151,7 +151,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                             onDrop={(accepted: Array<any>, rejected: Array<any>) => {
                                 const { xml, csv, json, other } = groupBy(getType, accepted);
                                 if (xml) {
-                                    forEach(file => {
+                                    forEach((file) => {
                                         readXml(file, ({ doc, encoding, string, hash }) => {
                                             this.props.addXmlFile({
                                                 filename: file.name,
@@ -167,9 +167,9 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                     /**
                                      * CSV files are controlaccess corrections
                                      */
-                                    forEach(file => {
+                                    forEach((file) => {
                                         Papa.parse(typeof file.__CYPRESS !== "undefined" ? file.__CYPRESS : file, {
-                                            complete: results => {
+                                            complete: (results) => {
                                                 this.props.updateCorrections(tail(results.data));
                                             },
                                         });
@@ -213,7 +213,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                                 <PaperSheet xs={12} data-cy="file-list">
                                                     <FileList
                                                         xmlFiles={this.props.xmlFiles}
-                                                        onRemove={xmlFile => {
+                                                        onRemove={(xmlFile) => {
                                                             this.props.removeXmlFile(xmlFile.get("hash"));
                                                         }}
                                                     />

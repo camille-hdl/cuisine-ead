@@ -15,12 +15,12 @@ import { makeXmlFileRecord } from "../lib/record-factories.js";
 
 const addXmlFileReducer = (state: StateRecord, data: AddXmlFileData): StateRecord => {
     const xmlFiles = state.get("xmlFiles");
-    const isDuplicate = xmlFiles.map(f => f.get("hash")).includes(data.hash);
-    return isDuplicate ? state : state.update("xmlFiles", xmlFiles => xmlFiles.push(makeXmlFileRecord(data)));
+    const isDuplicate = xmlFiles.map((f) => f.get("hash")).includes(data.hash);
+    return isDuplicate ? state : state.update("xmlFiles", (xmlFiles) => xmlFiles.push(makeXmlFileRecord(data)));
 };
 
 const removeXmlFileReducer = (state: StateRecord, data: string): StateRecord => {
-    return state.update("xmlFiles", xmlFiles => xmlFiles.filter(f => f.get("hash") !== data));
+    return state.update("xmlFiles", (xmlFiles) => xmlFiles.filter((f) => f.get("hash") !== data));
 };
 type Line = [string, string, string];
 const updateCorrectionsReducer = (state: StateRecord, data: Array<Line>): StateRecord => {

@@ -13,7 +13,7 @@ export const cleanOutputEncoding = (xmlStr: string, encoding: string): string =>
     str = str.replace("encoding='" + encoding.toLowerCase() + "'", "");
     str = str.replace('encoding="' + encoding.toLowerCase() + '"', "");
     forEach(
-        commonEncoding => {
+        (commonEncoding) => {
             str = str.replace("encoding='" + commonEncoding + "'", "");
             str = str.replace('encoding="' + commonEncoding + '"', "");
             str = str.replace("encoding='" + commonEncoding.toLowerCase() + "'", "");

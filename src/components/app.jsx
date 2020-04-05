@@ -81,7 +81,7 @@ const SelectRecipes = lazy(() => import("./select-recipes.jsx"));
  * View on which the user chooses which recipes they want
  * to apply
  */
-const AsyncSelectRecipes = props => {
+const AsyncSelectRecipes = (props) => {
     return (
         <Suspense fallback={<LoadingComponent />}>
             <ErrorCatcher>
@@ -94,7 +94,7 @@ const Results = lazy(() => import("./results.jsx"));
 /**
  * View on which the user can download processed files
  */
-const AsyncResults = props => {
+const AsyncResults = (props) => {
     return (
         <Suspense fallback={<LoadingComponent />}>
             <ErrorCatcher>
@@ -120,18 +120,21 @@ export default class App extends React.PureComponent<Props> {
                     <Route
                         exact
                         path="/"
-                        render={routeProps => <StartPage hasXmlFiles={hasXmlFiles} {...routeProps} />}
+                        render={(routeProps) => <StartPage hasXmlFiles={hasXmlFiles} {...routeProps} />}
                     />
-                    <Route path="/upload" render={routeProps => <AsyncUploadFiles {...this.props} {...routeProps} />} />
+                    <Route
+                        path="/upload"
+                        render={(routeProps) => <AsyncUploadFiles {...this.props} {...routeProps} />}
+                    />
                     <Route
                         path="/recettes"
-                        render={routeProps =>
+                        render={(routeProps) =>
                             hasXmlFiles ? <AsyncSelectRecipes {...this.props} {...routeProps} /> : <Redirect to="/" />
                         }
                     />
                     <Route
                         path="/resultats"
-                        render={routeProps =>
+                        render={(routeProps) =>
                             hasXmlFiles ? (
                                 hasPipeline ? (
                                     <AsyncResults {...this.props} {...routeProps} />
