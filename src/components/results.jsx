@@ -23,13 +23,14 @@ import { withStyles } from "@material-ui/core/styles";
 import { extractCA } from "../lib/recipes/recipes.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
+import type { XmlFileRecord } from "../types.js";
 import JSZip from "jszip";
 
 const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
     return <RouterLink to="/recettes" {...props} data-cy="prev-step-link" ref={ref} />;
 });
 
-const styles = theme => ({
+const styles = (theme) => ({
     downloadBlock: {
         ...theme.mixins.gutters(),
         textAlign: "center",
@@ -60,7 +61,7 @@ const getFullRecipe = (props: Props): string => {
  * Downloads the resulting files in separate files, one for each input file.
  */
 export const downloadResults = (props: Props) => {
-    props.xmlFiles.forEach(xmlFile => {
+    props.xmlFiles.forEach((xmlFile) => {
         // telecharger
         const output = props.pipelineFn(xmlFile);
         const serializer = new XMLSerializer();
@@ -82,8 +83,8 @@ export const downloadResults = (props: Props) => {
  */
 export const downloadResultsZip = (props: Props) => {
     const zip = new JSZip();
-    const promises = props.xmlFiles.map(xmlFile => {
-        return new Promise(resolve => {
+    const promises = props.xmlFiles.map((xmlFile) => {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 const output = props.pipelineFn(xmlFile);
                 const serializer = new XMLSerializer();
@@ -94,6 +95,7 @@ export const downloadResultsZip = (props: Props) => {
                     typeof encoding === "string" ? encoding : ""
                 );
                 resolve({
+                    doc: output,
                     filename:
                         typeof filename === "string"
                             ? genNewFilename(filename)
@@ -104,12 +106,20 @@ export const downloadResultsZip = (props: Props) => {
         });
     });
     if (promises.size > 0) {
-        Promise.all(promises.toArray()).then(outputFiles => {
-            outputFiles.forEach(outputFile => {
+        Promise.all(promises.toArray()).then((outputFiles) => {
+            if (typeof window.Cypress !== "undefined" && typeof window.__CYPRESS_OUTPUT === "undefined") {
+                window.__CYPRESS_OUTPUT = [];
+            }
+            outputFiles.forEach((outputFile) => {
+                if (typeof window.Cypress !== "undefined") {
+                    window.__CYPRESS_OUTPUT_READY = true;
+                    window.__CYPRESS_OUTPUT.push(outputFile);
+                    window.__CYPRESS_CORRECTIONS = props.corrections.toJS();
+                }
                 zip.file(outputFile.filename, outputFile.str);
             });
             zip.file("recette.cuisine-ead.json", getFullRecipe(props));
-            zip.generateAsync({ type: "blob" }).then(blob => {
+            zip.generateAsync({ type: "blob" }).then((blob) => {
                 FileSaver.saveAs(blob, "EAD cuisiné.zip");
             });
         });
@@ -120,27 +130,24 @@ export const downloadResultsZip = (props: Props) => {
  * We use `Immutable.Set` for performance.
  */
 export const downloadControlAccesses = (props: Props) => {
-    const controlaccesses = props.xmlFiles.reduce((acc: Set<any>, xmlFile: Map<string, mixed>): Set<any> => {
+    const controlaccesses = props.xmlFiles.reduce((acc: Set<any>, xmlFile: XmlFileRecord): Set<any> => {
         return acc.concat(extractCA(props.pipelineFn(xmlFile)).toSet());
     }, Set([]));
-    FileSaver.saveAs(
-        new Blob(
-            [
-                BOM +
-                    [
-                        ["controlaccess", "valeur", "attribut"].join(";"),
-                        ...map(ligne => {
-                            if (isTuple(ligne)) {
-                                return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
-                            }
-                            return ["", "", ""].join(";");
-                        }, controlaccesses.toJS()),
-                    ].join("\n"),
-            ],
-            { type: "text/plain;charset=utf-8+bom" }
-        ),
-        "controlaccess.csv"
-    );
+    const str =
+        BOM +
+        [
+            ["controlaccess", "valeur", "attribut"].join(";"),
+            ...map((ligne) => {
+                if (isTuple(ligne)) {
+                    return [escapeCell(ligne[0]), escapeCell(ligne[1]), escapeCell(ligne[2])].join(";");
+                }
+                return ["", "", ""].join(";");
+            }, controlaccesses.toJS()),
+        ].join("\n");
+    if (typeof window.Cypress !== "undefined") {
+        window.__CYPRESS_OUTPUT_CA = str;
+    }
+    FileSaver.saveAs(new Blob([str], { type: "text/plain;charset=utf-8+bom" }), "controlaccess.csv");
 };
 
 class Results extends React.PureComponent<Props & { classes: any }> {

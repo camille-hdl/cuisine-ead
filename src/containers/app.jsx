@@ -45,8 +45,5 @@ export const mapDispatchToProps = (dispatch: any) => {
 };
 
 export const AppContainer = withRouter(
-    connect<_, _, ComputedStateProps, _, _, _>(
-        mapStateToProps,
-        mapDispatchToProps
-    )(App)
+    connect<_, _, ComputedStateProps, _, _, _>(mapStateToProps, mapDispatchToProps)(App)
 );

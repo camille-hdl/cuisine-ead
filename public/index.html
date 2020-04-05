@@ -14,7 +14,6 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <meta name="theme-color" content="#3f51b5">
-        <script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Symbol%2CURL%2CPromise%2Ces2016"></script>
     </head>
     <body>
         <script type="module">
@@ -28,38 +27,6 @@
                 // this will throw if dynamic import is not supported
                 import("/js/esm/index.js");
             })();
-        </script>
-
-        <!-- browsers with ES6 modules but no dynamic import support -->
-        <script type="module">
-            // if the module script tag throws, window.esDynamicImport will be undefined
-            if (!window.esDynamicImport) {
-                // get the nomodule scripts and load (or inline) them
-                const noms = Array.prototype.slice
-                    .call(document.getElementsByTagName("script"), 0)
-                    .filter(x => x.hasAttribute("nomodule"));
-                function nextLoad(nom, s) {
-                    if (!(nom = noms.shift())) return;
-                    s = document.createElement("script");
-                    if (nom.src)
-                        (s.src = nom.src), s.addEventListener("load", nextLoad), s.addEventListener("error", nextLoad);
-                    else s.innerHTML = nom.innerHTML;
-                    document.head.appendChild(s);
-                    if (!nom.src) nextLoad();
-                }
-                nextLoad();
-            }
-        </script>
-
-        <!-- No ES6 modules support : fallback to systemJS -->
-        <script nomodule src="https://unpkg.com/systemjs@0.21.0/dist/system-production.js"></script>
-        <script nomodule>
-            if (navigator && navigator.serviceWorker) {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("/js/system/sw.js", { scope: "/" });
-                });
-            }
-            System.import("/js/system/index.js");
         </script>
         <div id="app-container"></div>
     </body>

@@ -12,7 +12,7 @@
  */
 
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
-var VERSION = "v0.2.7";
+var VERSION = "v1.0.0";
 workbox.core.setCacheNameDetails({
     prefix: "cuisine-ead",
     suffix: VERSION,
@@ -27,7 +27,7 @@ self.addEventListener("activate", function() {
  * See https://goo.gl/S9QRab
  */
 workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute([]);
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
 // cache polyfill.io
 workbox.routing.registerRoute(

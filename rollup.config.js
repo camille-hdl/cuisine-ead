@@ -9,16 +9,12 @@ import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-cpy";
 import json from "rollup-plugin-json";
 
-
-
-
-
 const outputDir = "./public/js/";
 
 const getPluginsConfig = (prod, mini) => {
     const sortie = [
         clear({
-            targets: [outputDir + "esm", outputDir + "system"],
+            targets: [outputDir + "esm"],
             watch: true,
         }),
         copy({
@@ -60,8 +56,9 @@ const getPluginsConfig = (prod, mini) => {
                     "forwardRef",
                     "Fragment",
                     "isValidElement",
+                    "createContext",
                 ],
-                "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates"],
+                "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates", "createPortal"],
                 "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS", "Record"],
                 "./node_modules/babel-runtime/node_modules/core-js/library/modules/es6.object.to-string.js": [
                     "default",
@@ -74,7 +71,7 @@ const getPluginsConfig = (prod, mini) => {
                     "createMuiTheme",
                     "MuiThemeProvider",
                 ],
-                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment", "ForwardRef"],
+                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment", "ForwardRef", "Memo"],
                 "./node_modules/react-redux/node_modules/react-is/index.js": [
                     "isValidElementType",
                     "isContextConsumer",
@@ -83,7 +80,7 @@ const getPluginsConfig = (prod, mini) => {
             },
         }),
         babel({
-            exclude: "node_modules/**",
+            // exclude: "node_modules/**",
         }),
         globals(),
         builtins(),
@@ -97,27 +94,14 @@ const getPluginsConfig = (prod, mini) => {
         sortie.push(
             terser({
                 compress: {
-                    // screw_ie8: true,
-                    // unused: false,
-                    // dead_code: false,
-                    // conditionals: false,
-                    // warnings: false,
-                    // defaults: true,
                     unused: false,
                     collapse_vars: false,
-                    // computed_props: false,
-                    // hoist_props: false,
-                    // reduce_vars: false,
-                    // pure_getters: false,
-                    // evaluate: false,
-                    // dead_code: false,
-                    // arrows: true,
-                    // if_return: true,
-                    // properties: false
                 },
                 output: {
                     comments: !prod,
                 },
+                ecma: 8,
+                safari10: true,
                 sourcemap: true,
             })
         );
@@ -130,16 +114,10 @@ export default CLIArgs => {
     const mini = !!CLIArgs.mini;
     const bundle = {
         input: ["./src/index.jsx"],
-        output: [
-            {
-                dir: outputDir + "system/",
-                format: "system",
-            },
-            {
-                dir: outputDir + "esm/",
-                format: "es",
-            },
-        ],
+        output: {
+            dir: outputDir + "esm/",
+            format: "es",
+        },
         watch: {
             include: ["./src/**"],
         },

@@ -27,6 +27,6 @@ export default class ErrorCatcher extends React.Component<Props, State> {
         if (this.state.hasError) {
             return <ErrorMessage message={this.props.message} />;
         }
-        return this.props.children;
+        return this.props.children ? this.props.children : null;
     }
 }

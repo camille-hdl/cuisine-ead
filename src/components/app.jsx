@@ -10,7 +10,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LoadingComponent from "./material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import type { AddXmlFileData, ComputedStateProps } from "../types.js";
+import type { AddXmlFileData, ComputedStateProps, RecipeInPipelineRecord } from "../types.js";
 import StartPage from "./start-page.jsx";
 import ErrorCatcher from "./error-catcher.jsx";
 import FloatingButtons from "./floating-buttons.jsx";
@@ -22,18 +22,20 @@ const muiTheme = createMuiTheme({
 /**
  * react-router Route
  */
-type RouteProps = {
+type RouteProps = {|
     location: {
         pathname: string,
     },
     history: any,
     match: any,
-};
+|};
 
 /**
  * Props provided by the container src/containers/app.jsx
  */
-export type Props = ComputedStateProps & {
+export type Props = {
+    ...ComputedStateProps,
+    ...RouteProps,
     /**
      * Function that maps xml strings to processed xml strings,
      * givent the current settings
@@ -44,11 +46,11 @@ export type Props = ComputedStateProps & {
     /**
      * Updates the recipes to apply to `Document`s
      */
-    setPipeline: (p: List<Map<string, mixed>>) => void,
+    setPipeline: (p: List<RecipeInPipelineRecord>) => void,
     /**
      * Updates the recipes to apply to xml strings
      */
-    setOutputPipeline: (p: List<Map<string, mixed>>) => void,
+    setOutputPipeline: (p: List<RecipeInPipelineRecord>) => void,
     /**
      * Defines which file is being previewed
      */
@@ -58,7 +60,7 @@ export type Props = ComputedStateProps & {
      * Updates the corrections map
      */
     updateCorrections: (corrections: Array<string>) => void,
-} & RouteProps;
+};
 
 const UploadFiles = lazy(() => import("./upload-files.jsx"));
 /**
@@ -79,7 +81,7 @@ const SelectRecipes = lazy(() => import("./select-recipes.jsx"));
  * View on which the user chooses which recipes they want
  * to apply
  */
-const AsyncSelectRecipes = props => {
+const AsyncSelectRecipes = (props) => {
     return (
         <Suspense fallback={<LoadingComponent />}>
             <ErrorCatcher>
@@ -92,7 +94,7 @@ const Results = lazy(() => import("./results.jsx"));
 /**
  * View on which the user can download processed files
  */
-const AsyncResults = props => {
+const AsyncResults = (props) => {
     return (
         <Suspense fallback={<LoadingComponent />}>
             <ErrorCatcher>
@@ -118,18 +120,21 @@ export default class App extends React.PureComponent<Props> {
                     <Route
                         exact
                         path="/"
-                        render={routeProps => <StartPage hasXmlFiles={hasXmlFiles} {...routeProps} />}
+                        render={(routeProps) => <StartPage hasXmlFiles={hasXmlFiles} {...routeProps} />}
                     />
-                    <Route path="/upload" render={routeProps => <AsyncUploadFiles {...this.props} {...routeProps} />} />
+                    <Route
+                        path="/upload"
+                        render={(routeProps) => <AsyncUploadFiles {...this.props} {...routeProps} />}
+                    />
                     <Route
                         path="/recettes"
-                        render={routeProps =>
+                        render={(routeProps) =>
                             hasXmlFiles ? <AsyncSelectRecipes {...this.props} {...routeProps} /> : <Redirect to="/" />
                         }
                     />
                     <Route
                         path="/resultats"
-                        render={routeProps =>
+                        render={(routeProps) =>
                             hasXmlFiles ? (
                                 hasPipeline ? (
                                     <AsyncResults {...this.props} {...routeProps} />

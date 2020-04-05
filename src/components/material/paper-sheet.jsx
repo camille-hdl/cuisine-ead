@@ -17,7 +17,7 @@ function PaperSheet(props: { classes: any, header?: Element<any> | string, child
     const { classes, header, children, ...rest } = props;
 
     return (
-        <Grid item {...rest}>
+        <Grid {...rest} item>
             <Paper className={classes.root} elevation={1}>
                 {header ? (
                     <Typography variant="h5" component="h3">

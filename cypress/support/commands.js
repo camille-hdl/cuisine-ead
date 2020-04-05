@@ -11,7 +11,16 @@ Cypress.Commands.add('upload_file', (fileName, selector, contentType) => {
         });
     });
 });
-
+Cypress.Commands.add(
+    "attach_file",
+    {
+      prevSubject: "element"
+    },
+    ($input, dataTransfer) => {
+      $input[0].files = dataTransfer.files;
+      return $input;
+    }
+);
 function b64toBlob(b64Data, contentType, sliceSize) {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;

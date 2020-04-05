@@ -40,11 +40,11 @@ function processContentNode(node, output, preserveSpace) {
         newLine(output);
     }
     const trimFunction = preserveSpace
-        ? str => {
+        ? (str) => {
               // remove newLines and multiple whitespace characters
               return str.replace(/(\r\n)|\n/g, "").replace(/\s+/g, " ");
           }
-        : str => str.trim();
+        : (str) => str.trim();
     appendContent(output, trimFunction(node.content));
 }
 function lastCharacterIsNewLine(output) {
@@ -70,7 +70,7 @@ function processElement(node, output, preserveSpace) {
         var nodePreserveSpace = node.attributes["xml:space"] === "preserve";
 
         if (!nodePreserveSpace && output.options.collapseContent) {
-            var containsTextNodes = node.children.some(function(child) {
+            var containsTextNodes = node.children.some(function (child) {
                 return child.name === "#text" && child.content.trim() !== "";
             });
 
@@ -79,7 +79,7 @@ function processElement(node, output, preserveSpace) {
             }
         }
 
-        node.children.forEach(function(child) {
+        node.children.forEach(function (child) {
             processNode(child, output, preserveSpace || nodePreserveSpace);
         });
 
@@ -93,7 +93,7 @@ function processElement(node, output, preserveSpace) {
 }
 
 function processAttributes(output, attributes) {
-    Object.keys(attributes).forEach(function(attr) {
+    Object.keys(attributes).forEach(function (attr) {
         appendContent(output, " " + attr + '="' + attributes[attr] + '"');
     });
 }
@@ -106,11 +106,11 @@ function processDeclaration(declaration, output) {
     }
 }
 type FormatOptionsInput = {
-    debug?: boolean | typeof undefined,
-    indentation?: string | typeof undefined,
-    stripComments?: boolean | typeof undefined,
-    collapseContent?: boolean | typeof undefined,
-    newLine?: string | typeof undefined,
+    debug?: boolean,
+    indentation?: string,
+    stripComments?: boolean,
+    collapseContent?: boolean,
+    newLine?: string,
 };
 type FormatOptions = {
     debug: boolean,
@@ -120,7 +120,7 @@ type FormatOptions = {
     newLine: string,
 };
 const applyDefaults = (options: FormatOptionsInput): FormatOptions => {
-    const defaults = {
+    const defaults: FormatOptions = {
         debug: false,
         indentation: "    ",
         stripComments: true,
@@ -150,7 +150,7 @@ export default function format(xml: string, inputOptions: FormatOptionsInput) {
     var output = { content: "", level: 0, options: options };
 
     processDeclaration(parsedXml.declaration, output);
-    parsedXml.children.forEach(function(child) {
+    parsedXml.children.forEach(function (child) {
         processNode(child, output, false);
     });
 
