@@ -59,7 +59,7 @@
     "rollup-pluginutils": "^2.8.2",
     "serve": "^11.3.0",
     "start-server-and-test": "^1.10.11",
-    "workbox-cli": "^4.3.1"
+    "workbox-cli": "^5.1.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.9.2",
