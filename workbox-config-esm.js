@@ -7,6 +7,7 @@ module.exports = {
   ],
   "swDest": "public/js/esm/sw.js",
   "swSrc": "./src/sw.js",
+  "maximumFileSizeToCacheInBytes": 5000000,
   "modifyURLPrefix": {
     "js/": "/js/",
     "index.": "/index."

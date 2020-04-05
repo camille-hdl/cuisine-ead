@@ -27,7 +27,7 @@ self.addEventListener("activate", function() {
  * See https://goo.gl/S9QRab
  */
 workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute([]);
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 
 // cache polyfill.io
 workbox.routing.registerRoute(
