@@ -28,7 +28,7 @@ import { openFile } from "../lib/utils.js";
 import type { InputJSONData, InputJSONRaw } from "../types.js";
 import Papa from "papaparse";
 import PaperSheet from "./material/paper-sheet.jsx";
-import { List } from "immutable";
+import { List, Map } from "immutable";
 import FileList from "./material/file-list.jsx";
 import BigIcon from "./material/big-icon.jsx";
 import Grid from "./material/grid.jsx";
@@ -46,7 +46,15 @@ const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {
         outputPipeline: List(),
     };
     if (input.pipeline) {
-        output.pipeline = List(input.pipeline.map(makeRecipeInPipelineRecord));
+        output.pipeline = List(input.pipeline.map(makeRecipeInPipelineRecord)).map(rec => {
+            if (rec.has("args")) {
+                if (!Map.isMap(rec.get("args"))) {
+                    return rec.set("args", Map(rec.get("args")));
+                }
+                return rec;
+            }
+            return rec.set("args", Map());
+        });
     }
     if (input.outputPipeline) {
         output.outputPipeline = List(input.outputPipeline.map(makeRecipeInPipelineRecord));

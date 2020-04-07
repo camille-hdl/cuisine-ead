@@ -21,7 +21,7 @@ class TextArg extends React.Component<Props & { classes: any, argName: string, l
     constructor(props: Props & { classes: any, argName: string, label: string }) {
         super(props);
         this.state = {
-            tempValue: String(props.args.get(props.argName)),
+            tempValue: String(props.args ? props.args.get(props.argName) : ""),
         };
         this.updateTO = null;
     }
