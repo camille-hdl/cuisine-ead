@@ -46,7 +46,7 @@ const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {
         outputPipeline: List(),
     };
     if (input.pipeline) {
-        output.pipeline = List(input.pipeline.map(makeRecipeInPipelineRecord)).map(rec => {
+        output.pipeline = List(input.pipeline.map(makeRecipeInPipelineRecord)).map((rec) => {
             if (rec.has("args")) {
                 if (!Map.isMap(rec.get("args"))) {
                     return rec.set("args", Map(rec.get("args")));
