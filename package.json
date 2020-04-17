@@ -83,7 +83,7 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
     "rxjs": "^6.5.5",
-    "xml-parser-xo": "^2.2.0",
+    "xml-parser-xo": "^2.2.1",
     "xxhash-wasm": "^0.4.0"
   },
   "jest": {
