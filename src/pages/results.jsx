@@ -6,15 +6,14 @@
 
 import React, { forwardRef } from "react";
 import Paper from "@material-ui/core/Paper";
-import PaperSheet from "./material/paper-sheet.jsx";
-import type { Map } from "immutable";
+import PaperSheet from "../components/material/paper-sheet.jsx";
 import { Set } from "immutable";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
-import OutlinedButton from "./material/outlined-button.jsx";
-import AppStepper from "./material/stepper.jsx";
-import ErrorCatcher from "./error-catcher.jsx";
+import OutlinedButton from "../components/material/outlined-button.jsx";
+import AppStepper from "../components/material/stepper.jsx";
+import ErrorCatcher from "../components/error-catcher.jsx";
 import FileSaver from "file-saver";
 import { map } from "ramda";
 import IconButton from "@material-ui/core/IconButton";

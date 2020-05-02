@@ -4,16 +4,16 @@
  * Handles routing and views
  */
 import React, { Suspense, lazy } from "react";
-import MenuBar from "./material/menu-bar.jsx";
-import { List, Map } from "immutable";
+import MenuBar from "../components/material/menu-bar.jsx";
+import { List } from "immutable";
 import { Route, Switch, Redirect } from "react-router-dom";
-import LoadingComponent from "./material/loading-component.jsx";
+import LoadingComponent from "../components/material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import type { AddXmlFileData, ComputedStateProps, RecipeInPipelineRecord } from "../types.js";
 import StartPage from "./start-page.jsx";
-import ErrorCatcher from "./error-catcher.jsx";
-import FloatingButtons from "./floating-buttons.jsx";
+import ErrorCatcher from "../components/error-catcher.jsx";
+import FloatingButtons from "../components/floating-buttons.jsx";
 
 const muiTheme = createMuiTheme({
     typography: {},

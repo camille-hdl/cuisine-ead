@@ -27,16 +27,16 @@ import { readXml } from "../lib/xml.js";
 import { openFile } from "../lib/utils.js";
 import type { InputJSONData, InputJSONRaw } from "../types.js";
 import Papa from "papaparse";
-import PaperSheet from "./material/paper-sheet.jsx";
+import PaperSheet from "../components/material/paper-sheet.jsx";
 import { List, Map } from "immutable";
-import FileList from "./material/file-list.jsx";
-import BigIcon from "./material/big-icon.jsx";
-import Grid from "./material/grid.jsx";
+import FileList from "../components/material/file-list.jsx";
+import BigIcon from "../components/material/big-icon.jsx";
+import Grid from "../components/material/grid.jsx";
 import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
-import OutlinedButton from "./material/outlined-button.jsx";
-import AppStepper from "./material/stepper.jsx";
-import ErrorCatcher from "./error-catcher.jsx";
+import OutlinedButton from "../components/material/outlined-button.jsx";
+import AppStepper from "../components/material/stepper.jsx";
+import ErrorCatcher from "../components/error-catcher.jsx";
 import { makeInputJSONRecord, makeRecipeInPipelineRecord } from "../lib/record-factories.js";
 
 const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {

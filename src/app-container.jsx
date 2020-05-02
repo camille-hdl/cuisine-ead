@@ -1,8 +1,7 @@
 //@flow
-import * as actions from "../actions.js";
+import * as actions from "./actions.js";
 import { connect } from "react-redux";
-import App from "../components/app.jsx";
-import type { Map } from "immutable";
+import App from "./pages/app.jsx";
 import { withRouter } from "react-router-dom";
 import {
     previewXmlFileSliceSelector,
@@ -12,11 +11,11 @@ import {
     fullRecipeSelector,
     correctionsNbSelector,
 } from "./selectors.js";
-import type { StateRecord, ComputedStateProps } from "../types.js";
+import type { StateRecord, ComputedStateProps } from "./types.js";
 
 export const mapStateToProps = (state: StateRecord): ComputedStateProps => {
     /**
-     * see src/components/app.jsx for details
+     * see src/pages/app.jsx for details
      * on each property
      */
     return {

@@ -5,28 +5,28 @@
  */
 
 import React, { forwardRef } from "react";
-import PaperSheet from "./material/paper-sheet.jsx";
+import PaperSheet from "../components/material/paper-sheet.jsx";
 import { List, Map } from "immutable";
-import Grid from "./material/grid.jsx";
+import Grid from "../components/material/grid.jsx";
 import { getRecipes, getStatefulRecipes } from "../lib/recipes/index.js";
 import { getRecipes as getOutputRecipes } from "../lib/output-recipes.js";
-import RecipeList from "./material/recipe-list.jsx";
-import OutputRecipeList from "./material/output-recipe-list.jsx";
+import RecipeList from "../components/material/recipe-list.jsx";
+import OutputRecipeList from "../components/material/output-recipe-list.jsx";
 import { Link as RouterLink } from "react-router-dom";
-import ResponsiveDrawer from "./material/resp-drawer.jsx";
+import ResponsiveDrawer from "../components/material/resp-drawer.jsx";
 import ReactDiffViewer from "react-diff-viewer";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import Switch from "@material-ui/core/Switch";
-import OutlinedButton from "./material/outlined-button.jsx";
+import OutlinedButton from "../components/material/outlined-button.jsx";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { uniq, sortBy, equals, ascend, map, filter } from "ramda";
 import useMedia from "react-use/lib/useMedia";
-import ErrorCatcher from "./error-catcher.jsx";
-import AppStepper from "./material/stepper.jsx";
-import SelectPreviewFile from "./material/select-preview.jsx";
+import ErrorCatcher from "../components/error-catcher.jsx";
+import AppStepper from "../components/material/stepper.jsx";
+import SelectPreviewFile from "../components/material/select-preview.jsx";
 import { getCategory, getDefaultArgs } from "../lib/recipes/recipes-lib.js";
 import { makeRecipeInPipelineRecord } from "../lib/record-factories.js";
 

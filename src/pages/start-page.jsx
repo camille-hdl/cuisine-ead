@@ -5,7 +5,7 @@
 
 import React, { useState, forwardRef } from "react";
 import { NavLink as RouterLink } from "react-router-dom";
-import OutlinedButton from "./material/outlined-button.jsx";
+import OutlinedButton from "../components/material/outlined-button.jsx";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
