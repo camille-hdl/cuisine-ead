@@ -61,6 +61,10 @@ export type InitialStateProps = {|
      * hash of the previed Document
      */
     previewHash: string | null,
+    /**
+     * True if there is a new version of the service worker
+     */
+    newVersionAvailable: boolean,
 |};
 
 export type ComputedStateProps = {|

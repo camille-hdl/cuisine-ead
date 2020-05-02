@@ -32,6 +32,7 @@ export const mapStateToProps = (state: StateRecord): ComputedStateProps => {
         previewEnabled: state.get("previewEnabled"),
         fullRecipe: fullRecipeSelector(state),
         correctionsNb: correctionsNbSelector(state),
+        newVersionAvailable: state.get("newVersionAvailable"),
     };
 };
 

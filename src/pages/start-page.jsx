@@ -91,7 +91,6 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                                         "Des boutons en bas à droite permettent de télécharger les controlaccess sans avoir de recette"
                                     }
                                 </li>
-                                <li>{"Nouveaux traitements (origination>name, span)"}</li>
                             </ul>
                         </Typography>
                     </ExpansionPanelDetails>
