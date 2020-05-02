@@ -1,5 +1,5 @@
 //@flow
-import { Map, List } from "immutable";
+import { List } from "immutable";
 import {
     ADD_XML_FILE,
     UPDATE_CORRECTIONS,

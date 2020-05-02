@@ -19,7 +19,7 @@ import { map } from "ramda";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { withStyles } from "@material-ui/core/styles";
-import { extractCA } from "../lib/recipes/recipes.js";
+import extractCA from "../lib/recipes/extract-ca.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
 import type { Props } from "./app.jsx";
 import type { XmlFileRecord } from "../types.js";
