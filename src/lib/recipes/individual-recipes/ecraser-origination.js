@@ -2,6 +2,7 @@
 import { xpathFilter } from "../../xml.js";
 import { trySetInnerHTML } from "../../utils.js";
 import { last } from "ramda";
+import type { Map } from "immutable";
 /**
  * if there is no origination tag, it will be created in archdesc/did
  * Expects arg `origination` (string, can contain xml).

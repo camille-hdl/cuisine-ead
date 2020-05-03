@@ -5,6 +5,8 @@
 import { find, partialRight, propEq } from "ramda";
 import type { Recipe, ExecuteState } from "./types.js";
 import type { RecipeInPipelineRecord } from "../../types.js";
+import { Map, List, fromJS } from "immutable";
+import { xpathFilter } from "../xml.js";
 import supprimerLb from "./individual-recipes/supprimer-lb.js";
 import supprimerLabelsVides from "./individual-recipes/supprimer-labels-vides.js";
 import remplacePlageSeparator from "./individual-recipes/remplace-plage-separator.js";
@@ -55,6 +57,9 @@ import supprimerPhysDidArchdesc from "./individual-recipes/supprimer-phys-did-ar
 import supprimerLangusage from "./individual-recipes/supprimer-langusage.js";
 import reordonnerOriginalsLoc from "./individual-recipes/reordonner-originals-loc.js";
 import correctionControlAccess from "./individual-recipes/correction-control-access.js";
+import supprimerCId from "./individual-recipes/supprimer-c-id.js";
+import geognameSetSource from "./individual-recipes/geogname-set-source.js";
+import remplacePlageSeparatorStrict from "./individual-recipes/remplace-plage-separator-strict.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -113,8 +118,21 @@ export const getRecipes = () => {
         { key: "supprimer_physdesc_archdesc", fn: supprimerPhysDidArchdesc },
         { key: "supprimer_langusage", fn: supprimerLangusage },
         { key: "reorg_c_originalsloc", fn: reordonnerOriginalsLoc },
+        //TODO: ajout FFAS 2020-05
+        { key: "supprimer_c_id", fn: supprimerCId },
+        { key: "geogname_set_source", fn: geognameSetSource },
+        { key: "remplace_plage_separator_strict", fn: remplacePlageSeparatorStrict },
     ];
 };
+
+if (typeof window.Cypress !== "undefined") {
+    window.__cypress_xpathFilter = xpathFilter;
+    window.__cypress_recipes = {};
+    window.__cypress_immutable = { Map, List, fromJS };
+    getRecipes().forEach((recipe) => {
+        window.__cypress_recipes[recipe.key] = recipe.fn;
+    });
+}
 
 /**
  * Returns an array of 'stateful' recipes : functions that take a DOM `Document` and the app state
