@@ -63,7 +63,7 @@
     </relatedmaterial>
 
     <dsc type="in-depth">
-      <c id="tt1-1">
+      <c id="tt1-1" data-cy="c-branche">
         <!--titre niveau 1-->
 
         <did>
@@ -113,7 +113,7 @@
             </daogrp>
           </c>
 
-          <c id="de-2">
+          <c id="de-2" data-cy="c-article">
             <did>
               <unitid>8 U 2</unitid>
 

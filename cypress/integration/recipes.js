@@ -94,4 +94,20 @@ describe("Recipe unit test", function () {
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
     });
+    it("ajouterAltRenderForce", function () {
+        const value = "CYPRESS";
+        const xpathExpr = '//c[@data-cy="c-branche"]';
+        const xpathExpr2 = '//c[@data-cy="c-article"]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        const matchesBefore2 = xpathFilter(doc, xpathExpr2);
+        expect(matchesBefore[0].hasAttribute("altrender")).to.be.false;
+        expect(matchesBefore2[0].hasAttribute("altrender")).to.be.false;
+
+        doc = recipes.ajouter_altrender_force()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        const matchesAfter2 = xpathFilter(doc, xpathExpr2);
+        expect(matchesAfter[0].getAttribute("altrender")).to.be.equal("ligeo-branche-standardisadg");
+        expect(matchesAfter2[0].getAttribute("altrender")).to.be.equal("ligeo-article-standardisadg");
+    });
 });
