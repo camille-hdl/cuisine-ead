@@ -10,6 +10,5 @@ export default (args: Map<string, any>) => (doc: Document): Document => {
     each(elems, (elem) => {
         elem.setAttribute("source", sourceValue);
     });
-
     return doc;
 };

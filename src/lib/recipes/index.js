@@ -60,6 +60,7 @@ import correctionControlAccess from "./individual-recipes/correction-control-acc
 import supprimerCId from "./individual-recipes/supprimer-c-id.js";
 import geognameSetSource from "./individual-recipes/geogname-set-source.js";
 import remplacePlageSeparatorStrict from "./individual-recipes/remplace-plage-separator-strict.js";
+import ajouterPersnameSource from "./individual-recipes/ajouter-persname-source.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -122,6 +123,7 @@ export const getRecipes = () => {
         { key: "supprimer_c_id", fn: supprimerCId },
         { key: "geogname_set_source", fn: geognameSetSource },
         { key: "remplace_plage_separator_strict", fn: remplacePlageSeparatorStrict },
+        { key: "ajouter_persname_source", fn: ajouterPersnameSource },
     ];
 };
 

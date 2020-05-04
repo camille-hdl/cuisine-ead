@@ -83,4 +83,15 @@ describe("Recipe unit test", function () {
         expect(matchesAfter[0].textContent.trim()).to.be.equal("8 U 1 à 256");
         expect(matchesAfter2[0].textContent.trim()).to.be.equal("8 U 1 à 12");
     });
+    it("ajouterPersnameSource", function () {
+        const value = "CYPRESS";
+        const xpathExpr = '//controlaccess/persname[@role="notaire"][@source="CYPRESS"]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+
+        doc = recipes.ajouter_persname_source(Map({ role: "notaire", source: "CYPRESS" }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.greaterThan(0);
+    });
 });
