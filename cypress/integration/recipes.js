@@ -110,4 +110,15 @@ describe("Recipe unit test", function () {
         expect(matchesAfter[0].getAttribute("altrender")).to.be.equal("ligeo-branche-standardisadg");
         expect(matchesAfter2[0].getAttribute("altrender")).to.be.equal("ligeo-article-standardisadg");
     });
+    it("ajouterTypologieArticle", function () {
+        const value = "CYPRESS";
+        const xpathExpr = '//c/controlaccess/genreform[@source="typologie"]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+
+        doc = recipes.ajouter_typologie_article(Map({ valeur: value }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.greaterThan(0);
+    });
 });

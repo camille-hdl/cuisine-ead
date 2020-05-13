@@ -62,6 +62,7 @@ import geognameSetSource from "./individual-recipes/geogname-set-source.js";
 import remplacePlageSeparatorStrict from "./individual-recipes/remplace-plage-separator-strict.js";
 import ajouterPersnameSource from "./individual-recipes/ajouter-persname-source.js";
 import ajouterAltRenderForce from "./individual-recipes/ajouter-alt-render-force.js";
+import ajouterTypologieArticle from "./individual-recipes/ajouter-typologie-article.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -126,6 +127,7 @@ export const getRecipes = () => {
         { key: "remplace_plage_separator_strict", fn: remplacePlageSeparatorStrict },
         { key: "ajouter_persname_source", fn: ajouterPersnameSource },
         { key: "ajouter_altrender_force", fn: ajouterAltRenderForce },
+        { key: "ajouter_typologie_article", fn: ajouterTypologieArticle },
     ];
 };
 
