@@ -121,4 +121,14 @@ describe("Recipe unit test", function () {
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
     });
+    it("ajouterAccessrestrictLigeo", function () {
+        const xpathExpr = '//c/accessrestrict[@type="incommunicable"][@id="ligeo-223"]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+
+        doc = recipes.ajouter_accessrestrict_ligeo()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.greaterThan(0);
+    });
 });
