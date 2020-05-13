@@ -131,4 +131,38 @@ describe("Recipe unit test", function () {
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
     });
+    it("transformeDaogrp - default", function () {
+        const xpathExpr = '//daogrp[@data-cy="daogrp-default"]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(1);
+
+        doc = recipes.transforme_daogrp_ligeo(Map({ prefix: "Serie_U" }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(1);
+        expect(matchesAfter[0].getAttribute("type")).to.be.equal("link");
+        const elem = matchesAfter[0];
+        expect(xpathFilter(doc, elem, 'daoloc[@role="dossier"]')[0].getAttribute("href")).to.be.equal("/Serie_U/8U/FRAD007_8U1/");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="prefixe"]')[0].getAttribute("href")).to.be.equal("FRAD007_8U1_");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="exception"]')[0].getAttribute("href")).to.be.equal("0000");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="extension"]')[0].getAttribute("href")).to.be.equal("jpg");
+    });
+    it("transformeDaogrp - series", function () {
+        const xpathExpr = '//daogrp[@data-cy="daogrp-series"]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(1);
+
+        doc = recipes.transforme_daogrp_ligeo(Map({ prefix: null }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(1);
+        expect(matchesAfter[0].getAttribute("type")).to.be.equal("link");
+        const elem = matchesAfter[0];
+        expect(xpathFilter(doc, elem, 'daoloc[@role="dossier"]')[0].getAttribute("href")).to.be.equal("/Serie_W/2246W/FRAD007_2246W425/");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="prefixe"]')[0].getAttribute("href")).to.be.equal("FRAD007_2246W425_");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="premier"]')[0].getAttribute("href")).to.be.equal("0003");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="dernier"]')[0].getAttribute("href")).to.be.equal("0003");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="exception"]')[0].getAttribute("href")).to.be.equal("0000");
+        expect(xpathFilter(doc, elem, 'daoloc[@role="extension"]')[0].getAttribute("href")).to.be.equal("jpg");
+    });
 });

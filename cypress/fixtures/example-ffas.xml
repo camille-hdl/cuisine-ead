@@ -104,7 +104,7 @@
               <geogname>Nomdecanton (Département, France)</geogname>
             </controlaccess>
 
-            <daogrp>
+            <daogrp data-cy="daogrp-default">
               <daoloc href="8U\FRAD007_8U1\FRAD007_8U1_0001_D.jpg"
                       role="image:first"></daoloc>
 
@@ -297,12 +297,9 @@
               <geogname>Nomdecanton (Département, France)</geogname>
             </controlaccess>
 
-            <daogrp>
-              <daoloc href="8U\FRAD007_8U9\FRAD007_8U9_0001_D.jpg"
-                      role="image:first"></daoloc>
-
-              <daoloc href="8U\FRAD007_8U9\FRAD007_8U9_0021_D.jpg"
-                      role="image:last"></daoloc>
+            <daogrp role="series" data-cy="daogrp-series">
+              <daoloc href="/Serie_W/2246W/FRAD007_2246W425/0003" role="image:first"/>
+              <daoloc href="/Serie_W/2246W/FRAD007_2246W425/0003" role="image:last"/>
             </daogrp>
           </c>
 
