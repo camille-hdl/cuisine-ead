@@ -6,7 +6,7 @@ const { CacheableResponsePlugin } = workbox.cacheableResponse;
 const { ExpirationPlugin } = workbox.expiration;
 const { skipWaiting, clientsClaim, setCacheNameDetails } = workbox.core;
 
-var VERSION = "v1.0.2";
+var VERSION = "v1.0.3";
 setCacheNameDetails({
     prefix: "cuisine-ead",
     suffix: VERSION,
