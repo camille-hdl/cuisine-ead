@@ -16,7 +16,6 @@
     "cypress:run": "cypress run",
     "cypress:install": "cypress install",
     "jest": "jest",
-    "predeploy": "CI=1 npm i cypress",
     "deploy": "npm run build",
     "prettier": "prettier --write src/**/*.{js,jsx}",
     "flow": "flow"
@@ -39,7 +38,6 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.0.1",
     "babel-plugin-transform-imports": "^2.0.0",
-    "cypress": "^4.5.0",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-babel": "^5.3.0",
