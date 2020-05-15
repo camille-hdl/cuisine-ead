@@ -11,7 +11,7 @@ export type Props = {
 
 function EventTrap(props: { children?: any }) {
     return (
-        <div role="presentation" onClick={e => e.stopPropagation()}>
+        <div role="presentation" onClick={(e) => e.stopPropagation()}>
             {props.children ? props.children : null}
         </div>
     );
@@ -49,6 +49,35 @@ export default class RecipeArgs extends React.PureComponent<Props> {
             return (
                 <EventTrap>
                     <TextArg {...this.props} argName="date" label="Date (année)" />
+                </EventTrap>
+            );
+        if (this.props.recipe === "geogname_set_source")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="source" label="Valeur de l'attribut" />
+                </EventTrap>
+            );
+        if (this.props.recipe === "ajouter_persname_source")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="role" label="Attribut 'role' recherché" />
+                    <TextArg {...this.props} argName="source" label="Valeur de l'attribut 'source'" />
+                </EventTrap>
+            );
+        if (this.props.recipe === "ajouter_typologie_article")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="valeur" label="Contenu du controlaccess genreform" />
+                </EventTrap>
+            );
+        if (this.props.recipe === "transforme_daogrp_ligeo")
+            return (
+                <EventTrap>
+                    <TextArg
+                        {...this.props}
+                        argName="prefix"
+                        label="Préfixe à ajouter au dossier. Laisser vide si inutile."
+                    />
                 </EventTrap>
             );
         return null;
