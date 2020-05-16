@@ -4,6 +4,14 @@ public/js/system/
 public/js/vendor/
 public/js/*.js
 
+jest-coverage
+.nyc_output
+coverage
+cypress-coverage/
+cypress/videos
+cypress/screenshots
+reports
+
 
 # Windows
 Thumbs.db
