@@ -6,7 +6,7 @@ let xmlString = "";
 let win = null;
 let xpathFilter = null;
 let recipes = null;
-let Map, List, fromJS, immutable;
+let IMap, List, fromJS, immutable;
 /**
  * Reset in `beforeEach`
  */
@@ -26,12 +26,14 @@ describe("Recipe unit test", function () {
         cy.fixture("example-ffas.xml", "utf-8").then((xml) => {
             xmlString = xml;
         });
+        cy.window().its('Cypress').should('be.an', 'object');
+        cy.window().its('__cypress_immutable').should('exist');
         cy.window().then((w) => {
             win = w;
             xpathFilter = win.__cypress_xpathFilter;
             recipes = win.__cypress_recipes;
             immutable = win.__cypress_immutable;
-            Map = immutable.Map;
+            IMap = immutable.Map;
             List = immutable.List;
             fromJS = immutable.fromJS;
             if (win.navigator && win.navigator.serviceWorker) {
@@ -62,7 +64,7 @@ describe("Recipe unit test", function () {
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.equal(0);
 
-        doc = recipes.geogname_set_source(Map({source: value}))(doc);
+        doc = recipes.geogname_set_source(IMap({source: value}))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
@@ -89,7 +91,7 @@ describe("Recipe unit test", function () {
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(0);
 
-        doc = recipes.ajouter_persname_source(Map({ role: "notaire", source: "CYPRESS" }))(doc);
+        doc = recipes.ajouter_persname_source(IMap({ role: "notaire", source: "CYPRESS" }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
@@ -116,7 +118,7 @@ describe("Recipe unit test", function () {
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(0);
 
-        doc = recipes.ajouter_typologie_article(Map({ valeur: value }))(doc);
+        doc = recipes.ajouter_typologie_article(IMap({ valeur: value }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
@@ -136,7 +138,7 @@ describe("Recipe unit test", function () {
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(1);
 
-        doc = recipes.transforme_daogrp_ligeo(Map({ prefix: "Serie_U" }))(doc);
+        doc = recipes.transforme_daogrp_ligeo(IMap({ prefix: "Serie_U" }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(1);
@@ -152,7 +154,7 @@ describe("Recipe unit test", function () {
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(1);
 
-        doc = recipes.transforme_daogrp_ligeo(Map({ prefix: null }))(doc);
+        doc = recipes.transforme_daogrp_ligeo(IMap({ prefix: null }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(1);
