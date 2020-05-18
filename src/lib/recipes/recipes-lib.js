@@ -7,6 +7,11 @@ type RecipeInfo = {
     defaultArgs?: any,
 };
 
+/**
+ * This lets the UI know which recipes are available,
+ * and in which Category they belong.
+ * Also, if the recipe requires arguments, we can provide default values
+ */
 const availables: Array<[string, RecipeInfo]> = [
     [
         "supprimer_lb",
@@ -374,13 +379,78 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Suppressions",
         },
     ],
+    [
+        "supprimer_c_id",
+        {
+            label: "Supprimer l'attribut ID des balises <c>",
+            category: "Suppressions",
+        },
+    ],
+    [
+        "geogname_set_source",
+        {
+            label: "Définir un attribut source sur les geogname",
+            category: "Corrections",
+            defaultArgs: { source: "" },
+        },
+    ],
+    [
+        "remplace_plage_separator_strict",
+        {
+            label: "Remplacer '-' par ' à ' dans les unitid",
+            complement: "Ne rajoute pas de '/' dans les articles",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "ajouter_persname_source",
+        {
+            label: "Définir un attribut source sur les persname",
+            complement: "Préciser le role recherché pour les persnames",
+            category: "Spécifique",
+            defaultArgs: { role: "", source: "" },
+        },
+    ],
+    [
+        "ajouter_altrender_force",
+        {
+            label: "Ajouter les valeurs altrender Ligéo même s'il n'y a pas de level",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "ajouter_typologie_article",
+        {
+            label: "Ajouter un controlaccess genreform[source=typologie]",
+            complement: "sur les fiches C articles",
+            category: "Corrections",
+            defaultArgs: { valeur: "" },
+        },
+    ],
+    [
+        "ajouter_accessrestrict_ligeo",
+        {
+            label: "Ajouter accessrestrict[type=incommunicable] Ligéo",
+            complement: "sur les fiches C articles",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "transforme_daogrp_ligeo",
+        {
+            label: "Convertir les daogrp first/last au format Ligéo (link)",
+            complement: "S'il est fourni, le préfixe est ajouté au dossier",
+            category: "Spécifique",
+            defaultArgs: { prefix: "" },
+        },
+    ],
 ];
 
 /**
  * Get information about a recipe
  */
 export const getInfo = (key: string): RecipeInfo | null | void => {
-    const tuple = find(tuple => equals(tuple[0], key), availables);
+    const tuple = find((tuple) => equals(tuple[0], key), availables);
     return tuple ? tuple[1] : null;
 };
 

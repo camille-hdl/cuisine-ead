@@ -12,6 +12,7 @@ export const SET_PIPELINE = "SET_PIPELINE";
 export const SET_PREVIEW_HASH = "SET_PREVIEW_HASH";
 export const TOGGLE_PREVIEW = "TOGGLE_PREVIEW";
 export const SET_OUTPUT_PIPELINE = "SET_OUTPUT_PIPELINE";
+export const SET_NEW_VERSION_AVAILABLE = "SET_NEW_VERSION_AVAILABLE";
 
 export const addXmlFile = (data: AddXmlFileData) => {
     return { type: ADD_XML_FILE, data: data };
@@ -38,4 +39,8 @@ export const setPreviewHash = (data: string) => {
 
 export const togglePreview = (data: boolean) => {
     return { type: TOGGLE_PREVIEW, data: data };
+};
+
+export const setNewVersionAvailable = (data: boolean) => {
+    return { type: SET_NEW_VERSION_AVAILABLE, data: data };
 };

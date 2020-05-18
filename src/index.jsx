@@ -2,7 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { AppContainer } from "./containers/app.jsx";
+import { AppContainer } from "./app-container.jsx";
 
 import App from "./reducers/reducer.js";
 import thunk from "redux-thunk";
@@ -26,6 +26,7 @@ export const getInitialState = (): InitialStateProps => {
         outputPipeline: List(),
         previewHash: null,
         previewEnabled: false,
+        newVersionAvailable: false,
     };
 };
 
@@ -37,13 +38,14 @@ const stateCreator: RecordFactory<InitialStateProps> = Record({
     outputPipeline: List(),
     previewHash: null,
     previewEnabled: false,
+    newVersionAvailable: false,
 });
 const containerElement = document.getElementById("app-container");
 if (containerElement) {
     const state: StateRecord = stateCreator(getInitialState());
     ReactDOM.render(
         <BrowserRouter>
-            <AppContainer store={createStore(App, state, composeEnhancers(applyMiddleware(thunk)))} />
+            <AppContainer store={createStore<StateRecord>(App, state, composeEnhancers(applyMiddleware(thunk)))} />
         </BrowserRouter>,
         containerElement
     );

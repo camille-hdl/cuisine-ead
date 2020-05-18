@@ -1,11 +1,11 @@
 //@flow
 import { createSelector } from "reselect";
 import { Map, List } from "immutable";
-import getRecipeFn from "../lib/recipes/index.js";
-import getOutputRecipeFn from "../lib/output-recipes.js";
+import getRecipeFn from "./lib/recipes/index.js";
+import getOutputRecipeFn from "./lib/output-recipes.js";
 import { pipe, compose, memoizeWith, take, split, identity, join } from "ramda";
-import type { StateRecord, XmlFileRecord, RecipeInPipelineRecord } from "../types.js";
-import type { ExecuteState } from "../lib/recipes/recipes.js";
+import type { StateRecord, XmlFileRecord, RecipeInPipelineRecord } from "./types.js";
+import type { ExecuteState } from "./lib/recipes/types.js";
 /**
  * Returns only the first few lines of the file,
  * because rendering the diff is slow and freezes the browser
@@ -206,8 +206,8 @@ export const fullRecipeSelector = createSelector<
  */
 export const correctionsNbSelector = createSelector<StateRecord, void, Map<string, mixed>, number>(
     correctionsSelector,
-    (corrections) =>
-        corrections.reduce((sum, terms) => {
+    (corrections): number =>
+        corrections.reduce<number>((sum, terms) => {
             return sum + terms.size;
         }, 0)
 );

@@ -3,8 +3,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import Icon from "@material-ui/core/Icon";
-import type { Props } from "./app.jsx";
-import { downloadResultsZip, downloadControlAccesses } from "./results.jsx";
+import type { Props } from "../pages/app.jsx";
+import { downloadResultsZip, downloadControlAccesses } from "../pages/results.jsx";
 
 const useStyles = makeStyles((theme) => ({
     root: {

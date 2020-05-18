@@ -1,5 +1,5 @@
 //@flow
-import { Map, List } from "immutable";
+import { List } from "immutable";
 import {
     ADD_XML_FILE,
     UPDATE_CORRECTIONS,
@@ -8,6 +8,7 @@ import {
     SET_PREVIEW_HASH,
     TOGGLE_PREVIEW,
     SET_OUTPUT_PIPELINE,
+    SET_NEW_VERSION_AVAILABLE,
 } from "../actions.js";
 import type { AddXmlFileData, StateRecord, RecipeInPipelineRecord } from "../types.js";
 import updateCorrections from "../lib/corrections-parser.js";
@@ -50,6 +51,7 @@ const reducersMap: { [actionType: string]: Reducer } = {
     [SET_OUTPUT_PIPELINE]: setOutputPipelinereducer,
     [SET_PREVIEW_HASH]: (state: StateRecord, data: string) => state.set("previewHash", data),
     [TOGGLE_PREVIEW]: (state: StateRecord, data: boolean) => state.set("previewEnabled", data),
+    [SET_NEW_VERSION_AVAILABLE]: (state: StateRecord, data: boolean) => state.set("newVersionAvailable", data),
 };
 export default function App(state: StateRecord, action: { type: string, data: AddXmlFileData | any }) {
     return typeof reducersMap[action.type] === "function" ? reducersMap[action.type](state, action.data) : state;

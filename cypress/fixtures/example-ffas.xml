@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN"
+"ead.dtd">
+<ead>
+  <eadheader>
+    <eadid>FRAD_XX</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>XX</titleproper>
+        <subtitle>Répertoire numérique</subtitle>
+        <author>par XX</author>
+      </titlestmt>
+      <publicationstmt>
+        <publisher></publisher>
+        <date normal="2004">2004</date>
+      </publicationstmt>
+    </filedesc>
+  </eadheader>
+
+  <archdesc level="fonds">
+    <did>
+      <unitid data-cy="range-fonds">8 U 1-256</unitid>
+
+      <unittitle>Répertoires de notaires en provenance du tribunal de première
+      instance de Commune.</unittitle>
+
+      <unitdate normal="1790/1939">1790-1939</unitdate>
+
+      <repository>Archives départementales de Département</repository>
+
+      <origination><corpname role="producteur">France. Tribunal de première
+      instance (Commune, Département)</corpname></origination>
+    </did>
+
+    <acqinfo>
+      <p>Versement.</p>
+    </acqinfo>
+
+    <prefercite>
+      <p>La citation de la source doit être accompagnée de la mention obligatoire suivante : "Description de la source (Archives départementales de Département, cote)."</p>
+    </prefercite>
+
+    <accessrestrict>
+      <p>Consultation des originaux interdite...</p>
+    </accessrestrict>
+
+    <userestrict>
+      <p>L'utilisation ou la reproduction...</p>
+    </userestrict>
+
+    <altformavail>
+      <p>Document(s) numérisé(s)...</p>
+    </altformavail>
+
+    <relatedmaterial type="sources internes aux Archives départementales de Département">
+      <p>Sous-série 2 E des notaires.</p>
+
+      <p>8 U 257-543 - Répertoires de notaires en provenance du tribunal de
+      première instance de Autrecommune (1780-1940).</p>
+
+      <p>8 U 544-827 - Répertoires de notaires en provenance du tribunal de
+      première instance de Encoreunecommune (1791-1905).</p>
+    </relatedmaterial>
+
+    <dsc type="in-depth">
+      <c id="tt1-1" data-cy="c-branche">
+        <!--titre niveau 1-->
+
+        <did>
+          <unitid>8 U 1-17</unitid>
+
+          <unittitle type="titre">Canton de Nomdecanton.</unittitle>
+
+          <unitdate normal="1798/1939">an VII-1939</unitdate>
+        </did>
+
+        <c id="tt2-2" level="file">
+          <!--titre niveau 2-->
+
+          <did>
+            <unitid data-cy="range-souslevel">8 U 1-12</unitid>
+
+            <unittitle type="titre">Nomdecanton.</unittitle>
+
+            <unitdate normal="1798/1939">an VII-1939</unitdate>
+          </did>
+
+          <controlaccess>
+            <geogname>Nomdecanton (Département, France)</geogname>
+          </controlaccess>
+
+          <c id="de-1">
+            <did>
+              <unitid>8 U 1</unitid>
+
+              <unittitle>Barrnom Jean Pierre.</unittitle>
+
+              <unitdate normal="1801/1827">an X-1827</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Barrnom, Jean Pierre</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp data-cy="daogrp-default">
+              <daoloc href="8U\FRAD007_8U1\FRAD007_8U1_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U1\FRAD007_8U1_0097_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-2" data-cy="c-article">
+            <did>
+              <unitid>8 U 2</unitid>
+
+              <unittitle>Barrautrenom Charles.</unittitle>
+
+              <unitdate normal="1921/1939">1921-1939</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Barrautrenom, Charles</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U2\FRAD007_8U2_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U2\FRAD007_8U2_0099_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-3">
+            <did>
+              <unitid>8 U 3</unitid>
+
+              <unittitle>Barrautrenom Marie Joseph Albert.</unittitle>
+
+              <unitdate normal="1910/1920">1910-1920</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Barrautrenom, Marie Joseph Albert</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U3\FRAD007_8U3_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U3\FRAD007_8U3_0055_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-4">
+            <did>
+              <unitid>8 U 4</unitid>
+
+              <unittitle>Bonautrenom Emile Henri.</unittitle>
+
+              <unitdate normal="1898/1904">1898-1904</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Bonautrenom, Emile Henri</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U4\FRAD007_8U4_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U4\FRAD007_8U4_0023_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-5">
+            <did>
+              <unitid>8 U 5</unitid>
+
+              <unittitle>Chnom Albert Jean François.</unittitle>
+
+              <unitdate normal="1877/1897">1877-1897</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Chnom, Albert Jean François</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U5\FRAD007_8U5_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U5\FRAD007_8U5_0080_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-6">
+            <did>
+              <unitid>8 U 6</unitid>
+
+              <unittitle>Sudo Henri Marie Joseph.</unittitle>
+
+              <unitdate normal="1890/1910">1890-1910</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Sudo, Henri Marie
+              Joseph</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U6\FRAD007_8U6_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U6\FRAD007_8U6_0067_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-7">
+            <did>
+              <unitid>8 U 7</unitid>
+
+              <unittitle>Chown Jean François.</unittitle>
+
+              <unitdate normal="1800/1805">an IX</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Chown, Jean François</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U7\FRAD007_8U7_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U7\FRAD007_8U7_0063_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-8">
+            <did>
+              <unitid>8 U 8</unitid>
+
+              <unittitle>Ls Pierre Joseph.</unittitle>
+
+              <unitdate normal="1828/1831">1828-1831</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Ls, Pierre Joseph</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U8\FRAD007_8U8_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U8\FRAD007_8U8_0014_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-9">
+            <did>
+              <unitid>8 U 9</unitid>
+
+              <unittitle>Dockercompose Jean Baptiste.</unittitle>
+
+              <unitdate normal="1806/1808">1806-1808</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Dockercompose, Jean Baptiste</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp role="series" data-cy="daogrp-series">
+              <daoloc href="/Serie_W/2246W/FRAD007_2246W425/0003" role="image:first"/>
+              <daoloc href="/Serie_W/2246W/FRAD007_2246W425/0003" role="image:last"/>
+            </daogrp>
+          </c>
+
+          <c id="de-10">
+            <did>
+              <unitid>8 U 10</unitid>
+
+              <unittitle>Gulp Jean François.</unittitle>
+
+              <unitdate normal="1858/1877">1858-1877</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Gulp, Jean François</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U10\FRAD007_8U10_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U10\FRAD007_8U10_0055_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-11">
+            <did>
+              <unitid>8 U 11</unitid>
+
+              <unittitle>Top Jean Baptiste Paul.</unittitle>
+
+              <unitdate normal="1798/1835">an VII-1835</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Top, Jean Baptiste Paul</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U11\FRAD007_8U11_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U11\FRAD007_8U11_0283_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+
+          <c id="de-12">
+            <did>
+              <unitid>8 U 12</unitid>
+
+              <unittitle>Top Jean Frédéric.</unittitle>
+
+              <unitdate normal="1836/1889">1836-1889</unitdate>
+            </did>
+
+            <controlaccess>
+              <persname role="notaire">Top, Jean Frédéric</persname>
+
+              <geogname>Nomdecanton (Département, France)</geogname>
+            </controlaccess>
+
+            <daogrp>
+              <daoloc href="8U\FRAD007_8U12\FRAD007_8U12_0001_D.jpg"
+                      role="image:first"></daoloc>
+
+              <daoloc href="8U\FRAD007_8U12\FRAD007_8U12_0214_D.jpg"
+                      role="image:last"></daoloc>
+            </daogrp>
+          </c>
+        </c>
+      </c>
+    </dsc>
+  </archdesc>
+</ead>

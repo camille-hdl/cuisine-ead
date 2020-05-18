@@ -5,7 +5,7 @@
 
 import React, { useState, forwardRef } from "react";
 import { NavLink as RouterLink } from "react-router-dom";
-import OutlinedButton from "./material/outlined-button.jsx";
+import OutlinedButton from "../components/material/outlined-button.jsx";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -91,7 +91,6 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                                         "Des boutons en bas à droite permettent de télécharger les controlaccess sans avoir de recette"
                                     }
                                 </li>
-                                <li>{"Nouveaux traitements (origination>name, span)"}</li>
                             </ul>
                         </Typography>
                     </ExpansionPanelDetails>
