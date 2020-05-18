@@ -135,14 +135,17 @@ export const getRecipes = () => {
     ];
 };
 
-if (typeof window.Cypress !== "undefined") {
-    window.__cypress_xpathFilter = xpathFilter;
-    window.__cypress_recipes = {};
-    window.__cypress_immutable = { Map, List, fromJS };
-    getRecipes().forEach((recipe) => {
-        window.__cypress_recipes[recipe.key] = recipe.fn;
-    });
-}
+/**
+ * Used for testing purposes.
+ * cypress is used for unit testing recipes,
+ * as they depend on browser APIs
+ */
+window.__cypress_xpathFilter = xpathFilter;
+window.__cypress_recipes = {};
+window.__cypress_immutable = { Map, List, fromJS };
+getRecipes().forEach((recipe) => {
+    window.__cypress_recipes[recipe.key] = recipe.fn;
+});
 
 /**
  * Returns an array of 'stateful' recipes : functions that take a DOM `Document` and the app state

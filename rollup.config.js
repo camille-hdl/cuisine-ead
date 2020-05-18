@@ -79,9 +79,7 @@ const getPluginsConfig = (prod, mini) => {
                 "node_modules/@material-ui/utils/node_modules/react-is/index.js": ["ForwardRef"],
             },
         }),
-        babel({
-            // exclude: "node_modules/**",
-        }),
+        babel(),
         globals(),
         builtins(),
         json({

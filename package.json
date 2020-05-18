@@ -4,10 +4,12 @@
   "description": "",
   "main": "public/index.html",
   "scripts": {
-    "test": "run-s jest build testci",
+    "test": "run-s jest build:dev testci",
     "testci": "start-server-and-test serve http://localhost:5000 cypress:run",
     "build": "run-s buildrollup workbox",
+    "build:dev": "run-s buildrollup:dev workbox",
     "buildrollup": "rollup -c --prod --mini",
+    "buildrollup:dev": "rollup -c",
     "workbox": "workbox injectManifest workbox-config-esm.js",
     "workbox:generate": "workbox generateSW workbox-config-esm.js",
     "watch": "rollup -c -w",
@@ -18,7 +20,16 @@
     "jest": "jest",
     "deploy": "npm run build",
     "prettier": "prettier --write src/**/*.{js,jsx}",
-    "flow": "flow"
+    "flow": "flow",
+    "pretest": "rm -rf .nyc_output || true",
+    "posttest": "npm run report:combined",
+    "mkdir:reports": "mkdir reports || true",
+    "precopy:reports": "npm run mkdir:reports",
+    "copy:reports": "cp cypress-coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
+    "precombine:reports": "npm run copy:reports && mkdir .nyc_output || true",
+    "combine:reports": "nyc merge reports && mv coverage.json .nyc_output/out.json",
+    "prereport:combined": "npm run combine:reports",
+    "report:combined": "nyc report --reporter lcov --reporter text --report-dir coverage"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -32,11 +43,13 @@
     "@babel/preset-flow": "^7.9.0",
     "@babel/preset-modules": "^0.1.3",
     "@babel/preset-react": "^7.9.4",
+    "@cypress/code-coverage": "^3.7.4",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@rollup/plugin-replace": "^2.3.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.0.1",
+    "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
@@ -48,6 +61,7 @@
     "flow-bin": "^0.124.0",
     "jest": "^26.0.1",
     "npm-run-all": "^4.1.5",
+    "nyc": "^15.0.1",
     "prettier": "^2.0.5",
     "rollup": "^2.10.2",
     "rollup-plugin-babel": "^4.4.0",
@@ -87,22 +101,6 @@
     "xml-parser-xo": "^2.2.1",
     "xxhash-wasm": "^0.4.0"
   },
-  "jest": {
-    "verbose": true,
-    "testRegex": "(/__tests__/.*|\\.(test|spec|react-test))\\.(js|jsx)$",
-    "moduleFileExtensions": [
-      "js"
-    ],
-    "globals": {
-      "NODE_ENV": "test"
-    },
-    "testPathIgnorePatterns": [
-      "node_modules"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!react-native|my-project|react-native-button)/"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/camille-hdl/ead-tinker.git"
@@ -116,5 +114,8 @@
   "bugs": {
     "url": "https://github.com/camille-hdl/ead-tinker/issues"
   },
-  "homepage": "https://github.com/camille-hdl/ead-tinker#readme"
+  "homepage": "https://github.com/camille-hdl/ead-tinker#readme",
+  "nyc": {
+    "report-dir": "cypress-coverage"
+  }
 }
