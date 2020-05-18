@@ -17,6 +17,7 @@ export default () => (doc: Document): Document => {
             const accessrestrict = doc.createElement("accessrestrict");
             accessrestrict.setAttribute("type", "incommunicable");
             accessrestrict.setAttribute("id", "ligeo-223");
+            accessrestrict.textContent = "Document numérisé";
             elem.appendChild(accessrestrict);
         }
     });

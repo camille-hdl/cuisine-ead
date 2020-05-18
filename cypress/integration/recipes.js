@@ -28,6 +28,7 @@ describe("Recipe unit test", function () {
         });
         cy.window().its('Cypress').should('be.an', 'object');
         cy.window().its('__cypress_immutable').should('exist');
+
         cy.window().then((w) => {
             win = w;
             xpathFilter = win.__cypress_xpathFilter;
@@ -132,6 +133,7 @@ describe("Recipe unit test", function () {
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.greaterThan(0);
+        expect(matchesAfter[0].textContent).to.equal("Document numérisé");
     });
     it("transformeDaogrp - default", function () {
         const xpathExpr = '//daogrp[@data-cy="daogrp-default"]';
