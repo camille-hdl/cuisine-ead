@@ -23,5 +23,4 @@ Sample files used in integration tests are from https://francearchives.fr/fr/ope
 
 [@camille_hdl](https://twitter.com/camille_hdl)
 
-
 [LICENSE](LICENSE)
