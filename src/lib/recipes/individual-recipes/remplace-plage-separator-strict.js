@@ -9,7 +9,10 @@ import { trim, filter } from "ramda";
  */
 export default () => (doc: Document): Document => {
     // first c level != piece and file
-    let elems = xpathFilter(doc, '//c[@level!="file"][@level!="piece"]/did/unitid|//archdesc/did/unitid');
+    let elems = xpathFilter(
+        doc,
+        '//c[@level!="file"][@level!="piece"]/did/unitid|//archdesc/did/unitid|//c[not(@level)]/did/unitid'
+    );
     each(elems, (elem) => {
         const oldUnitid = trim(elem.innerHTML);
         const range = getRange(oldUnitid);
