@@ -100,7 +100,6 @@ const getPluginsConfig = (prod, mini) => {
                 },
                 ecma: 8,
                 safari10: true,
-                sourcemap: true,
             })
         );
     }
