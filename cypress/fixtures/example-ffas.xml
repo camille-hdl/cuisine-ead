@@ -62,6 +62,20 @@
       première instance de Encoreunecommune (1791-1905).</p>
     </relatedmaterial>
 
+    <otherfindaid>
+      <head>test</head>
+      <list>
+        <item>A</item>
+        <item>B</item>
+      </list>
+      <list>
+        <item><archref
+            data-cy="otherfindaid-child"
+            href="FRADXXX_.pdf"
+          /></item>
+      </list>
+    </otherfindaid>
+
     <dsc type="in-depth">
       <c id="tt1-1" data-cy="c-branche">
         <!--titre niveau 1-->
