@@ -65,6 +65,7 @@ import ajouterAltRenderForce from "./individual-recipes/ajouter-alt-render-force
 import ajouterTypologieArticle from "./individual-recipes/ajouter-typologie-article.js";
 import ajouterAccessRestrictLigeo from "./individual-recipes/ajouter-accessrestrict-ligeo.js";
 import transformeDaogrpLigeo from "./individual-recipes/transforme-daogrp-ligeo.js";
+import nettoyerOtherfindaidList from "./individual-recipes/nettoyer-otherfindaid-list.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -132,6 +133,7 @@ export const getRecipes = () => {
         { key: "ajouter_typologie_article", fn: ajouterTypologieArticle },
         { key: "ajouter_accessrestrict_ligeo", fn: ajouterAccessRestrictLigeo },
         { key: "transforme_daogrp_ligeo", fn: transformeDaogrpLigeo },
+        { key: "nettoyer_otherfindaid_list", fn: nettoyerOtherfindaidList },
     ];
 };
 

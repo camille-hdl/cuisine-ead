@@ -24,5 +24,4 @@ A tool for batch editing xml-ead files in the browser.
 
 [@camille_hdl](https://twitter.com/camille_hdl)
 
-
 [LICENSE](LICENSE)

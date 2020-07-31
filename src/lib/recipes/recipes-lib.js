@@ -246,6 +246,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "nettoyer_otherfindaid_list",
+        {
+            label: "Enlever les otherfindaid>list>item mais conserver leur contenu",
+            category: "Suppressions",
+        },
+    ],
+    [
         "corriger_deplacer_genreform",
         {
             label: "Déplacer certains genreform dans physdesc",

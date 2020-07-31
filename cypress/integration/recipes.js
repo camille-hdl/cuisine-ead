@@ -74,17 +74,22 @@ describe("Recipe unit test", function () {
         const value = "CYPRESS";
         const xpathExpr = '//unitid[@data-cy="range-fonds"]';
         const xpathExpr2 = '//unitid[@data-cy="range-souslevel"]';
+        const xpathExpr3 = '//c[@data-cy="c-branche"]/did/unitid';
         const matchesBefore = xpathFilter(doc, xpathExpr);
         const matchesBefore2 = xpathFilter(doc, xpathExpr2);
+        const matchesBefore3 = xpathFilter(doc, xpathExpr3);
         expect(matchesBefore[0].textContent.trim()).to.be.equal("8 U 1-256");
         expect(matchesBefore2[0].textContent.trim()).to.be.equal("8 U 1-12");
+        expect(matchesBefore3[0].textContent.trim()).to.be.equal("8 U 1-17");
 
         doc = recipes.remplace_plage_separator_strict()(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         const matchesAfter2 = xpathFilter(doc, xpathExpr2);
+        const matchesAfter3 = xpathFilter(doc, xpathExpr3);
         expect(matchesAfter[0].textContent.trim()).to.be.equal("8 U 1 à 256");
         expect(matchesAfter2[0].textContent.trim()).to.be.equal("8 U 1 à 12");
+        expect(matchesAfter3[0].textContent.trim()).to.be.equal("8 U 1 à 17");
     });
     it("ajouterPersnameSource", function () {
         const value = "CYPRESS";
@@ -168,5 +173,30 @@ describe("Recipe unit test", function () {
         expect(xpathFilter(doc, elem, 'daoloc[@role="dernier"]')[0].getAttribute("href")).to.be.equal("0003");
         expect(xpathFilter(doc, elem, 'daoloc[@role="exception"]')[0].getAttribute("href")).to.be.equal("0000");
         expect(xpathFilter(doc, elem, 'daoloc[@role="extension"]')[0].getAttribute("href")).to.be.equal("jpg");
+    });
+    it("nettoyerOtherfindaidList", function () {
+        const xpathExpr = '//otherfindaid/list';
+        const xpathExpr2 = '//archref[@data-cy="otherfindaid-child"]';
+        const xpathExpr3 = '//otherfindaid/text()';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        const matchesBefore2 = xpathFilter(doc, xpathExpr2);
+        const matchesBefore3 = xpathFilter(doc, xpathExpr3).filter(node => {
+            return node.data.trim() !== "";
+        });
+        expect(matchesBefore.length).to.be.equal(2);
+        expect(matchesBefore2.length).to.be.equal(1);
+        expect(matchesBefore3.length).to.be.equal(0);
+
+        doc = recipes.nettoyer_otherfindaid_list()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        const matchesAfter2 = xpathFilter(doc, xpathExpr2);
+        const matchesAfter3 = xpathFilter(doc, xpathExpr3).filter(node => {
+            return node.data.trim() !== "";
+        });
+        expect(matchesAfter.length).to.be.equal(0);
+        expect(matchesAfter2.length).to.be.equal(1);
+        expect(matchesAfter3.length).to.be.equal(2);
+        expect(matchesAfter3[0].data).to.be.equal("A");
     });
 });
