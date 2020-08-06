@@ -6,7 +6,7 @@ const { CacheableResponsePlugin } = workbox.cacheableResponse;
 const { ExpirationPlugin } = workbox.expiration;
 const { skipWaiting, clientsClaim, setCacheNameDetails } = workbox.core;
 
-var VERSION = "v1.0.4";
+var VERSION = "v1.0.5";
 setCacheNameDetails({
     prefix: "cuisine-ead",
     suffix: VERSION,
@@ -24,6 +24,13 @@ workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 registerRoute(
     /^https:\/\/fonts\.googleapis\.com/,
+    new StaleWhileRevalidate({
+        cacheName: "google-fonts-stylesheets",
+    })
+);
+
+registerRoute(
+    /^https:\/\/cdn\.usefathom\.com/,
     new StaleWhileRevalidate({
         cacheName: "google-fonts-stylesheets",
     })
