@@ -61,6 +61,8 @@ const availables: Array<[string, RecipeInfo]> = [
         {
             label: "Définir origination à partir de la valeur unittitle",
             category: "Spécifique",
+            complement: "Séparateur: |",
+            defaultArgs: { expectedTitle: "" },
         },
     ],
     [
