@@ -80,6 +80,32 @@ export default class RecipeArgs extends React.PureComponent<Props> {
                     />
                 </EventTrap>
             );
+        if (this.props.recipe === "origination_from_unittitle")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="titre" label="Titres à ajouter en origination." />
+                </EventTrap>
+            );
+        if (this.props.recipe === "genreform_from_unittitle")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="titre" label="Titres à ajouter en genreform." />
+                    <TextArg {...this.props} argName="titre" label="Attribut 'type' à ajouter sur les genreform." />
+                </EventTrap>
+            );
+        if (this.props.recipe === "index_from_unittitle_multi")
+            return (
+                <EventTrap>
+                    <TextArg {...this.props} argName="titres" label="Titres à ajouter en index." />
+                    <TextArg {...this.props} argName="index" label="Index controlaccess (par ex: 'genreform')." />
+                    <TextArg {...this.props} argName="type" label="Attribut 'type' à ajouter sur les index." />
+                    <TextArg
+                        {...this.props}
+                        argName="separateurs"
+                        label="Séparateurs pour diviser le titre en plusieur index (separés par '|')"
+                    />
+                </EventTrap>
+            );
         return null;
     }
 }
