@@ -34,20 +34,18 @@ describe('Smoke test', function () {
             dataTransfer: dt,
         };
         cy.fixture('example-ead.xml', 'base64').then((file) => {
-            return Cypress.Blob.base64StringToBlob(file, '').then((blob) => {
-                const testFile = new File([blob], 'example-ead.xml', { type: "application/xml", lastModified: new Date() });
-                dropEvent.dataTransfer.items.add(testFile);
-            });
+            const blob = Cypress.Blob.base64StringToBlob(file, '');
+            const testFile = new File([blob], 'example-ead.xml', { type: "application/xml", lastModified: new Date() });
+            dropEvent.dataTransfer.items.add(testFile);
         });
         cy.fixture('example-correction.csv', 'base64').then((file) => {
-            return Cypress.Blob.base64StringToBlob(file, '').then((blob) => {
-                const testFile = new File([blob], 'example-correction.csv', { type: "text/csv", lastModified: new Date() });
-                /**
-                 * FIXME: Papaparse ne fonctionne pas correctement avec cypress
-                 */
-                testFile.__CYPRESS = corrections;
-                dropEvent.dataTransfer.items.add(testFile);
-            });
+            const blob = Cypress.Blob.base64StringToBlob(file, '');
+            const testFile = new File([blob], 'example-correction.csv', { type: "text/csv", lastModified: new Date() });
+            /**
+             * FIXME: Papaparse ne fonctionne pas correctement avec cypress
+             */
+            testFile.__CYPRESS = corrections;
+            dropEvent.dataTransfer.items.add(testFile);
         });
         cy.get('[data-cy=dropzone]').trigger('drop', dropEvent);
         /**
