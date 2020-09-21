@@ -57,6 +57,13 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "origination_from_unittitle",
+        {
+            label: "Définir origination à partir de la valeur unittitle",
+            category: "Spécifique",
+        },
+    ],
+    [
         "vider_unitdate_normal",
         {
             label: "Vider l'attribut 'normal' des unitdate",

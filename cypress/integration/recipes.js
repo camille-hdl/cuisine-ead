@@ -199,4 +199,28 @@ describe("Recipe unit test", function () {
         expect(matchesAfter3.length).to.be.equal(2);
         expect(matchesAfter3[0].data).to.be.equal("A");
     });
+    it("originationFromUnittitle", function () {
+        const xpathExpr = '//did[@data-cy="test-origination"]/origination';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+
+        doc = recipes.origination_from_unittitle(IMap({ expectedTitle: "Bonautrenom EMILE Henri." }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(1);
+        expect(matchesAfter[0].textContent).to.be.equal("Bonautrenom Emile Henri.");
+    });
+    it("originationFromUnittitle - existing origination", function () {
+        const xpathExpr = '//did[@data-cy="test-origination-2"]/origination';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(1);
+        expect(matchesBefore[0].childNodes.length).to.be.equal(1);
+
+        doc = recipes.origination_from_unittitle(IMap({ expectedTitle: "Chnom Albert Jean François." }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(1);
+        expect(matchesAfter[0].childNodes.length).to.be.equal(2);
+        expect(matchesAfter[0].childNodes[1].textContent).to.be.equal("Chnom Albert Jean François.");
+    });
 });

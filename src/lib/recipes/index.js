@@ -66,6 +66,7 @@ import ajouterTypologieArticle from "./individual-recipes/ajouter-typologie-arti
 import ajouterAccessRestrictLigeo from "./individual-recipes/ajouter-accessrestrict-ligeo.js";
 import transformeDaogrpLigeo from "./individual-recipes/transforme-daogrp-ligeo.js";
 import nettoyerOtherfindaidList from "./individual-recipes/nettoyer-otherfindaid-list.js";
+import originationFromUnittitle from "./individual-recipes/origination-from-unittitle.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -124,7 +125,6 @@ export const getRecipes = () => {
         { key: "supprimer_physdesc_archdesc", fn: supprimerPhysDidArchdesc },
         { key: "supprimer_langusage", fn: supprimerLangusage },
         { key: "reorg_c_originalsloc", fn: reordonnerOriginalsLoc },
-        //TODO: ajout FFAS 2020-05
         { key: "supprimer_c_id", fn: supprimerCId },
         { key: "geogname_set_source", fn: geognameSetSource },
         { key: "remplace_plage_separator_strict", fn: remplacePlageSeparatorStrict },
@@ -134,6 +134,7 @@ export const getRecipes = () => {
         { key: "ajouter_accessrestrict_ligeo", fn: ajouterAccessRestrictLigeo },
         { key: "transforme_daogrp_ligeo", fn: transformeDaogrpLigeo },
         { key: "nettoyer_otherfindaid_list", fn: nettoyerOtherfindaidList },
+        { key: "origination_from_unittitle", fn: originationFromUnittitle },
     ];
 };
 

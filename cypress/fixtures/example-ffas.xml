@@ -176,7 +176,7 @@
           </c>
 
           <c id="de-4">
-            <did>
+            <did data-cy="test-origination">
               <unitid>8 U 4</unitid>
 
               <unittitle>Bonautrenom Emile Henri.</unittitle>
@@ -200,11 +200,11 @@
           </c>
 
           <c id="de-5">
-            <did>
+            <did data-cy="test-origination-2">
               <unitid>8 U 5</unitid>
 
               <unittitle>Chnom Albert Jean François.</unittitle>
-
+              <origination><name>truc</name></origination>
               <unitdate normal="1877/1897">1877-1897</unitdate>
             </did>
 
