@@ -62,7 +62,16 @@ const availables: Array<[string, RecipeInfo]> = [
             label: "Définir origination à partir de la valeur unittitle",
             category: "Spécifique",
             complement: "Séparateur: |",
-            defaultArgs: { expectedTitle: "" },
+            defaultArgs: { titre: "" },
+        },
+    ],
+    [
+        "genreform_from_unittitle",
+        {
+            label: "Définir genreform à partir de la valeur unittitle",
+            category: "Spécifique",
+            complement: "Séparateur unittitle: |",
+            defaultArgs: { titre: "", type: "" },
         },
     ],
     [

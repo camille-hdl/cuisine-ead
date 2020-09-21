@@ -223,11 +223,11 @@
             </daogrp>
           </c>
 
-          <c id="de-6">
+          <c id="de-6" data-cy="test-genreform">
             <did>
               <unitid>8 U 6</unitid>
 
-              <unittitle>Sudo Henri Marie Joseph.</unittitle>
+              <unittitle>Tables décennales</unittitle>
 
               <unitdate normal="1890/1910">1890-1910</unitdate>
             </did>
@@ -246,6 +246,12 @@
               <daoloc href="8U\FRAD007_8U6\FRAD007_8U6_0067_D.jpg"
                       role="image:last"></daoloc>
             </daogrp>
+            <c id="sub-de-6">
+              <did>
+                <unitid>blablabla</unitid>
+                <unittitle>Truc</unittitle>
+              </did>
+            </c>
           </c>
 
           <c id="de-7">

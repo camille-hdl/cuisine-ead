@@ -204,7 +204,7 @@ describe("Recipe unit test", function () {
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(0);
 
-        doc = recipes.origination_from_unittitle(IMap({ expectedTitle: "Bonautrenom EMILE Henri." }))(doc);
+        doc = recipes.origination_from_unittitle(IMap({ titre: "Bonautrenom EMILE Henri." }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(1);
@@ -216,11 +216,33 @@ describe("Recipe unit test", function () {
         expect(matchesBefore.length).to.be.equal(1);
         expect(matchesBefore[0].childNodes.length).to.be.equal(1);
 
-        doc = recipes.origination_from_unittitle(IMap({ expectedTitle: "Chnom Albert Jean François." }))(doc);
+        doc = recipes.origination_from_unittitle(IMap({ titre: "Chnom Albert Jean François." }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(1);
         expect(matchesAfter[0].childNodes.length).to.be.equal(2);
         expect(matchesAfter[0].childNodes[1].textContent).to.be.equal("Chnom Albert Jean François.");
+    });
+    it("genreformFromUnittitle", function () {
+        const xpathExpr = '//c[@data-cy="test-genreform"]/controlaccess/genreform';
+        const xpathExpr2 = '//c[@data-cy="test-genreform"]/c/controlaccess/genreform';
+        const xpathExprControl = '//c[@data-cy="c-branche"]/controlaccess/genreform';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+        const matchesBefore2 = xpathFilter(doc, xpathExpr2);
+        expect(matchesBefore2.length).to.be.equal(0);
+        const controlBefore = xpathFilter(doc, xpathExprControl);
+        expect(controlBefore.length).to.be.equal(0);
+
+        doc = recipes.genreform_from_unittitle(IMap({ titre: "Tables décennales|Etat civil", type: "Type de document" }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(1);
+        expect(matchesAfter[0].textContent).to.be.equal("Tables décennales");
+        expect(matchesAfter[0].getAttribute("type")).to.be.equal("Type de document");
+        const matchesAfter2 = xpathFilter(doc, xpathExpr2);
+        expect(matchesAfter2.length).to.be.equal(1);
+        const controlAfter = xpathFilter(doc, xpathExprControl);
+        expect(controlAfter.length).to.be.equal(0);
     });
 });
