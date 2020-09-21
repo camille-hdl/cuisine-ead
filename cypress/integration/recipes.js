@@ -245,4 +245,20 @@ describe("Recipe unit test", function () {
         const controlAfter = xpathFilter(doc, xpathExprControl);
         expect(controlAfter.length).to.be.equal(0);
     });
+
+    it("genreformFromUnittitle", function () {
+        const xpathExpr = '//c[@data-cy="test-type-actes"]/controlaccess/genreform';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+
+        const titres = "Baptêmes|Naissances|mariages|sépultures|Décès|Publications de mariages";
+        doc = recipes.index_from_unittitle_multi(IMap({ titres: titres, type: "Type d'acte", separateurs: ",|et", index: "genreform" }))(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(3);
+        expect(matchesAfter[0].textContent).to.be.equal("Naissances");
+        expect(matchesAfter[1].textContent).to.be.equal("Mariages");
+        expect(matchesAfter[2].textContent).to.be.equal("Décès");
+        expect(matchesAfter[0].getAttribute("type")).to.be.equal("Type d'acte");
+    });
 });

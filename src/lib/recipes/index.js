@@ -1,5 +1,5 @@
-//@flow
 /**
+ //@flow
  * Top-level API for the recipes
  */
 import { find, partialRight, propEq } from "ramda";
@@ -68,6 +68,7 @@ import transformeDaogrpLigeo from "./individual-recipes/transforme-daogrp-ligeo.
 import nettoyerOtherfindaidList from "./individual-recipes/nettoyer-otherfindaid-list.js";
 import originationFromUnittitle from "./individual-recipes/origination-from-unittitle.js";
 import genreformFromUnittitle from "./individual-recipes/genreform-from-unittitle.js";
+import genreformFromUnittitleMulti from "./individual-recipes/genreform-from-unittitle-multi.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -137,6 +138,7 @@ export const getRecipes = () => {
         { key: "nettoyer_otherfindaid_list", fn: nettoyerOtherfindaidList },
         { key: "origination_from_unittitle", fn: originationFromUnittitle },
         { key: "genreform_from_unittitle", fn: genreformFromUnittitle },
+        { key: "index_from_unittitle_multi", fn: genreformFromUnittitleMulti },
     ];
 };
 

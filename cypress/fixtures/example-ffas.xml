@@ -254,11 +254,11 @@
             </c>
           </c>
 
-          <c id="de-7">
+          <c id="de-7" data-cy="test-type-actes">
             <did>
               <unitid>8 U 7</unitid>
 
-              <unittitle>Chown Jean François.</unittitle>
+              <unittitle>Naissances, mariages et décès</unittitle>
 
               <unitdate normal="1800/1805">an IX</unitdate>
             </did>

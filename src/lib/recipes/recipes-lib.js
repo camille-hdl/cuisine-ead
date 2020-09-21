@@ -75,6 +75,15 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "index_from_unittitle_multi",
+        {
+            label: "Définir plusieurs index controlaccess à partir des valeurs unittitle",
+            category: "Spécifique",
+            complement: "Séparateur unittitle: |",
+            defaultArgs: { titres: "", index: "", type: "", separateurs: ",|et" },
+        },
+    ],
+    [
         "vider_unitdate_normal",
         {
             label: "Vider l'attribut 'normal' des unitdate",
