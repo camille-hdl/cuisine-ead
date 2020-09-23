@@ -3,7 +3,7 @@ import { xpathFilter } from "../../xml.js";
 import { each } from "../utils.js";
 import { last, filter } from "ramda";
 /**
- * Set genreform from unittitle, recursively
+ * Set genreform from unittitle
  */
 export default (args: Map<string, any>) => (doc: Document): Document => {
     const expectedTitle = args.get("titre") ?? "";
@@ -37,8 +37,6 @@ export default (args: Map<string, any>) => (doc: Document): Document => {
             };
             const ficheC = elem.parentNode.parentNode;
             addGenreform(ficheC);
-            const children = xpathFilter(doc, ficheC, "c");
-            each(children, addGenreform);
         }
     });
     return doc;

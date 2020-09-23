@@ -241,12 +241,12 @@ describe("Recipe unit test", function () {
         expect(matchesAfter[0].textContent).to.be.equal("Tables décennales");
         expect(matchesAfter[0].getAttribute("type")).to.be.equal("Type de document");
         const matchesAfter2 = xpathFilter(doc, xpathExpr2);
-        expect(matchesAfter2.length).to.be.equal(1);
+        expect(matchesAfter2.length).to.be.equal(0);
         const controlAfter = xpathFilter(doc, xpathExprControl);
         expect(controlAfter.length).to.be.equal(0);
     });
 
-    it("genreformFromUnittitle", function () {
+    it("genreformFromUnittitleMulti", function () {
         const xpathExpr = '//c[@data-cy="test-type-actes"]/controlaccess/genreform';
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(0);
