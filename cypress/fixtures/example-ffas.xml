@@ -176,7 +176,7 @@
           </c>
 
           <c id="de-4">
-            <did>
+            <did data-cy="test-origination">
               <unitid>8 U 4</unitid>
 
               <unittitle>Bonautrenom Emile Henri.</unittitle>
@@ -200,11 +200,11 @@
           </c>
 
           <c id="de-5">
-            <did>
+            <did data-cy="test-origination-2">
               <unitid>8 U 5</unitid>
 
               <unittitle>Chnom Albert Jean François.</unittitle>
-
+              <origination><name>truc</name></origination>
               <unitdate normal="1877/1897">1877-1897</unitdate>
             </did>
 
@@ -223,11 +223,11 @@
             </daogrp>
           </c>
 
-          <c id="de-6">
+          <c id="de-6" data-cy="test-genreform">
             <did>
               <unitid>8 U 6</unitid>
 
-              <unittitle>Sudo Henri Marie Joseph.</unittitle>
+              <unittitle>Tables décennales</unittitle>
 
               <unitdate normal="1890/1910">1890-1910</unitdate>
             </did>
@@ -246,13 +246,19 @@
               <daoloc href="8U\FRAD007_8U6\FRAD007_8U6_0067_D.jpg"
                       role="image:last"></daoloc>
             </daogrp>
+            <c id="sub-de-6">
+              <did>
+                <unitid>blablabla</unitid>
+                <unittitle>Truc</unittitle>
+              </did>
+            </c>
           </c>
 
-          <c id="de-7">
+          <c id="de-7" data-cy="test-type-actes">
             <did>
               <unitid>8 U 7</unitid>
 
-              <unittitle>Chown Jean François.</unittitle>
+              <unittitle>Naissances, mariages et décès</unittitle>
 
               <unitdate normal="1800/1805">an IX</unitdate>
             </did>

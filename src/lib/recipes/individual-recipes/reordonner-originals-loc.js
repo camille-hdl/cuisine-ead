@@ -9,7 +9,8 @@ import { each } from "../utils.js";
  * 1. `<did>`
  * 2. `<originalsloc>`
  * 3. `<scopecontent>`
- * 4. ...rest
+ * 4. `<controlaccess>`
+ * 5. ...rest
  */
 export default () => (doc: Document): Document => {
     const components = xpathFilter(doc, "//c");
@@ -18,6 +19,7 @@ export default () => (doc: Document): Document => {
             if (child.tagName === "did") return "did";
             if (child.tagName === "originalsloc") return "originalsloc";
             if (child.tagName === "scopecontent") return "scopecontent";
+            if (child.tagName === "controlaccess") return "controlaccess";
         }
         return "rest";
     };
@@ -33,6 +35,7 @@ export default () => (doc: Document): Document => {
                 did: [],
                 originalsloc: [],
                 scopecontent: [],
+                controlaccess: [],
                 rest: [],
             };
             each(elem.children, (child) => {
@@ -43,6 +46,7 @@ export default () => (doc: Document): Document => {
             elem = addListToElem(elem, childrenByType.did);
             elem = addListToElem(elem, childrenByType.originalsloc);
             elem = addListToElem(elem, childrenByType.scopecontent);
+            elem = addListToElem(elem, childrenByType.controlaccess);
             elem = addListToElem(elem, childrenByType.rest);
         }
     });

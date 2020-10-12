@@ -57,6 +57,33 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "origination_from_unittitle",
+        {
+            label: "Définir origination à partir de la valeur unittitle",
+            category: "Spécifique",
+            complement: "Séparateur: |",
+            defaultArgs: { titre: "" },
+        },
+    ],
+    [
+        "genreform_from_unittitle",
+        {
+            label: "Définir genreform à partir de la valeur unittitle",
+            category: "Spécifique",
+            complement: "Séparateur unittitle: |",
+            defaultArgs: { titre: "", type: "" },
+        },
+    ],
+    [
+        "index_from_unittitle_multi",
+        {
+            label: "Définir plusieurs index controlaccess à partir des valeurs unittitle",
+            category: "Spécifique",
+            complement: "Séparateur unittitle: |",
+            defaultArgs: { titres: "", index: "", type: "", separateurs: ",|et" },
+        },
+    ],
+    [
         "vider_unitdate_normal",
         {
             label: "Vider l'attribut 'normal' des unitdate",
