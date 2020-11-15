@@ -24,6 +24,7 @@ import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js
 import type { Props } from "./app.jsx";
 import type { XmlFileRecord } from "../types.js";
 import JSZip from "jszip";
+import { trackGoal } from "../lib/fathom.js";
 
 const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
     return <RouterLink to="/recettes" {...props} data-cy="prev-step-link" ref={ref} />;
@@ -75,6 +76,7 @@ export const downloadResults = (props: Props) => {
             typeof filename === "string" ? genNewFilename(filename) : genNewFilename("default_filename.xml")
         );
     });
+    trackGoal("DUGNE754");
 };
 
 /**
@@ -123,6 +125,7 @@ export const downloadResultsZip = (props: Props) => {
             });
         });
     }
+    trackGoal("DUGNE754");
 };
 /**
  * Export controlaccess tags and their content in a csv file.
@@ -147,6 +150,7 @@ export const downloadControlAccesses = (props: Props) => {
         window.__CYPRESS_OUTPUT_CA = str;
     }
     FileSaver.saveAs(new Blob([str], { type: "text/plain;charset=utf-8+bom" }), "controlaccess.csv");
+    trackGoal("XFHTRH2Y");
 };
 
 class Results extends React.PureComponent<Props & { classes: any }> {
