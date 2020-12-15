@@ -23,7 +23,7 @@ import {
     tail,
     map,
 } from "ramda";
-import { readXml } from "../lib/xml.js";
+import { readXml, countC } from "../lib/xml.js";
 import { openFile } from "../lib/utils.js";
 import type { InputJSONData, InputJSONRaw } from "../types.js";
 import Papa from "papaparse";
@@ -169,6 +169,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                                 encoding: encoding,
                                                 string: string,
                                                 hash: hash,
+                                                nbC: countC(doc),
                                             });
                                         });
                                     }, xml);

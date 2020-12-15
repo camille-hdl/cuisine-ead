@@ -9,6 +9,7 @@ export const makeXmlFileRecord: RecordFactory<AddXmlFileData> = Record({
     filename: "",
     string: "",
     hash: "",
+    nbC: 0,
 });
 
 export const makeRecipeInPipelineRecord: RecordFactory<RecipeInPipeline> = Record({
