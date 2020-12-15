@@ -149,3 +149,11 @@ const crlfRE = /\r\n/g;
 export const normalizeXmlString = (str: string): string => {
     return str.replace(crlfRE, "\n");
 };
+
+/**
+ * Returns how many <c>s are in the document
+ */
+export const countC = (doc: Document): number => {
+    const cs = xpathFilter(doc, "//c");
+    return cs.length;
+};

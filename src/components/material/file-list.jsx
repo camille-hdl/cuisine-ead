@@ -10,10 +10,10 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { List as ImmutableList, Map } from "immutable";
-import { map, head } from "ramda";
+import { map, head, reduce } from "ramda";
 import { xpathFilter } from "../../lib/xml.js";
-
-const styles = theme => ({
+const sumC = reduce((acc, xmlFile) => acc + xmlFile.get("nbC"), 0);
+const styles = (theme) => ({
     root: {
         flexGrow: 1,
         margin: "auto",
@@ -43,18 +43,24 @@ const getTitleProper = (doc: any): string => {
  */
 class FileList extends React.PureComponent<Props> {
     render() {
-        const { classes } = this.props;
+        const { classes, xmlFiles } = this.props;
+        const xmlFilesArray = xmlFiles.toArray();
+        const totalNbC = sumC(xmlFilesArray);
         return (
             <div className={classes.root}>
                 <div className={classes.paper}>
+                    {totalNbC > 0 ? (
+                        <p>{`${"" + totalNbC} fiche(s) C dans ${xmlFilesArray.length} fichier(s)`}</p>
+                    ) : null}
                     <List dense={false}>
-                        {map(xmlFile => {
+                        {map((xmlFile) => {
                             const hash = xmlFile.get("hash") ? String(xmlFile.get("hash")) : String(Math.random());
                             const doc = xmlFile.get("doc");
                             const filename = xmlFile.get("filename") ? String(xmlFile.get("filename")) : "no-filename";
                             const encoding = xmlFile.get("encoding")
                                 ? String(xmlFile.get("encoding"))
                                 : "encodage introuvable";
+                            const nbC = xmlFile.get("nbC") ? `${"" + xmlFile.get("nbC")} fiche(s) C` : "pas de fiche C";
                             return (
                                 <ListItem key={hash}>
                                     <ListItemAvatar>
@@ -65,12 +71,12 @@ class FileList extends React.PureComponent<Props> {
                                     <ListItemText
                                         data-cy="file-list-text"
                                         primary={doc instanceof Document ? getTitleProper(doc) || filename : filename}
-                                        secondary={`${filename} - ${encoding}`}
+                                        secondary={`${filename} - ${encoding} - ${nbC}`}
                                     />
                                     <ListItemSecondaryAction>
                                         <IconButton
                                             aria-label="Delete"
-                                            onClick={ev => {
+                                            onClick={(ev) => {
                                                 ev.stopPropagation();
                                                 this.props.onRemove(xmlFile);
                                             }}
@@ -80,7 +86,7 @@ class FileList extends React.PureComponent<Props> {
                                     </ListItemSecondaryAction>
                                 </ListItem>
                             );
-                        }, this.props.xmlFiles.toArray())}
+                        }, xmlFilesArray)}
                     </List>
                 </div>
             </div>
