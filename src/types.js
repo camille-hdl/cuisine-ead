@@ -31,6 +31,10 @@ export type AddXmlFileData = {|
      * hash created from the content of the file
      */
     hash: string,
+    /**
+     * How many <c>
+     */
+    nbC: number,
 |};
 
 export type InitialStateProps = {|
