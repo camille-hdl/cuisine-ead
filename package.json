@@ -97,7 +97,7 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
     "rxjs": "^7.0.0",
-    "workbox-window": "^5.1.3",
+    "workbox-window": "^6.1.5",
     "xml-parser-xo": "^2.2.1",
     "xxhash-wasm": "^0.4.0"
   },
