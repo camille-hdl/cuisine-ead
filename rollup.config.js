@@ -3,8 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import { terser } from "rollup-plugin-terser";
-import builtins from "rollup-plugin-node-builtins";
-import globals from "rollup-plugin-node-globals";
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 import clear from "rollup-plugin-clear";
 import copy from "rollup-plugin-cpy";
 import json from "rollup-plugin-json";
@@ -24,64 +23,18 @@ const getPluginsConfig = (prod, mini) => {
         nodeResolve({
             mainFields: ["module", "main", "browser"],
             dedupe: ["react", "react-dom"],
-            preferBuiltins: true,
+            preferBuiltins: false,
         }),
         replace({
             "process.env.NODE_ENV": JSON.stringify(prod ? "production" : "development"),
         }),
         commonjs({
             include: "node_modules/**",
-            namedExports: {
-                "./node_modules/react/index.js": [
-                    "cloneElement",
-                    "createElement",
-                    "PropTypes",
-                    "Children",
-                    "Component",
-                    "createFactory",
-                    "PureComponent",
-                    "lazy",
-                    "Suspense",
-                    "useState",
-                    "useEffect",
-                    "useLayoutEffect",
-                    "useCallback",
-                    "useMemo",
-                    "useContext",
-                    "useReducer",
-                    "useRef",
-                    "useImperativeHandle",
-                    "useDebugValue",
-                    "memo",
-                    "forwardRef",
-                    "Fragment",
-                    "isValidElement",
-                    "createContext",
-                ],
-                "./node_modules/react-dom/index.js": ["findDOMNode", "unstable_batchedUpdates", "createPortal"],
-                "./node_modules/immutable/dist/immutable.js": ["Map", "List", "Set", "fromJS", "Record"],
-                "./node_modules/babel-runtime/node_modules/core-js/library/modules/es6.object.to-string.js": [
-                    "default",
-                ],
-                "./node_modules/rxjs/Subject.js": ["Subject"],
-                "./node_modules/process/browser.js": ["nextTick"],
-                "./node_modules/events/events.js": ["EventEmitter"],
-                "./node_modules/@material-ui/core/styles/index.js": [
-                    "withStyles",
-                    "createMuiTheme",
-                    "MuiThemeProvider",
-                ],
-                "./node_modules/react-is/index.js": ["isValidElementType", "isFragment", "ForwardRef", "Memo"],
-                "./node_modules/react-redux/node_modules/react-is/index.js": [
-                    "isValidElementType",
-                    "isContextConsumer",
-                ],
-                "node_modules/@material-ui/utils/node_modules/react-is/index.js": ["ForwardRef"],
-            },
         }),
         babel(),
-        globals(),
-        builtins(),
+        nodePolyfills({
+            include: null,
+        }),
         json({
             preferConst: true,
             compact: true,
