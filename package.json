@@ -58,7 +58,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
-    "flow-bin": "^0.151.0",
+    "flow-bin": "^0.152.0",
     "jest": "^26.6.3",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
@@ -95,7 +95,7 @@
     "redux": "^4.1.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
-    "rxjs": "^7.0.1",
+    "rxjs": "^7.1.0",
     "workbox-window": "^6.1.5",
     "xml-parser-xo": "^2",
     "xxhash-wasm": "^0.4.1"
