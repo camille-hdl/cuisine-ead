@@ -261,4 +261,14 @@ describe("Recipe unit test", function () {
         expect(matchesAfter[2].textContent).to.be.equal("Décès");
         expect(matchesAfter[0].getAttribute("type")).to.be.equal("Type d'acte");
     });
+    it("copierTitleproperDansUnititle", function () {
+        const xpathExpr = '/ead/archdesc/did/unittitle';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore[0].textContent).to.be.equal("Répertoires de notaires en provenance du tribunal de première instance de Commune.");
+
+        doc = recipes.copier_titleproper_dans_unittitle()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore[0].textContent).to.be.equal("XX");
+    });
 });

@@ -478,6 +478,13 @@ const availables: Array<[string, RecipeInfo]> = [
             defaultArgs: { prefix: "" },
         },
     ],
+    [
+        "copier_titleproper_dans_unittitle",
+        {
+            label: "Copier le titleproper dans le unittitle du archdesc",
+            category: "Corrections",
+        },
+    ],
 ];
 
 /**

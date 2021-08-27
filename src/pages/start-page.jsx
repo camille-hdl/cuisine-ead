@@ -84,8 +84,8 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{"Nouveau traitement : copier le titleproper dans le unittitle du archdesc"}</li>
                                 <li>{"Nouveau traitement : forcer level=file sur les derniers niveaux"}</li>
-                                <li>{"Nouveau traitement : supprimer les notes 'mnesysinternal'"}</li>
                                 <li>
                                     {
                                         "Des boutons en bas à droite permettent de télécharger les controlaccess sans avoir de recette"

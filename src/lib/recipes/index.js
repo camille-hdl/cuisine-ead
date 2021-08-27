@@ -69,6 +69,7 @@ import nettoyerOtherfindaidList from "./individual-recipes/nettoyer-otherfindaid
 import originationFromUnittitle from "./individual-recipes/origination-from-unittitle.js";
 import genreformFromUnittitle from "./individual-recipes/genreform-from-unittitle.js";
 import genreformFromUnittitleMulti from "./individual-recipes/genreform-from-unittitle-multi.js";
+import copierTitleproperDansUnittitle from "./individual-recipes/copier-titleproper-dans-unittitle.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -139,6 +140,7 @@ export const getRecipes = () => {
         { key: "origination_from_unittitle", fn: originationFromUnittitle },
         { key: "genreform_from_unittitle", fn: genreformFromUnittitle },
         { key: "index_from_unittitle_multi", fn: genreformFromUnittitleMulti },
+        { key: "copier_titleproper_dans_unittitle", fn: copierTitleproperDansUnittitle },
     ];
 };
 
