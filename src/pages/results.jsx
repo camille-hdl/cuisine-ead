@@ -172,7 +172,7 @@ class Results extends React.PureComponent<Props & { classes: any }> {
         );
     };
     render() {
-        const { classes } = this.props;
+        const { classes, pipeline } = this.props;
         return (
             <div>
                 <Grid container>
@@ -183,6 +183,17 @@ class Results extends React.PureComponent<Props & { classes: any }> {
                             </AppStepper>
                         </ErrorCatcher>
                     </PaperSheet>
+                    { pipeline.size <= 0 ? (
+                        <Grid item xs={12} md={12}>
+                            <Paper className={classes.downloadBlock}>
+                                <Typography variant="body1">
+                                    {
+                                        "⚠️ Vous n'avez sélectionné aucune recette, les fichiers seront donc téléchargés sans être modifiés."
+                                    }
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                    ) : null}
                     <Grid item xs={12} md={3}>
                         <Paper className={classes.downloadBlock}>
                             <Typography
