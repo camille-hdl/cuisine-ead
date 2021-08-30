@@ -9,6 +9,7 @@ import Menu from "@material-ui/core/Menu";
 import type { List as IList } from "immutable";
 import { map, head } from "ramda";
 import { xpathFilter } from "../../lib/xml.js";
+import type { XmlFileRecord } from "../../types.js";
 
 const styles = theme => ({
     root: {
@@ -20,18 +21,26 @@ const styles = theme => ({
 /**
  * Retourne le texte de la balise "titleproper"
  */
-export function getTitleProper (doc: Document): string {
+export function getTitleProper(doc: Document): string {
     const tags = xpathFilter(doc, "//titleproper");
     return tags.length > 0 && head(tags) ? head(tags).textContent : "";
+};
+
+/**
+ * Retourne le texte de la balise "eadid"
+ */
+ export function getEADID(doc: Document): string {
+    const eadids = xpathFilter(doc, "//eadid");
+    return eadids.length > 0 && head(eadids) ? head(eadids).textContent : "";
 };
 
 function SelectFile(props: {
     classes: any,
     title: string,
-    xmlFiles: IList<Map<string, mixed>>,
-    selectedFile: Map<string, mixed> | null,
+    xmlFiles: IList<XmlFileRecord>,
+    selectedFile: XmlFileRecord | null,
     emptyProposition?: boolean,
-    onChange: (selectedXmlFile: Map<string, mixed> | null) => void,
+    onChange: (selectedXmlFile: XmlFileRecord | null) => void,
 }) {
     const { classes, title, onChange, xmlFiles, selectedFile, emptyProposition } = props;
     const [anchorEl, setAnchorEl] = useState(null);

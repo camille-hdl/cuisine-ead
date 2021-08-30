@@ -2,12 +2,13 @@
 import React from "react";
 import type { List as IList } from "immutable"
 import SelectFile from "./select-file.jsx";
+import type { XmlFileRecord } from "../../types.js";
 
 export default function SelectPreviewFile(props: {
     classes: any,
-    xmlFiles: IList<Map<string, mixed>>,
+    xmlFiles: IList<XmlFileRecord>,
     previewHash: string | null,
-    previewXmlFile: Map<string, mixed> | null,
+    previewXmlFile: XmlFileRecord | null,
     setPreviewHash: (hash: string | null) => void,
 }) {
     const { classes } = props;

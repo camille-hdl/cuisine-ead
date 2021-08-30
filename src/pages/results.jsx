@@ -20,11 +20,15 @@ import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import { withStyles } from "@material-ui/core/styles";
 import extractCA from "../lib/recipes/extract-ca.js";
+import { xpathFilter } from "../lib/xml.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
+import { each } from "../lib/recipes/utils.js";
 import type { Props } from "./app.jsx";
 import type { XmlFileRecord } from "../types.js";
 import JSZip from "jszip";
 import { trackGoal } from "../lib/fathom.js";
+import SelectFile from "../components/material/select-file.jsx";
+import insertIntoDocument from "../lib/recipes/insert-into-document.js";
 
 const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
     return <RouterLink to="/recettes" {...props} data-cy="prev-step-link" ref={ref} />;
@@ -153,10 +157,47 @@ export const downloadControlAccesses = (props: Props) => {
     trackGoal("XFHTRH2Y");
 };
 
+/**
+ * Attempts to combine all files into `rootXmlFile`.
+ * If an archref[href] in `rootXmlFile` matches another file, the content of this file is inserted in its place in `rootXmlFile`.
+ */
+const mergeIntoOneFile = (rootXmlFile: XmlFileRecord, props: Props) => {
+    const otherFiles = props.xmlFiles.filter(file => file !== rootXmlFile);
+    const findOtherfileByFilename = (candidate: string): XmlFileRecord | null => {
+        return otherFiles.find(file => {
+            return file.get("filename").toLocaleLowerCase() === candidate.toLocaleLowerCase();
+        });
+    };
+    const rootDoc = props.pipelineFn(rootXmlFile);
+    const archrefs = xpathFilter(rootDoc, "//archref[@href]");
+    each(archrefs, archref => {
+        const href = archref.getAttribute("href");
+        const targetFile = findOtherfileByFilename(href);
+        if (targetFile) {
+            console.log("Correspondance trouvée pour", href);
+            const targetDoc = props.pipelineFn(targetFile);
+            insertIntoDocument(rootDoc, targetDoc, archref);
+        } else {
+            console.log("Pas de correspondance pour", href);
+        }
+    });
+    const serializer = new XMLSerializer();
+    const encoding = rootXmlFile.get("encoding");
+    const filename = `fusion_${rootXmlFile.get("filename")}`;
+    let str = cleanOutputEncoding(
+        props.outputPipelineFn(serializer.serializeToString(rootDoc)),
+        typeof encoding === "string" ? encoding : ""
+    );
+    FileSaver.saveAs(
+        new Blob([str], { type: "application/xml;charset=utf-8" }),
+        typeof filename === "string" ? filename : genNewFilename("default_filename.xml")
+    );
+};
 class Results extends React.PureComponent<Props & { classes: any }> {
     download = () => downloadResults(this.props);
     downloadZip = () => downloadResultsZip(this.props);
     downloadControlAccess = () => downloadControlAccesses(this.props);
+    mergeXmlsIntoOneFile = (rootXmlFile: XmlFileRecord) => mergeIntoOneFile(rootXmlFile, this.props);
     /**
      * Returns a json representation of the pipeline + outputPipeline
      * so that the user can re-use it as a preset
@@ -259,6 +300,29 @@ class Results extends React.PureComponent<Props & { classes: any }> {
                             </IconButton>
                         </Paper>
                     </Grid>
+                    {this.props.xmlFiles.size > 1 ? (
+                        <Grid item xs={12} md={3}>
+                            <Paper className={classes.downloadBlock}>
+                                <Typography
+                                    variant="h5"
+                                    data-cy="download-merged-file"
+                                >
+                                    {"Fusionner en un seul fichier 🌮"}
+                                </Typography>
+                                <SelectFile
+                                    title="Sélectionner le fichier principal, dans lequel les autres seront inclus"
+                                    emptyProposition={true}
+                                    xmlFiles={this.props.xmlFiles}
+                                    selectedFile={null}
+                                    onChange={file => {
+                                        if (file) {
+                                            this.mergeXmlsIntoOneFile(file);
+                                        }
+                                    }}
+                                />
+                            </Paper>
+                        </Grid>
+                    ) : null}
                 </Grid>
             </div>
         );
