@@ -1,5 +1,5 @@
 //@flow
-import { head } from "ramda";
+import { head, last } from "ramda";
 import { xpathFilter } from "../xml.js";
 import { each } from "./utils.js";
 import { getEADID } from "../../components/material/select-file.jsx";
@@ -26,7 +26,7 @@ import { getEADID } from "../../components/material/select-file.jsx";
         const currentID = element.getAttribute("id");
         element.setAttribute("id", `${targetEADID}-${currentID}`);
     });
-    const insertionPoint = head(xpathFilter(rootDocument, anchor, "//ancestor::c"));
+    const insertionPoint = last(xpathFilter(rootDocument, anchor, "//ancestor::c"));
     insertionPoint.appendChild(rootC);
     anchor.remove();
 }
