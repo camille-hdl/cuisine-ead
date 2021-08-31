@@ -11,12 +11,20 @@
     </eadheader>
     <archdesc level="fonds">
         <dsc>
+            <c id="doc_0">
+            </c>
             <c id="doc_1">
                 <c id="doc_1_1">
+                    <c id="doc_1_1_1">
+                    </c>
                 </c>
                 <otherfindaid>
                     <archref href="child.xml" />
                 </otherfindaid>
+                <c id="doc_1_2">
+                </c>
+            </c>
+            <c id="doc_2">
             </c>
         </dsc>
     </archdesc>

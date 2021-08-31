@@ -60,6 +60,10 @@
          const anchor = xpathFilter(docRoot, "//archref")[0];
          insertIntoDocument(docRoot, docChild, anchor);
      });
+     it("Should have been inserted in the right node", function () {
+        const insertedC = xpathFilter(docRoot, '//c[@id="doc_1"]/c');
+        expect(insertedC.length).to.equal(3);
+     });
      it("Should have removed the anchor element", function () {
         const matchesAfter = xpathFilter(docRoot, "//archref");
         expect(matchesAfter.length).to.equal(0);
