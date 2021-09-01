@@ -28,5 +28,4 @@ import { getEADID } from "../../components/material/select-file.jsx";
     });
     const insertionPoint = last(xpathFilter(rootDocument, anchor, "ancestor::c"));
     insertionPoint.appendChild(rootC);
-    anchor.remove();
 }

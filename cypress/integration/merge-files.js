@@ -64,10 +64,6 @@
         const insertedC = xpathFilter(docRoot, '//c[@id="doc_1"]/c');
         expect(insertedC.length).to.equal(3);
      });
-     it("Should have removed the anchor element", function () {
-        const matchesAfter = xpathFilter(docRoot, "//archref");
-        expect(matchesAfter.length).to.equal(0);
-     });
      it("Should have inserted a new node with archdesc metadata", function () {
         const insertedRoot = xpathFilter(docRoot, '//c[@id="CHILD_XML-root"]');
         expect(insertedRoot.length).to.equal(1);
