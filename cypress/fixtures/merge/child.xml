@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead>
+    <eadheader>
+        <eadid>CHILD_XML</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>Child</titleproper>
+            </titlestmt>
+        </filedesc>
+    </eadheader>
+    <archdesc level="fonds">
+        <controlaccess>
+            <persname>Testname</persname>
+        </controlaccess>
+        <did>
+            <unitid>test unitid</unitid>
+        </did>
+        <dsc>
+            <c id="doc_1">
+                <c id="doc_1_1">
+                </c>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

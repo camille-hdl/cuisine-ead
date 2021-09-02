@@ -80,7 +80,6 @@ export default function SelectRecipes(props: Props) {
     const nextLink = (
         <OutlinedButton
             linkComponent={NextStepLink}
-            style={{ visibility: props.pipeline.size > 0 ? "visible" : "hidden" }}
         >
             {"résultats →"}
         </OutlinedButton>
