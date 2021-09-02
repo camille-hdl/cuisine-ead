@@ -61,9 +61,8 @@ describe('Smoke test', function () {
         cy.get("[data-cy=download-ca]").click();
         cy.window().its("__CYPRESS_OUTPUT_CA").should("contain", "originalvalue");
     });
-    it("Should not let you go to the results without recipes", function () {
+    it("Should not let you download the results without recipes", function () {
         cy.get("[data-cy=next-step-link]").click();
-        cy.get("[data-cy=next-step-link]").should("not.be.visible");
         cy.get("[data-cy=download-results]").should("not.be.visible");
     });
     it("Should let you add all recipes", function() {

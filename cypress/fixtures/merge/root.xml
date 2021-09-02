@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead>
+    <eadheader>
+        <eadid>ROOT_XML</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>Root</titleproper>
+            </titlestmt>
+        </filedesc>
+    </eadheader>
+    <archdesc level="fonds">
+        <dsc>
+            <c id="doc_0">
+            </c>
+            <c id="doc_1">
+                <c id="doc_1_1">
+                    <c id="doc_1_1_1">
+                    </c>
+                </c>
+                <otherfindaid>
+                    <archref href="child.xml" />
+                </otherfindaid>
+                <c id="doc_1_2">
+                </c>
+            </c>
+            <c id="doc_2">
+            </c>
+        </dsc>
+    </archdesc>
+</ead>
