@@ -70,6 +70,7 @@ import originationFromUnittitle from "./individual-recipes/origination-from-unit
 import genreformFromUnittitle from "./individual-recipes/genreform-from-unittitle.js";
 import genreformFromUnittitleMulti from "./individual-recipes/genreform-from-unittitle-multi.js";
 import copierTitleproperDansUnittitle from "./individual-recipes/copier-titleproper-dans-unittitle.js";
+import insertIntoDocument from "./insert-into-document.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -152,6 +153,7 @@ export const getRecipes = () => {
 window.__cypress_xpathFilter = xpathFilter;
 window.__cypress_recipes = {};
 window.__cypress_immutable = { Map, List, fromJS };
+window.__cypress_insertIntoDocument = insertIntoDocument;
 getRecipes().forEach((recipe) => {
     window.__cypress_recipes[recipe.key] = recipe.fn;
 });

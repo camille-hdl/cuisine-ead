@@ -130,7 +130,6 @@ export default class App extends React.PureComponent<Props> {
     }
     render() {
         const hasXmlFiles = this.props.xmlFiles.size > 0;
-        const hasPipeline = this.props.pipeline.size > 0;
         return (
             <MuiThemeProvider theme={muiTheme}>
                 <CssBaseline />
@@ -155,11 +154,7 @@ export default class App extends React.PureComponent<Props> {
                         path="/resultats"
                         render={(routeProps) =>
                             hasXmlFiles ? (
-                                hasPipeline ? (
-                                    <AsyncResults {...this.props} {...routeProps} />
-                                ) : (
-                                    <Redirect to="/recettes" />
-                                )
+                                <AsyncResults {...this.props} {...routeProps} />
                             ) : (
                                 <Redirect to="/upload" />
                             )
