@@ -485,6 +485,13 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Corrections",
         },
     ],
+    [
+        "sortir_scopecontent_did",
+        {
+            label: "Sortir scopecontent du did et le placer juste après",
+            category: "Corrections",
+        },
+    ],
 ];
 
 /**
