@@ -38,7 +38,6 @@ import OutlinedButton from "../components/material/outlined-button.jsx";
 import AppStepper from "../components/material/stepper.jsx";
 import ErrorCatcher from "../components/error-catcher.jsx";
 import { makeInputJSONRecord, makeRecipeInPipelineRecord } from "../lib/record-factories.js";
-import { trackGoal } from "../lib/fathom.js";
 
 const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {
     const output = {
@@ -134,7 +133,6 @@ export default class UploadFiles extends React.PureComponent<Props> {
             const usableRecipes = inputRecipes.filter((ir) => !recipesKeys.includes(ir.get("key")));
             this.props.setOutputPipeline(this.props.outputPipeline.concat(usableRecipes));
         }
-        trackGoal("EHQ3GEOS");
     };
     render() {
         return (

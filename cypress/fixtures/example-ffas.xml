@@ -29,6 +29,8 @@
 
       <origination><corpname role="producteur">France. Tribunal de première
       instance (Commune, Département)</corpname></origination>
+      <scopecontent data-cy="scopecontent-mal-place">
+      </scopecontent> 
     </did>
 
     <acqinfo>

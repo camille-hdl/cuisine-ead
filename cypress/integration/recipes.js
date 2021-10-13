@@ -271,4 +271,19 @@ describe("Recipe unit test", function () {
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesBefore[0].textContent).to.be.equal("XX");
     });
+    it("sortirScopecontentDid", function () {
+        const xpathExpr = '//did/scopecontent';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(1);
+
+        doc = recipes.sortir_scopecontent_did()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(0);
+        const scopecontent = xpathFilter(doc, '//archdesc/scopecontent')[0];
+        const archdesc = xpathFilter(doc, '//archdesc')[0];
+        const did = xpathFilter(doc, '//archdesc/did')[0];
+        expect(scopecontent.parentNode).to.be.equal(archdesc);
+        expect(did.nextSibling).to.be.equal(scopecontent);
+    });
 });
