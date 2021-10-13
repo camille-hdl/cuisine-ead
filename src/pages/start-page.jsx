@@ -84,6 +84,7 @@ function StartPage(props: { hasXmlFiles: boolean, classes: any }) {
                     <ExpansionPanelDetails>
                         <Typography className={classes.changelog}>
                             <ul>
+                                <li>{"Nouveau traitement : sortir scopecontent du did et le placer juste après"}</li>
                                 <li>{"Sur la page des résultats : fusionner les fichiers en un seul, à partir des archref"}</li>
                                 <li>{"Nouveau traitement : copier le titleproper dans le unittitle du archdesc"}</li>
                                 <li>{"Nouveau traitement : forcer level=file sur les derniers niveaux"}</li>
