@@ -29,13 +29,6 @@ registerRoute(
     })
 );
 
-registerRoute(
-    /^https:\/\/cdn\.usefathom\.com/,
-    new StaleWhileRevalidate({
-        cacheName: "google-fonts-stylesheets",
-    })
-);
-
 // Cache the underlying font files with a cache-first strategy for 1 year.
 registerRoute(
     /^https:\/\/fonts\.gstatic\.com/,
