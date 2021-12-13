@@ -48,7 +48,7 @@
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^2.4.2",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
+    "babel-jest": "^27.4.4",
     "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "eslint": "^7.26.0",
