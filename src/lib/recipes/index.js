@@ -71,6 +71,7 @@ import genreformFromUnittitle from "./individual-recipes/genreform-from-unittitl
 import genreformFromUnittitleMulti from "./individual-recipes/genreform-from-unittitle-multi.js";
 import copierTitleproperDansUnittitle from "./individual-recipes/copier-titleproper-dans-unittitle.js";
 import sortirScopeContentDid from "./individual-recipes/sortir-scopecontent-did.js";
+import idFromUnittitle from "./individual-recipes/id-from-unittitle.js";
 import insertIntoDocument from "./insert-into-document.js";
 
 /**
@@ -144,6 +145,7 @@ export const getRecipes = () => {
         { key: "index_from_unittitle_multi", fn: genreformFromUnittitleMulti },
         { key: "copier_titleproper_dans_unittitle", fn: copierTitleproperDansUnittitle },
         { key: "sortir_scopecontent_did", fn: sortirScopeContentDid },
+        { key: "id_from_unittitle", fn: idFromUnittitle },
     ];
 };
 

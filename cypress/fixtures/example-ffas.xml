@@ -397,6 +397,16 @@
           </c>
         </c>
       </c>
+      <c id="testParentId">
+        <c>
+          <did><unittitle>testChild</unittitle></did>
+        </c>
+        <c>
+          <did><unittitle>testChild</unittitle></did>
+        </c>
+        <c>
+        </c>
+      </c>
     </dsc>
   </archdesc>
 </ead>

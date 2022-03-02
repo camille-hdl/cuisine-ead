@@ -43,6 +43,14 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "id_from_unittitle",
+        {
+            label: "Générer des ids de fiches <c> manquants",
+            complement: "L'id est généré à partir du unittitle s'il existe, sinon à partir des ids des parents et d'un incrément",
+            category: "Spécifique",
+        },
+    ],
+    [
         "supprimer_commentaire",
         {
             label: "Supprimer les commentaires",
