@@ -26,7 +26,7 @@ export default () => (doc: Document): Document => {
 
 const rejectedCharsRE = /[^a-zA-Z0-9\-_]/gm;
 function safeID(input: string): string {
-    return input.replace(rejectedCharsRE, "_");
+    return input.replace(rejectedCharsRE, "_").toLowerCase();
 }
 
 function parentIDs(element: Element, doc: Document): string {
