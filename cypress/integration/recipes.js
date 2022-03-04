@@ -286,4 +286,18 @@ describe("Recipe unit test", function () {
         expect(scopecontent.parentNode).to.be.equal(archdesc);
         expect(did.nextSibling).to.be.equal(scopecontent);
     });
+    it("idFromUnittitle", function () {
+        const xpathExpr = '//c[not(@id)]';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(3);
+
+        doc = recipes.id_from_unittitle()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(0);
+        expect(xpathFilter(doc, '//c[@id="ctestChild-0"]').length).to.be.equal(1);
+        expect(xpathFilter(doc, '//c[@id="ctestChild-1"]').length).to.be.equal(1);
+        expect(xpathFilter(doc, '//c[@id="ctestChild-2"]').length).to.be.equal(0);
+        expect(xpathFilter(doc, '//c[@id="ctestParentId-0"]').length).to.be.equal(1);
+    });
 });
