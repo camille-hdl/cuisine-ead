@@ -295,9 +295,10 @@ describe("Recipe unit test", function () {
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(0);
-        expect(xpathFilter(doc, '//c[@id="ctestChild-0"]').length).to.be.equal(1);
-        expect(xpathFilter(doc, '//c[@id="ctestChild-1"]').length).to.be.equal(1);
-        expect(xpathFilter(doc, '//c[@id="ctestChild-2"]').length).to.be.equal(0);
-        expect(xpathFilter(doc, '//c[@id="ctestParentId-0"]').length).to.be.equal(1);
+        console.log(xpathFilter(doc, '//c'));
+        expect(xpathFilter(doc, '//c[@id="ctestchild-0"]').length).to.be.equal(1);
+        expect(xpathFilter(doc, '//c[@id="ctestchild-1"]').length).to.be.equal(1);
+        expect(xpathFilter(doc, '//c[@id="ctestchild-2"]').length).to.be.equal(0);
+        expect(xpathFilter(doc, '//c[@id="ctestparentid-0"]').length).to.be.equal(1);
     });
 });

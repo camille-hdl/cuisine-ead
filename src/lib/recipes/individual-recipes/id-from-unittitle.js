@@ -10,15 +10,24 @@ const MAX_CHARS = 150;
  */
 export default () => (doc: Document): Document => {
     const withoutId = xpathFilter(doc, "//c[not(@id) or @id=\"\"]");
+    /**
+     * On est susceptibles de générer beaucoup d'ids à partir d'une même chaine,
+     * donc on utilise countersById pour stocker le dernier `counter` associé à une chaine
+     * pour éviter de boucler inutilement
+     */
+    const countersById = {};
     each(withoutId, (c) => {
         const unittitle = head(xpathFilter(doc, c, "did/unittitle"));
-        let suggestedId = `c${unittitle && unittitle.textContent ? safeID(unittitle.textContent.trim()) : parentIDs(c, doc)}`
-        let counter = 0;
-        let candidateId = `${suggestedId.slice(0, MAX_CHARS)}-${counter}`;
+        const suggestedId = `c${unittitle && unittitle.textContent ? safeID(unittitle.textContent.trim()) : parentIDs(c, doc)}`
+        const idRoot = suggestedId.slice(0, MAX_CHARS);
+        let counter = countersById[suggestedId] ?? 0;
+        let candidateId = `${idRoot}-${counter}`;
         while(xpathFilter(doc, `//*[@id="${candidateId}"]`).length > 0) {
             counter++;
             candidateId = `${suggestedId}-${counter}`;
         }
+        counter++;
+        countersById[suggestedId] = counter;
         c.setAttribute("id", candidateId);
     });
     return doc;
@@ -34,5 +43,5 @@ function parentIDs(element: Element, doc: Document): string {
     const ids = map((parent) => {
         return parent.getAttribute("id").trim();
     }, parents);
-    return ids.join("-");
+    return ids.join("-").toLowerCase();
 }
