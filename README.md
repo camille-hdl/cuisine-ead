@@ -1,5 +1,5 @@
 # Cuisine EAD 🍲
-[![Build Status](https://travis-ci.org/camille-hdl/cuisine-ead.svg?branch=master)](https://travis-ci.org/camille-hdl/cuisine-ead) [![Test Coverage](https://api.codeclimate.com/v1/badges/b74ad07c067f9b18fd5d/test_coverage)](https://codeclimate.com/github/camille-hdl/cuisine-ead/test_coverage) 
+![Build](https://github.com/camille-hdl/cuisine-ead/actions/workflows/ci.yaml/badge.svg) [![Test Coverage](https://api.codeclimate.com/v1/badges/b74ad07c067f9b18fd5d/test_coverage)](https://codeclimate.com/github/camille-hdl/cuisine-ead/test_coverage)
 
 A tool for batch editing xml-ead files in the browser.
 
