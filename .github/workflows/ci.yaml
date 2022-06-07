@@ -32,13 +32,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Prepare Code Climate reporter
-      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-      - run: chmod +x ./cc-test-reporter
-      - run: ./cc-test-reporter before-build
-      - name: Build and test
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
       - run: npm ci
       - run: TESTRESULT=npm test
       - name: Report coverage
-      - env:
+        env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      - run: ./cc-test-reporter after-build --exit-code $TESTRESULT
+        run: ./cc-test-reporter after-build --exit-code $TESTRESULT
