@@ -1,0 +1,45 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - '!*' # Do not execute on tags
+    paths:
+      - src/**
+      - public/**
+      - cypress/**
+      - '.github/**'
+      - '*.json'
+      - '*.js'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '!*.MD'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 15.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Prepare Code-Climate reporter
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+      - run: npm ci
+      - name: Run tests and report coverage
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          npm test
+          ./cc-test-reporter after-build --exit-code $?
