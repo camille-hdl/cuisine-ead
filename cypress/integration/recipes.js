@@ -295,10 +295,24 @@ describe("Recipe unit test", function () {
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(0);
-        console.log(xpathFilter(doc, '//c'));
         expect(xpathFilter(doc, '//c[@id="ctestchild-0"]').length).to.be.equal(1);
         expect(xpathFilter(doc, '//c[@id="ctestchild-1"]').length).to.be.equal(1);
         expect(xpathFilter(doc, '//c[@id="ctestchild-2"]').length).to.be.equal(0);
         expect(xpathFilter(doc, '//c[@id="ctestparentid-0"]').length).to.be.equal(1);
+    });
+    it("extraire_dao_daodesc", function () {
+        const xpathExpr = '//daogrp/daodesc/daoloc';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(2);
+
+        doc = recipes.extraire_dao_daodesc()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(0);
+        const matchesDaolocBienPlaces = xpathFilter(doc, '//daogrp[@id="test-daogrp-daodesc"]/daoloc');
+        expect(matchesDaolocBienPlaces.length).to.be.equal(2);
+        const matchesDescription = xpathFilter(doc, '//daogrp[@id="test-daogrp-daodesc"]/daodesc/p');
+        expect(matchesDescription.length).to.be.equal(1);
+        
     });
 });

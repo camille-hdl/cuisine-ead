@@ -500,6 +500,13 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Corrections",
         },
     ],
+    [
+        "extraire_dao_daodesc",
+        {
+            label: "Extraire les <daoloc> de <daodesc>",
+            category: "Spécifique",
+        },
+    ],
 ];
 
 /**
