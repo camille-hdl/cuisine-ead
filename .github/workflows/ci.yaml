@@ -38,7 +38,7 @@ jobs:
       - run: npm ci
       - name: Run tests and report coverage
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: 1ba79968e72f466436bec94526c2234b000886463638859d328819c94bfe3590
         run: |
           npm test
           ./cc-test-reporter after-build --exit-code $?
