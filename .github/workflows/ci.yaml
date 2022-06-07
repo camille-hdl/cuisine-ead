@@ -9,7 +9,7 @@ on:
       - src/*
       - public/*
       - cypress/*
-      - .github/*
+      - '.github/**'
       - '*.json'
       - '*.js'
   pull_request:
