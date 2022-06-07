@@ -6,9 +6,9 @@ on:
     tags:
       - '!*' # Do not execute on tags
     paths:
-      - src/*
-      - public/*
-      - cypress/*
+      - src/**
+      - public/**
+      - cypress/**
       - '.github/**'
       - '*.json'
       - '*.js'
