@@ -37,8 +37,9 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - run: npm ci
-      - run: TESTRESULT=npm test
-      - name: Report coverage
+      - name: Run tests and report coverage
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        run: ./cc-test-reporter after-build --exit-code $TESTRESULT
+        run: |
+          npm test
+          ./cc-test-reporter after-build --exit-code $?
