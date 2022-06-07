@@ -2,7 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ actionstest ]
+    branches: [ master ]
     tags:
       - '!*' # Do not execute on tags
     paths:
@@ -13,7 +13,7 @@ on:
       - '*.json'
       - '*.js'
   pull_request:
-    branches: [ actionstest ]
+    branches: [ master ]
     paths:
       - '!*.MD'
 
