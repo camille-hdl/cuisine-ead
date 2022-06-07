@@ -3,8 +3,19 @@ name: Node.js CI
 on:
   push:
     branches: [ actionstest ]
+    tags:
+      - '!*' # Do not execute on tags
+    paths:
+      - src/*
+      - public/*
+      - cypress/*
+      - .github/*
+      - '*.json'
+      - '*.js'
   pull_request:
     branches: [ actionstest ]
+    paths:
+      - '!*.MD'
 
 jobs:
   build:
@@ -20,5 +31,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - name: Prepare Code Climate reporter
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter
+      - run: ./cc-test-reporter before-build
+      - name: Build and test
       - run: npm ci
-      - run: npm test
+      - run: TESTRESULT=npm test
+      - name: Report coverage
+      - env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - run: ./cc-test-reporter after-build --exit-code $TESTRESULT
