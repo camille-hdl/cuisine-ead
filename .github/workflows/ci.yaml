@@ -10,12 +10,11 @@ on:
       - public/**
       - cypress/**
       - '.github/**'
-      - '*.json'
-      - '*.js'
+      - '**.json'
+      - '**.js'
+      - '**.jsx'
   pull_request:
     branches: [ master ]
-    paths:
-      - '!*.MD'
 
 jobs:
   build:
