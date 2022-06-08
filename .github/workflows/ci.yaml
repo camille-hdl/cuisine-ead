@@ -30,6 +30,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - name: Get cypress cache directory
+        id: cypress-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm run cypress:cachepath)"
+      - name: Persist cypress cache
+        uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: ${{ steps.cypress-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Prepare Code-Climate reporter
         run: |
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
