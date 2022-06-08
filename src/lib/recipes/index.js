@@ -72,6 +72,7 @@ import genreformFromUnittitleMulti from "./individual-recipes/genreform-from-uni
 import copierTitleproperDansUnittitle from "./individual-recipes/copier-titleproper-dans-unittitle.js";
 import sortirScopeContentDid from "./individual-recipes/sortir-scopecontent-did.js";
 import idFromUnittitle from "./individual-recipes/id-from-unittitle.js";
+import extraireDaoFromDaodesc from "./individual-recipes/extraire-dao-daodesc.js";
 import insertIntoDocument from "./insert-into-document.js";
 
 /**
@@ -146,6 +147,7 @@ export const getRecipes = () => {
         { key: "copier_titleproper_dans_unittitle", fn: copierTitleproperDansUnittitle },
         { key: "sortir_scopecontent_did", fn: sortirScopeContentDid },
         { key: "id_from_unittitle", fn: idFromUnittitle },
+        { key: "extraire_dao_daodesc", fn: extraireDaoFromDaodesc },
     ];
 };
 

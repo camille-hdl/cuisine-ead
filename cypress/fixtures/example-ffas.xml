@@ -406,6 +406,16 @@
         </c>
         <c>
         </c>
+        <daogrp id="test-daogrp-daodesc">
+          <daodesc>
+            <p>Les images avec des balises non-valides</p>
+            <daoloc href="8U\FRAD007_8U12\FRAD007_8U12_0001_D.jpg"
+                    role="image:first"></daoloc>
+
+            <daoloc href="8U\FRAD007_8U12\FRAD007_8U12_0214_D.jpg"
+                    role="image:last"></daoloc>
+            </daodesc>
+        </daogrp>
       </c>
     </dsc>
   </archdesc>
