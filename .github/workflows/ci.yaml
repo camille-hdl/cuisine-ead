@@ -33,7 +33,7 @@ jobs:
       - name: Get cypress cache directory
         id: cypress-cache-dir
         run: |
-          echo "::set-output name=dir::$(npm run cypress:cachepath)"
+          echo "::set-output name=dir::$(npm run cypress:cachepath --silent)"
       - name: Persist cypress cache
         uses: actions/cache@v3
         id: cypress-cache
