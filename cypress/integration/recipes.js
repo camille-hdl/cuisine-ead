@@ -313,6 +313,24 @@ describe("Recipe unit test", function () {
         expect(matchesDaolocBienPlaces.length).to.be.equal(2);
         const matchesDescription = xpathFilter(doc, '//daogrp[@id="test-daogrp-daodesc"]/daodesc/p');
         expect(matchesDescription.length).to.be.equal(1);
+    });
+    it("remplace_dao_href", function () {
+        const xpathTest1 = '//*[@id="test-replace"]';
+        const xpathTest2 = '//*[@id="test-replace-2"]';
+        const test1 = xpathFilter(doc, xpathTest1)[0];
+        const test2 = xpathFilter(doc, xpathTest2)[0];
+        expect(test1.getAttribute("href")).to.be.equal("8U/FRAD007_8U12/FRAD007_8U12_0001_D.jpg");
+        expect(test2.getAttribute("href")).to.be.equal("8U/FRAD007_8U12/FRAD007_8U12_0001_D.jpg");
+
+        doc = recipes.remplace_dao_href(IMap({
+            remplacements: [
+                { rechercher: "FRAD", remplacer: "TEST" },
+                { rechercher: "[0-9]", remplacer: "🪐" },
+            ],
+        }))(doc);
+
+        expect(test1.getAttribute("href")).to.be.equal("🪐U/TEST🪐🪐🪐_🪐U🪐🪐/TEST🪐🪐🪐_🪐U🪐🪐_🪐🪐🪐🪐_D.jpg");
+        expect(test2.getAttribute("href")).to.be.equal("🪐U/TEST🪐🪐🪐_🪐U🪐🪐/TEST🪐🪐🪐_🪐U🪐🪐_🪐🪐🪐🪐_D.jpg");
         
     });
 });
