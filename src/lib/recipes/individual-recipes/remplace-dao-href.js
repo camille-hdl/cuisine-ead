@@ -14,7 +14,7 @@ export default (args: Map<string, any>) => (doc: Document): Document => {
         return remplacements.reduce((acc, remplacement) => {
             const { rechercher, remplacer } = remplacement;
             const re = new RegExp(rechercher, "gm");
-            return acc.replaceAll(re, remplacer);
+            return acc.replace(re, remplacer);
         }, text);
     }
     const daos = xpathFilter(doc, "//daoloc[@href]|//dao[@href]");
