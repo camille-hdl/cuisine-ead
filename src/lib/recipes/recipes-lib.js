@@ -507,6 +507,15 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Spécifique",
         },
     ],
+    [
+        "remplace_dao_href",
+        {
+            label: "Rechercher/remplacer dans les href des <daoloc> et <dao>",
+            complement: "La chaine recherchée utilise les expressions régulières",
+            category: "Corrections",
+            defaultArgs: { remplacements: [] },
+        },
+    ],
 ];
 
 /**

@@ -2,6 +2,7 @@
 import React from "react";
 import { Map } from "immutable";
 import TextArg from "./text-arg.jsx";
+import RechRemplacerDaoHrefArgs from "./rech-remplacer-dao-args.jsx";
 
 export type Props = {
     recipe: string,
@@ -30,6 +31,7 @@ function ArgumentList(props: Props) {
     if (props.recipe === "origination_from_unittitle") return <OriginationFromUnittitleArgs {...props} />;
     if (props.recipe === "genreform_from_unittitle") return <GenreformFromUnititleArgs {...props} />;
     if (props.recipe === "index_from_unittitle_multi") return <IndexFromUnittitleMultiArgs {...props} />;
+    if (props.recipe === "remplace_dao_href") return <RechRemplacerDaoHrefArgs {...props} />;
     return null;
 }
 
