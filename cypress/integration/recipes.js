@@ -333,4 +333,17 @@ describe("Recipe unit test", function () {
         expect(test2.getAttribute("href")).to.be.equal("🪐U/TEST🪐🪐🪐_🪐U🪐🪐/TEST🪐🪐🪐_🪐U🪐🪐_🪐🪐🪐🪐_D.jpg");
         
     });
+    it("separer_controlaccess_lb", function () {
+        const xpathExpr = '//*[@id="test-split-lb"]/*';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(4);
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[0].childNodes.length).to.be.equal(3);
+
+        doc = recipes.separer_controlaccess_lb()(doc);
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(7);
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name').length).to.be.equal(2);
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[0].getAttribute("role")).to.be.equal("test");
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[1].getAttribute("role")).to.be.equal("test");
+    });
 });

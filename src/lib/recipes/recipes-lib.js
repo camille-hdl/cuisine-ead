@@ -516,6 +516,13 @@ const availables: Array<[string, RecipeInfo]> = [
             defaultArgs: { remplacements: [] },
         },
     ],
+    [
+        "separer_controlaccess_lb",
+        {
+            label: "Si un controlaccess contient plusieurs lb, le transformer en plusieurs controlaccess",
+            category: "Corrections",
+        },
+    ],
 ];
 
 /**

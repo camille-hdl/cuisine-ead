@@ -418,6 +418,15 @@
             </daodesc>
         </daogrp>
       </c>
+      <c id="testchild132">
+        <did><unitid>testChild 132</unitid></did>
+        <controlaccess id="test-split-lb">
+          <persname>Top, Jean Frédéric</persname>
+          <name role="test">UN NOM<lb />UN AUTRE NOM</name>
+          <genreform>UN GENRE<lb />UN AUTRE GENRE<lb />ENCORE UN GENRE</genreform>
+          <p>DEVRAIT ETRE<lb />IGNORE</p>
+        </controlaccess>
+      </c>
     </dsc>
   </archdesc>
 </ead>
