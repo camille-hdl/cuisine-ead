@@ -74,6 +74,7 @@ import sortirScopeContentDid from "./individual-recipes/sortir-scopecontent-did.
 import idFromUnittitle from "./individual-recipes/id-from-unittitle.js";
 import extraireDaoFromDaodesc from "./individual-recipes/extraire-dao-daodesc.js";
 import remplaceDaoHref from "./individual-recipes/remplace-dao-href.js";
+import separerControlaccessLb from "./individual-recipes/separer-controlaccess-lb.js";
 import insertIntoDocument from "./insert-into-document.js";
 
 /**
@@ -150,6 +151,7 @@ export const getRecipes = () => {
         { key: "id_from_unittitle", fn: idFromUnittitle },
         { key: "extraire_dao_daodesc", fn: extraireDaoFromDaodesc },
         { key: "remplace_dao_href", fn: remplaceDaoHref },
+        { key: "separer_controlaccess_lb", fn: separerControlaccessLb },
     ];
 };
 
