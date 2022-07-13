@@ -146,7 +146,6 @@ describe("Recipe unit test", function () {
         expect(matchesBefore.length).to.be.equal(1);
 
         doc = recipes.transforme_daogrp_ligeo(IMap({ prefix: "Serie_U" }))(doc);
-
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(1);
         expect(matchesAfter[0].getAttribute("type")).to.be.equal("link");
@@ -160,7 +159,6 @@ describe("Recipe unit test", function () {
         const xpathExpr = '//daogrp[@data-cy="daogrp-series"]';
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(1);
-
         doc = recipes.transforme_daogrp_ligeo(IMap({ prefix: null }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
@@ -319,18 +317,18 @@ describe("Recipe unit test", function () {
         const xpathTest2 = '//*[@id="test-replace-2"]';
         const test1 = xpathFilter(doc, xpathTest1)[0];
         const test2 = xpathFilter(doc, xpathTest2)[0];
-        expect(test1.getAttribute("href")).to.be.equal("8U/FRAD007_8U12/FRAD007_8U12_0001_D.jpg");
-        expect(test2.getAttribute("href")).to.be.equal("8U/FRAD007_8U12/FRAD007_8U12_0001_D.jpg");
+        expect(test1.getAttribute("href")).to.be.equal("G:\\Archives\\FONDS NUMERISES\\19Fi\\FRAC0000_19Fi001.jpg");
+        expect(test2.getAttribute("href")).to.be.equal("G:\\Archives\\FONDS NUMERISES\\19Fi\\FRAC0000_19Fi101.jpg");
 
         doc = recipes.remplace_dao_href(IMap({
             remplacements: [
-                { rechercher: "FRAD", remplacer: "TEST" },
+                { rechercher: "G:\\\\Archives\\\\FONDS NUMERISES\\\\19Fi\\\\", remplacer: "19Fo_consultation/" },
                 { rechercher: "[0-9]", remplacer: "🪐" },
             ],
         }))(doc);
 
-        expect(test1.getAttribute("href")).to.be.equal("🪐U/TEST🪐🪐🪐_🪐U🪐🪐/TEST🪐🪐🪐_🪐U🪐🪐_🪐🪐🪐🪐_D.jpg");
-        expect(test2.getAttribute("href")).to.be.equal("🪐U/TEST🪐🪐🪐_🪐U🪐🪐/TEST🪐🪐🪐_🪐U🪐🪐_🪐🪐🪐🪐_D.jpg");
+        expect(test1.getAttribute("href")).to.be.equal("🪐🪐Fo_consultation/FRAC🪐🪐🪐🪐_🪐🪐Fi🪐🪐🪐.jpg");
+        expect(test2.getAttribute("href")).to.be.equal("🪐🪐Fo_consultation/FRAC🪐🪐🪐🪐_🪐🪐Fi🪐🪐🪐.jpg");
         
     });
     it("separer_controlaccess_lb", function () {

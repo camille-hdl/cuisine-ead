@@ -511,7 +511,7 @@ const availables: Array<[string, RecipeInfo]> = [
         "remplace_dao_href",
         {
             label: "Rechercher/remplacer dans les href des <daoloc> et <dao>",
-            complement: "La chaine recherchée utilise les expressions régulières",
+            complement: "La chaine recherchée utilise les expressions régulière, si elle contient des antislash `\\`, veuillez les doubler : `\\\\`",
             category: "Corrections",
             defaultArgs: { remplacements: [] },
         },

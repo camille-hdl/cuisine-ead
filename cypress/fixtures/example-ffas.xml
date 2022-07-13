@@ -388,13 +388,13 @@
             </controlaccess>
 
             <daogrp>
-              <daoloc id="test-replace" href="8U/FRAD007_8U12/FRAD007_8U12_0001_D.jpg"
+              <daoloc id="test-replace" href="G:\Archives\FONDS NUMERISES\19Fi\FRAC0000_19Fi001.jpg"
                       role="image:first"></daoloc>
 
-              <daoloc href="8U/FRAD007_8U12/FRAD007_8U12_0214_D.jpg"
+              <daoloc href="G:\Archives\FONDS NUMERISES\19Fi\FRAC0000_19Fi010.jpg"
                       role="image:last"></daoloc>
             </daogrp>
-            <dao id="test-replace-2" href="8U/FRAD007_8U12/FRAD007_8U12_0001_D.jpg"/>
+            <dao id="test-replace-2" href="G:\Archives\FONDS NUMERISES\19Fi\FRAC0000_19Fi101.jpg"/>
           </c>
         </c>
       </c>
