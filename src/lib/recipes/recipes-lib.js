@@ -500,6 +500,29 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Corrections",
         },
     ],
+    [
+        "extraire_dao_daodesc",
+        {
+            label: "Extraire les <daoloc> de <daodesc>",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "remplace_dao_href",
+        {
+            label: "Rechercher/remplacer dans les href des <daoloc> et <dao>",
+            complement: "La chaine recherchée utilise les expressions régulière, si elle contient des antislash `\\`, veuillez les doubler : `\\\\`",
+            category: "Corrections",
+            defaultArgs: { remplacements: [] },
+        },
+    ],
+    [
+        "separer_controlaccess_lb",
+        {
+            label: "Si un controlaccess contient plusieurs lb, le transformer en plusieurs controlaccess",
+            category: "Corrections",
+        },
+    ],
 ];
 
 /**

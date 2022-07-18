@@ -146,7 +146,6 @@ describe("Recipe unit test", function () {
         expect(matchesBefore.length).to.be.equal(1);
 
         doc = recipes.transforme_daogrp_ligeo(IMap({ prefix: "Serie_U" }))(doc);
-
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(1);
         expect(matchesAfter[0].getAttribute("type")).to.be.equal("link");
@@ -160,7 +159,6 @@ describe("Recipe unit test", function () {
         const xpathExpr = '//daogrp[@data-cy="daogrp-series"]';
         const matchesBefore = xpathFilter(doc, xpathExpr);
         expect(matchesBefore.length).to.be.equal(1);
-
         doc = recipes.transforme_daogrp_ligeo(IMap({ prefix: null }))(doc);
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
@@ -295,10 +293,55 @@ describe("Recipe unit test", function () {
 
         const matchesAfter = xpathFilter(doc, xpathExpr);
         expect(matchesAfter.length).to.be.equal(0);
-        console.log(xpathFilter(doc, '//c'));
         expect(xpathFilter(doc, '//c[@id="ctestchild-0"]').length).to.be.equal(1);
         expect(xpathFilter(doc, '//c[@id="ctestchild-1"]').length).to.be.equal(1);
         expect(xpathFilter(doc, '//c[@id="ctestchild-2"]').length).to.be.equal(0);
         expect(xpathFilter(doc, '//c[@id="ctestparentid-0"]').length).to.be.equal(1);
+    });
+    it("extraire_dao_daodesc", function () {
+        const xpathExpr = '//daogrp/daodesc/daoloc';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(2);
+
+        doc = recipes.extraire_dao_daodesc()(doc);
+
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(0);
+        const matchesDaolocBienPlaces = xpathFilter(doc, '//daogrp[@id="test-daogrp-daodesc"]/daoloc');
+        expect(matchesDaolocBienPlaces.length).to.be.equal(2);
+        const matchesDescription = xpathFilter(doc, '//daogrp[@id="test-daogrp-daodesc"]/daodesc/p');
+        expect(matchesDescription.length).to.be.equal(1);
+    });
+    it("remplace_dao_href", function () {
+        const xpathTest1 = '//*[@id="test-replace"]';
+        const xpathTest2 = '//*[@id="test-replace-2"]';
+        const test1 = xpathFilter(doc, xpathTest1)[0];
+        const test2 = xpathFilter(doc, xpathTest2)[0];
+        expect(test1.getAttribute("href")).to.be.equal("G:\\Archives\\FONDS NUMERISES\\19Fi\\FRAC0000_19Fi001.jpg");
+        expect(test2.getAttribute("href")).to.be.equal("G:\\Archives\\FONDS NUMERISES\\19Fi\\FRAC0000_19Fi101.jpg");
+
+        doc = recipes.remplace_dao_href(IMap({
+            remplacements: [
+                { rechercher: "G:\\\\Archives\\\\FONDS NUMERISES\\\\19Fi\\\\", remplacer: "19Fo_consultation/" },
+                { rechercher: "[0-9]", remplacer: "🪐" },
+            ],
+        }))(doc);
+
+        expect(test1.getAttribute("href")).to.be.equal("🪐🪐Fo_consultation/FRAC🪐🪐🪐🪐_🪐🪐Fi🪐🪐🪐.jpg");
+        expect(test2.getAttribute("href")).to.be.equal("🪐🪐Fo_consultation/FRAC🪐🪐🪐🪐_🪐🪐Fi🪐🪐🪐.jpg");
+        
+    });
+    it("separer_controlaccess_lb", function () {
+        const xpathExpr = '//*[@id="test-split-lb"]/*';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(4);
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[0].childNodes.length).to.be.equal(3);
+
+        doc = recipes.separer_controlaccess_lb()(doc);
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(7);
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name').length).to.be.equal(2);
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[0].getAttribute("role")).to.be.equal("test");
+        expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[1].getAttribute("role")).to.be.equal("test");
     });
 });

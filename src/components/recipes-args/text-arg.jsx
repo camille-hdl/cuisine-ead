@@ -3,50 +3,18 @@ import React from "react";
 import type { Props } from "./recipe-args.jsx";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-
-const styles = theme => ({
-    textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: "100%",
-    },
-});
-
-type State = {
-    tempValue: string,
-};
-
-class TextArg extends React.Component<Props & { classes: any, argName: string, label: string }, State> {
-    updateTO: any;
-    constructor(props: Props & { classes: any, argName: string, label: string }) {
-        super(props);
-        this.state = {
-            tempValue: String(props.args ? props.args.get(props.argName) : ""),
-        };
-        this.updateTO = null;
-    }
-    componentWillUnmount() {
-        if (this.updateTO) clearTimeout(this.updateTO);
-    }
+import DelayedTextField from "./delayed-text-field.jsx";
+export default class TextArg extends React.PureComponent<Props & { argName: string, label: string }> {
     render() {
-        const { classes, argName, label } = this.props;
+        const { argName, label } = this.props;
         return (
-            <TextField
+            <DelayedTextField
                 label={label}
-                value={this.state.tempValue}
-                className={classes.textField}
-                onChange={ev => {
-                    const value = ev.target.value;
-                    this.setState({ tempValue: value });
-                    if (this.updateTO) clearTimeout(this.updateTO);
-                    this.updateTO = setTimeout(() => {
-                        this.props.setArgs(this.props.args.set(argName, value));
-                    }, 250);
+                value={String(this.props.args ? this.props.args.get(argName) : "")}
+                onChange={value => {
+                    this.props.setArgs(this.props.args.set(argName, value));
                 }}
-                margin="normal"
             />
         );
     }
 }
-
-export default withStyles(styles)(TextArg);

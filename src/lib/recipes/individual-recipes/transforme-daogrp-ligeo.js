@@ -54,8 +54,8 @@ function getFirstLast(doc: Document, elem: Element): { first: Element | null, la
     const daoFirst = xpathFilter(doc, elem, `daoloc[@role="image:first"]`);
     const daoLast = xpathFilter(doc, elem, `daoloc[@role="image:last"]`);
     return {
-        first: daoFirst.length > 0 ? head(daoFirst) : null,
-        last: daoLast.length > 0 ? head(daoLast) : null,
+        first: daoFirst?.length > 0 ? head(daoFirst) : null,
+        last: daoLast?.length > 0 ? head(daoLast) : null,
     };
 }
 
@@ -98,7 +98,7 @@ function getComponentsDefault(
     lastPathComponents: Array<string>,
     prefix?: string | null
 ): DaolocComponents {
-    if (firstPathComponents.length <= 0 || lastPathComponents.length <= 0) {
+    if (firstPathComponents?.length <= 0 || lastPathComponents?.length <= 0) {
         throw new Error("Empty daloc href");
     }
     const directoryComponents = init(firstPathComponents);
@@ -110,7 +110,7 @@ function getComponentsDefault(
     const firstFilenameParts = firstFilename.split(FILENAME_SEPARATOR);
     const prefixe = take(2, firstFilenameParts).join(FILENAME_SEPARATOR) + FILENAME_SEPARATOR;
     const premier = firstFilenameParts[2];
-    const exception = map(() => "0", Array.from({ length: premier.length })).join("");
+    const exception = map(() => "0", Array.from({ length: premier?.length })).join("");
     const endOfFilename = last(firstFilenameParts) ?? "";
     const extension = last(endOfFilename.split(".")) ?? "jpg";
     return { dossier, prefixe, exception, extension };
