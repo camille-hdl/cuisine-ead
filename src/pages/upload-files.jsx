@@ -37,6 +37,8 @@ import { Link as RouterLink } from "react-router-dom";
 import OutlinedButton from "../components/material/outlined-button.jsx";
 import AppStepper from "../components/material/stepper.jsx";
 import ErrorCatcher from "../components/error-catcher.jsx";
+import Changelog from "../components/changelog.jsx";
+import Title from "../components/material/title.jsx";
 import { makeInputJSONRecord, makeRecipeInPipelineRecord } from "../lib/record-factories.js";
 
 const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {
@@ -135,6 +137,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
         }
     };
     render() {
+        const pipelineLength = this.props.pipeline.size + this.props.outputPipeline.size;
         return (
             <div>
                 <Grid container>
@@ -145,7 +148,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                     linkComponent={NextStepLink}
                                     style={{ visibility: this.props.xmlFiles.size > 0 ? "visible" : "hidden" }}
                                 >
-                                    {"Recettes →"}
+                                    {`Recettes${pipelineLength > 0 ? ` (${pipelineLength})`: ""} →`}
                                 </OutlinedButton>
                             </AppStepper>
                         </ErrorCatcher>
@@ -212,11 +215,12 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                     <input {...getInputProps()} />
                                     <Grid container>
                                         <PaperSheet xs={12}>
+                                            <Title />
                                             <Typography variant="h3" align="center" style={{ opacity: 0.5 }}>
-                                                {"Déposer des fichiers"}
+                                                {"Déposez les fichiers"}
                                             </Typography>
                                             <Typography variant="h4" align="center" style={{ opacity: 0.5 }}>
-                                                {"xml-ead ou csv (corrections)"}
+                                                {"xml-ead, csv (corrections) ou json (recettes)"}
                                             </Typography>
                                             {this.props.xmlFiles.size > 0 ? (
                                                 <PaperSheet xs={12} data-cy="file-list">
@@ -246,6 +250,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                         </Dropzone>
                     </div>
                 </ErrorCatcher>
+                <Changelog />
             </div>
         );
     }

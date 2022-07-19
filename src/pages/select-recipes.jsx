@@ -68,7 +68,7 @@ type Props = {
     setPreviewHash: (h: string) => void,
 };
 const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
-    return <RouterLink to="/upload" {...props} data-cy="prev-step-link" ref={ref} />;
+    return <RouterLink to="/" {...props} data-cy="prev-step-link" ref={ref} />;
 });
 const NextStepLink = forwardRef(function NextStepLink(props, ref) {
     return <RouterLink to="/resultats" {...props} data-cy="next-step-link" ref={ref} />;
