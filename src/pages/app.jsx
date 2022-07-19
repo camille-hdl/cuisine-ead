@@ -11,10 +11,10 @@ import LoadingComponent from "../components/material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import type { AddXmlFileData, ComputedStateProps, RecipeInPipelineRecord } from "../types.js";
-import StartPage from "./start-page.jsx";
 import ErrorCatcher from "../components/error-catcher.jsx";
 import FloatingButtons from "../components/floating-buttons.jsx";
 import { Workbox } from "workbox-window";
+import UploadFiles from "./upload-files.jsx";
 
 const muiTheme = createMuiTheme({
     typography: {},
@@ -67,20 +67,6 @@ export type Props = {
     setNewVersionAvailable: (toggle: boolean) => void,
 };
 
-const UploadFiles = lazy(() => import("./upload-files.jsx"));
-/**
- * View on which the user can drag & drop files
- * to be processed
- */
-const AsyncUploadFiles = function AsyncUploadFiles(props) {
-    return (
-        <Suspense fallback={<LoadingComponent />}>
-            <ErrorCatcher>
-                <UploadFiles {...props} />
-            </ErrorCatcher>
-        </Suspense>
-    );
-};
 const SelectRecipes = lazy(() => import("./select-recipes.jsx"));
 /**
  * View on which the user chooses which recipes they want
@@ -138,11 +124,11 @@ export default class App extends React.PureComponent<Props> {
                     <Route
                         exact
                         path="/"
-                        render={(routeProps) => <StartPage hasXmlFiles={hasXmlFiles} {...routeProps} />}
+                        render={(routeProps) => <UploadFiles {...this.props} {...routeProps} />}
                     />
                     <Route
                         path="/upload"
-                        render={(routeProps) => <AsyncUploadFiles {...this.props} {...routeProps} />}
+                        render={(routeProps) => <UploadFiles {...this.props} {...routeProps} />}
                     />
                     <Route
                         path="/recettes"
@@ -156,7 +142,7 @@ export default class App extends React.PureComponent<Props> {
                             hasXmlFiles ? (
                                 <AsyncResults {...this.props} {...routeProps} />
                             ) : (
-                                <Redirect to="/upload" />
+                                <Redirect to="/" />
                             )
                         }
                     />

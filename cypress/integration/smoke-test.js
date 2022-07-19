@@ -25,9 +25,6 @@ describe('Smoke test', function () {
         cy.visit('/');
         cy.get("h1").should("contain", "Cuisine EAD");
 
-        cy.get("[data-cy=start-button").click();
-        cy.url().should("contain", "/upload");
-        
         cy.get("[data-cy=next-step-link]").should("not.be.visible");
         const dt = new DataTransfer();
         const dropEvent = {
