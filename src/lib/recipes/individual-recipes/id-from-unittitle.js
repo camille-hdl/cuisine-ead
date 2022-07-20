@@ -24,7 +24,7 @@ export default () => (doc: Document): Document => {
         let candidateId = `${idRoot}-${counter}`;
         while(xpathFilter(doc, `//*[@id="${candidateId}"]`).length > 0) {
             counter++;
-            candidateId = `${suggestedId}-${counter}`;
+            candidateId = `${idRoot}-${counter}`;
         }
         counter++;
         countersById[suggestedId] = counter;
