@@ -98,7 +98,7 @@
     "reselect": "^4.0.0",
     "rxjs": "^7.5.5",
     "workbox-window": "^6.1.5",
-    "xml-parser-xo": "^2",
+    "xml-parser-xo": "^4",
     "xxhash-wasm": "^0.4.1"
   },
   "repository": {
