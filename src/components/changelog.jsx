@@ -43,6 +43,7 @@
                      <ExpansionPanelDetails>
                          <Typography className={classes.changelog}>
                              <ul>
+                                 <li>{"Nouveau traitement : diviser les controlaccess à partir d'un texte séparateur (ex: ' / ')"}</li>
                                  <li>{"Nouveau traitement : rechercher/remplacer dans les dao* href"}</li>
                                  <li>{"Nouveau traitement : diviser les controlaccess entre chaque <lb />"}</li>
                                  <li>{"Nouveau traitement : sortir scopecontent du did et le placer juste après"}</li>

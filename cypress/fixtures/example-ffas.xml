@@ -381,8 +381,8 @@
               <unitdate normal="1836/1889">1836-1889</unitdate>
             </did>
 
-            <controlaccess>
-              <persname role="notaire">Top, Jean Frédéric</persname>
+            <controlaccess id="cypress-test-ca-separator">
+              <persname role="notaire">Top, Jean Frédéric ;;; Pog, Auguste</persname>
 
               <geogname>Nomdecanton (Département, France)</geogname>
             </controlaccess>

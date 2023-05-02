@@ -344,4 +344,19 @@ describe("Recipe unit test", function () {
         expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[0].getAttribute("role")).to.be.equal("test");
         expect(xpathFilter(doc, '//*[@id="test-split-lb"]/name')[1].getAttribute("role")).to.be.equal("test");
     });
+    it("separer_controlaccess_separator", function () {
+        const xpathExpr = '//*[@id="cypress-test-ca-separator"]/persname';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(1);
+        expect(matchesBefore[0].textContent).to.be.equal("Top, Jean Frédéric ;;; Pog, Auguste");
+        expect(matchesBefore[0].getAttribute("role")).to.be.equal("notaire");
+
+        doc = recipes.separer_controlaccess_separator(immutable.Map({ separator: ";;;"}))(doc);
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(2);
+        expect(matchesAfter[0].textContent).to.be.equal("Top, Jean Frédéric");
+        expect(matchesAfter[1].textContent).to.be.equal("Pog, Auguste");
+        expect(matchesAfter[0].getAttribute("role")).to.be.equal("notaire");
+        expect(matchesAfter[1].getAttribute("role")).to.be.equal("notaire");
+    });
 });
