@@ -32,6 +32,7 @@ function ArgumentList(props: Props) {
     if (props.recipe === "genreform_from_unittitle") return <GenreformFromUnititleArgs {...props} />;
     if (props.recipe === "index_from_unittitle_multi") return <IndexFromUnittitleMultiArgs {...props} />;
     if (props.recipe === "remplace_dao_href") return <RechRemplacerDaoHrefArgs {...props} />;
+    if (props.recipe === "separer_controlaccess_separator") return <SeparerControlaccessSeparatorArgs {...props} />;
     return null;
 }
 
@@ -109,4 +110,8 @@ function IndexFromUnittitleMultiArgs(props: Props) {
             />
         </>
     );
+}
+
+function SeparerControlaccessSeparatorArgs(props: Props) {
+    return <TextArg {...props} argName="separator" label="Texte à utiliser comme séparateur" />;
 }

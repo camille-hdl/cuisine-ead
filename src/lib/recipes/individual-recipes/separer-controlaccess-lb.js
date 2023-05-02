@@ -1,9 +1,9 @@
 //@flow
-import { xpathFilter } from "../../xml.js";
+import { xpathFilter, getControlaccessTagNames } from "../../xml.js";
 import { each } from "../utils.js";
 import { filter, map } from "ramda";
 
-const accepted = ["corpname", "famname", "function", "genreform", "geogname", "name", "occupation", "persname", "subject", "title"];
+const accepted = getControlaccessTagNames();
 
 export default () => (doc: Document): Document => {
     const controlaccesses = filter((el) => {

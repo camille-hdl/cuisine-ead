@@ -523,6 +523,15 @@ const availables: Array<[string, RecipeInfo]> = [
             category: "Corrections",
         },
     ],
+    [
+        "separer_controlaccess_separator",
+        {
+            label: "Si un controlaccess contient un séparateur, le transformer en plusieurs controlaccess",
+            complement: "Le séparateur peut être n'importe quel texte (ex: ' / '), mais ne peut pas être une balise",
+            category: "Corrections",
+            defaultArgs: { separator: "/" },
+        },
+    ],
 ];
 
 /**
