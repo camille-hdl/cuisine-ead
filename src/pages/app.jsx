@@ -6,7 +6,7 @@
 import React, { Suspense, lazy } from "react";
 import MenuBar from "../components/material/menu-bar.jsx";
 import { List } from "immutable";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import LoadingComponent from "../components/material/loading-component.jsx";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -120,33 +120,20 @@ export default class App extends React.PureComponent<Props> {
             <MuiThemeProvider theme={muiTheme}>
                 <CssBaseline />
                 <MenuBar version={this.props.version} newVersionAvailable={this.props.newVersionAvailable} />
-                <Switch>
-                    <Route
-                        exact
-                        path="/"
-                        render={(routeProps) => <UploadFiles {...this.props} {...routeProps} />}
-                    />
-                    <Route
-                        path="/upload"
-                        render={(routeProps) => <UploadFiles {...this.props} {...routeProps} />}
-                    />
+                <Routes>
+                    <Route path="/" element={<UploadFiles {...this.props} />}></Route>
+                    <Route path="/upload" element={<UploadFiles {...this.props} />}></Route>
                     <Route
                         path="/recettes"
-                        render={(routeProps) =>
-                            hasXmlFiles ? <AsyncSelectRecipes {...this.props} {...routeProps} /> : <Redirect to="/" />
+                        element={
+                            hasXmlFiles ? <AsyncSelectRecipes {...this.props} /> : <Navigate to="/" />
                         }
                     />
                     <Route
                         path="/resultats"
-                        render={(routeProps) =>
-                            hasXmlFiles ? (
-                                <AsyncResults {...this.props} {...routeProps} />
-                            ) : (
-                                <Redirect to="/" />
-                            )
-                        }
+                        element={hasXmlFiles ? <AsyncResults {...this.props} /> : <Navigate to="/" />}
                     />
-                </Switch>
+                </Routes>
                 <FloatingButtons {...this.props} />
             </MuiThemeProvider>
         );
