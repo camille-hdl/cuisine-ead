@@ -31,6 +31,7 @@ import type { XmlFileRecord } from "../types.js";
 import JSZip from "jszip";
 import SelectFile from "../components/material/select-file.jsx";
 import insertIntoDocument from "../lib/recipes/insert-into-document.js";
+import { trackGoal } from "../lib/fathom.js";
 
 const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
     return <RouterLink to="/recettes" {...props} data-cy="prev-step-link" ref={ref} />;
@@ -82,6 +83,7 @@ export const downloadResults = (props: Props) => {
             typeof filename === "string" ? genNewFilename(filename) : genNewFilename("default_filename.xml")
         );
     });
+    trackGoal("DTHSLHSJ");
 };
 
 /**
@@ -130,6 +132,7 @@ export const downloadResultsZip = (props: Props) => {
             });
         });
     }
+    trackGoal("DTHSLHSJ");
 };
 /**
  * Export controlaccess tags and their content in a csv file.
@@ -154,6 +157,7 @@ export const downloadControlAccesses = (props: Props) => {
         window.__CYPRESS_OUTPUT_CA = str;
     }
     FileSaver.saveAs(new Blob([str], { type: "text/plain;charset=utf-8+bom" }), "controlaccess.csv");
+    trackGoal("DTHSLHSJ");
 };
 
 /**
