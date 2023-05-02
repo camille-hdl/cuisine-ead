@@ -2,7 +2,6 @@
 import * as actions from "./actions.js";
 import { connect } from "react-redux";
 import App from "./pages/app.jsx";
-import { withRouter } from "react-router-dom";
 import {
     previewXmlFileSliceSelector,
     pipelineFnSelector,
@@ -44,6 +43,4 @@ export const mapDispatchToProps = (dispatch: any) => {
     return dispatchers;
 };
 
-export const AppContainer = withRouter(
-    connect<_, _, ComputedStateProps, _, _, _>(mapStateToProps, mapDispatchToProps)(App)
-);
+export const AppContainer = connect<_, _, ComputedStateProps, _, _, _>(mapStateToProps, mapDispatchToProps)(App);

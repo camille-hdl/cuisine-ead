@@ -1,6 +1,6 @@
 //@flow
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import { AppContainer } from "./app-container.jsx";
 
@@ -43,10 +43,10 @@ const stateCreator: RecordFactory<InitialStateProps> = Record({
 const containerElement = document.getElementById("app-container");
 if (containerElement) {
     const state: StateRecord = stateCreator(getInitialState());
-    ReactDOM.render(
+    const root = createRoot(containerElement);
+    root.render(
         <BrowserRouter>
             <AppContainer store={createStore<StateRecord>(App, state, composeEnhancers(applyMiddleware(thunk)))} />
-        </BrowserRouter>,
-        containerElement
+        </BrowserRouter>
     );
 }
