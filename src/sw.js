@@ -29,6 +29,13 @@ registerRoute(
     })
 );
 
+registerRoute(
+    /^https:\/\/cdn\.usefathom\.com/,
+    new StaleWhileRevalidate({
+        cacheName: "fathom-analytics",
+    })
+);
+
 // Cache the underlying font files with a cache-first strategy for 1 year.
 registerRoute(
     /^https:\/\/fonts\.gstatic\.com/,
