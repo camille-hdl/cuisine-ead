@@ -13,7 +13,7 @@
     "workbox": "workbox injectManifest workbox-config-esm.js",
     "workbox:generate": "workbox generateSW workbox-config-esm.js",
     "watch": "rollup -c -w",
-    "serve": "serve",
+    "serve": "serve -l 5000",
     "cypress:open": "npx cypress@5.1 open",
     "cypress:run": "npx cypress@5.1 run",
     "cypress:cachepath": "npx cypress@5.1 cache path",
