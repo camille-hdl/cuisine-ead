@@ -157,3 +157,8 @@ export const getTagAndAttributes = (str: string): { tag: string, attributes: Arr
     }
     return { tag, attributes };
 };
+
+export const trimWhitespaceAndNewlines = (str: string): string => {
+    if (!str) return "";
+    return str.trim().replace("\n", "").replace("\r\n", "")
+};

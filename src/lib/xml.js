@@ -3,6 +3,7 @@ import xxhash from "xxhash-wasm";
 const jschardet = window && window.jschardet ? window.jschardet : null;
 if (!jschardet) throw "jschardet missing";
 import type { EncodingString } from "../types.js";
+import { each } from "./recipes/utils.js";
 type Hasher = {
     h64: (input: string) => string,
     h32: (input: string) => string,
@@ -157,3 +158,25 @@ export const countC = (doc: Document): number => {
     const cs = xpathFilter(doc, "//c");
     return cs.length;
 };
+
+export const getControlaccessTagNames = (): Array<string> => {
+    return ["genreform", "geogname", "name", "occupation", "subject", "title", "function", "corpname", "famname", "persname"];
+}
+
+export const getControlaccessElements = (doc: Document, contextNode: ?Element): Array<Element> => {
+    const tagNames = getControlaccessTagNames();
+    const xpathQueryFragments = tagNames.map((tagName) => `//controlaccess/${tagName}`);
+    const xpathQuery = xpathQueryFragments.join(" | ");
+    if (contextNode) {
+        return xpathFilter(doc, contextNode, xpathQuery);
+    } else {
+        return xpathFilter(doc, xpathQuery);
+    }
+}
+
+export const copyAttributes = (source: Element, target: Element) => {
+    if (typeof source.attributes === "undefined") return;
+    each([...source.attributes], (attr) => {
+        target.setAttribute(attr.name, attr.value);
+    });
+}
