@@ -17,7 +17,7 @@
     "cypress:open": "npx cypress@5.1 open",
     "cypress:run": "npx cypress@5.1 run",
     "cypress:cachepath": "npx cypress@5.1 cache path",
-    "cypress:install": "npx cypress install",
+    "cypress:install": "npx cypress@5.1 install",
     "jest": "jest",
     "deploy": "npm run build",
     "prettier": "prettier --write src/**/*.{js,jsx}",
