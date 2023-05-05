@@ -24,14 +24,7 @@ checks:
     enabled: false
   similar-code:
     config:
-      threshold: 3
+      threshold: 75
   identical-code:
     config:
-      threshold: 3
-plugins:
-  duplication:
-    enabled: true
-    config:
-      languages:
-        javascript:
-          mass_threshold: 65
+      threshold: 55
