@@ -291,6 +291,14 @@ const availables: Array<[string, RecipeInfo]> = [
         "corriger_deplacer_genreform",
         {
             label: "Déplacer certains genreform dans physdesc",
+            complement: "Uniquement les valeurs : matrice cadastrale, état de sections, tableau d'assemblage, plan-minute de conservation, liste, iconographie, nomenclature des propriétaires",
+            category: "Spécifique",
+        },
+    ],
+    [
+        "deplacer_genreform_physdesc",
+        {
+            label: "Déplacer TOUS les genreform dans physdesc",
             category: "Spécifique",
         },
     ],
