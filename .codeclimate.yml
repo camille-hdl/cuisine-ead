@@ -28,3 +28,10 @@ checks:
   identical-code:
     config:
       threshold: 3
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        javascript:
+          mass_threshold: 65
