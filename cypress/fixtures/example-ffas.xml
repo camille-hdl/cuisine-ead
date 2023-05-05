@@ -427,6 +427,14 @@
           <p>DEVRAIT ETRE<lb />IGNORE</p>
         </controlaccess>
       </c>
+      <c id="test-genreform-physdesc">
+        <did><unitid>testChild 132</unitid></did>
+        <controlaccess>
+          <persname>Top, Jean Frédéric</persname>
+          <genreform role="test">val1</genreform>
+          <genreform>val2</genreform>
+        </controlaccess>
+      </c>
     </dsc>
   </archdesc>
 </ead>

@@ -76,6 +76,7 @@ import extraireDaoFromDaodesc from "./individual-recipes/extraire-dao-daodesc.js
 import remplaceDaoHref from "./individual-recipes/remplace-dao-href.js";
 import separerControlaccessLb from "./individual-recipes/separer-controlaccess-lb.js";
 import separerControlaccessSeparator from "./individual-recipes/separer-controlaccess-separator.js";
+import deplacerGenreformPhysdesc from "./individual-recipes/deplacer-genreform-physdesc.js";
 import insertIntoDocument from "./insert-into-document.js";
 
 /**
@@ -121,6 +122,7 @@ export const getRecipes = () => {
         { key: "corriger_source_contexte", fn: corrigerSubjectContexteHisto },
         { key: "corriger_mat_spec_donnees", fn: corrigerMatSpecDonnees },
         { key: "corriger_deplacer_genreform", fn: corrigerGenreformPhysdesc },
+        { key: "deplacer_genreform_physdesc", fn: deplacerGenreformPhysdesc },
         { key: "pack_ligeo", fn: traitementsLigeo },
         { key: "suppr_mnesys_internal", fn: supprimerMnesysInternal },
         { key: "suppr_accessrestrict_formate", fn: supprimerAccessRestrictFormate },
