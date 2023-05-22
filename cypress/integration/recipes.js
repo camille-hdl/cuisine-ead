@@ -359,4 +359,19 @@ describe("Recipe unit test", function () {
         expect(matchesAfter[0].getAttribute("role")).to.be.equal("notaire");
         expect(matchesAfter[1].getAttribute("role")).to.be.equal("notaire");
     });
+    it("deplacer_genreform_physdesc", function () {
+        const xpathExpr = '//c[@id="test-genreform-physdesc"]/did/physdesc/genreform';
+        const matchesBefore = xpathFilter(doc, xpathExpr);
+        expect(matchesBefore.length).to.be.equal(0);
+        expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/did/physdesc').length).to.be.equal(0);
+        expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/controlaccess/*').length).to.be.equal(3);
+
+        doc = recipes.deplacer_genreform_physdesc()(doc);
+        expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/did/physdesc').length).to.be.equal(1);
+        const matchesAfter = xpathFilter(doc, xpathExpr);
+        expect(matchesAfter.length).to.be.equal(2);
+        expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/controlaccess/*').length).to.be.equal(1);
+        expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/did/physdesc/genreform[@role="test"]').length).to.be.equal(1);
+        expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/did/physdesc/genreform[@source="genreform"]').length).to.be.equal(2);
+    });
 });
