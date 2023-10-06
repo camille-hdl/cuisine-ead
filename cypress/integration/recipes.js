@@ -374,4 +374,42 @@ describe("Recipe unit test", function () {
         expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/did/physdesc/genreform[@role="test"]').length).to.be.equal(1);
         expect(xpathFilter(doc, '//c[@id="test-genreform-physdesc"]/did/physdesc/genreform[@source="genreform"]').length).to.be.equal(2);
     });
+    it("deplacer_unitdate_unittitle", function () {
+        const ficheC1 = xpathFilter(doc, '//c[@id="test-unitdate-1"]')[0];
+        expect(xpathFilter(doc, ficheC1, 'did/unittitle/unitdate').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC1, 'did/unitdate').length).to.be.equal(0);
+
+        const ficheC2 = xpathFilter(doc, '//c[@id="test-unitdate-2"]')[0];
+        expect(xpathFilter(doc, ficheC2, 'did/unittitle/unitdate').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate').length).to.be.equal(1);
+
+        const ficheC3 = xpathFilter(doc, '//c[@id="test-unitdate-3"]')[0];
+        expect(xpathFilter(doc, ficheC3, 'did/unittitle/unitdate').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC3, 'did/unitdate').length).to.be.equal(1);
+
+        doc = recipes.deplacer_unitdate_unittitle()(doc);
+
+        expect(xpathFilter(doc, ficheC1, 'did/unittitle/unitdate').length).to.be.equal(0);
+        expect(xpathFilter(doc, ficheC1, 'did/unitdate').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC1, 'did/unitdate')[0].getAttribute("normal")).to.be.equal("1900");
+        expect(xpathFilter(doc, ficheC1, 'did/unitdate')[0].textContent).to.be.equal("Année 1900");
+        expect(xpathFilter(doc, ficheC1, 'did/unittitle')[0].textContent).to.be.equal("test-unitdate-1 Année 1900");
+
+        expect(xpathFilter(doc, ficheC2, 'did/unittitle/unitdate').length).to.be.equal(0);
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate').length).to.be.equal(2);
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate')[0].getAttribute("normal")).to.be.equal("2000");
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate')[0].hasAttribute("type")).to.be.false;
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate')[1].getAttribute("normal")).to.be.equal("2000");
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate')[1].hasAttribute("type")).to.be.true;
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate')[1].getAttribute("type")).to.be.equal("test");
+        expect(xpathFilter(doc, ficheC2, 'did/unitdate')[1].textContent).to.be.equal("Année 2000");
+        expect(xpathFilter(doc, ficheC2, 'did/unittitle')[0].textContent).to.be.equal("test-unitdate-2 Année 2000");
+
+        expect(xpathFilter(doc, ficheC3, 'did/unittitle/unitdate').length).to.be.equal(0);
+        expect(xpathFilter(doc, ficheC3, 'did/unitdate').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC3, 'did/unitdate')[0].getAttribute("normal")).to.be.equal("3000");
+        expect(xpathFilter(doc, ficheC3, 'did/unitdate')[0].getAttribute("type")).to.be.equal("test");
+        expect(xpathFilter(doc, ficheC3, 'did/unitdate')[0].textContent).to.be.equal("Année 3000");
+        expect(xpathFilter(doc, ficheC3, 'did/unittitle')[0].textContent).to.be.equal("test-unitdate-3 Année 3000");
+    });
 });

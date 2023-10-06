@@ -303,6 +303,14 @@ const availables: Array<[string, RecipeInfo]> = [
         },
     ],
     [
+        "deplacer_unitdate_unittitle",
+        {
+            label: "Sortir les unitdate des unittitles",
+            complement: "Le texte de l'unitdate est laissé dans le unittitle. Si une unitdate existe déjà dans le did avec la même valeur normale et type, on ne rajoute pas un doublon.",
+            category: "Spécifique",
+        },
+    ],
+    [
         "supprimer_internal",
         {
             label: "Supprimer les éléments audience='internal'",
