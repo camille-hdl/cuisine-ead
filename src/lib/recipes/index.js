@@ -78,6 +78,7 @@ import separerControlaccessLb from "./individual-recipes/separer-controlaccess-l
 import separerControlaccessSeparator from "./individual-recipes/separer-controlaccess-separator.js";
 import deplacerGenreformPhysdesc from "./individual-recipes/deplacer-genreform-physdesc.js";
 import insertIntoDocument from "./insert-into-document.js";
+import deplacerUnitdateUnittitle from "./individual-recipes/deplacer-unitdate-unittitle.js";
 
 /**
  * Returns an array of 'simple' recipes creators : functions that create functions that take a single DOM `Document` as argument and returns
@@ -156,6 +157,7 @@ export const getRecipes = () => {
         { key: "remplace_dao_href", fn: remplaceDaoHref },
         { key: "separer_controlaccess_lb", fn: separerControlaccessLb },
         { key: "separer_controlaccess_separator", fn: separerControlaccessSeparator },
+        { key: "deplacer_unitdate_unittitle", fn: deplacerUnitdateUnittitle },
     ];
 };
 

@@ -435,6 +435,23 @@
           <genreform>val2</genreform>
         </controlaccess>
       </c>
+      <c id="test-unitdate-1">
+        <did>
+          <unittitle>test-unitdate-1 <unitdate normal="1900">Année 1900</unitdate></unittitle>
+        </did>
+        <c id="test-unitdate-2">
+          <did>
+            <unittitle>test-unitdate-2 <unitdate type="test" normal="2000">Année 2000</unitdate></unittitle>
+            <unitdate normal="2000">Année 2000</unitdate>
+          </did>
+        </c>
+        <c id="test-unitdate-3">
+          <did>
+            <unittitle>test-unitdate-3 <unitdate type="test" normal="3000">Année 3000</unitdate></unittitle>
+            <unitdate type="test" normal="3000">Année 3000</unitdate>
+          </did>
+        </c>
+      </c>
     </dsc>
   </archdesc>
 </ead>
