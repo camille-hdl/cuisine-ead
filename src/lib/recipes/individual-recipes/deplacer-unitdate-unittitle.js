@@ -3,6 +3,17 @@ import { xpathFilter } from "../../xml.js";
 import { each, getAttributesMap } from "../utils.js";
 import { last, head } from "ramda";
 
+function findParentNode(elem: Element, nodeName: string): ?Element {
+    const parent = elem.parentNode;
+    if (!parent) {
+        return null;
+    }
+    if (parent instanceof Element && parent.nodeName === nodeName) {
+        return parent;
+    }
+    return parent instanceof Element ? findParentNode(parent, nodeName) : null;
+}
+
 /**
  * Si on trouve un unitdate dans le unittitle,
  * on le déplace dans le did en laissant juste la valeur texte dans le unittitle,
@@ -14,7 +25,11 @@ export default () => (doc: Document): Document => {
     each(unitdatesDansTitle, (elem) => {
         const attributesMap = getAttributesMap(elem);
         const textContent = (""+elem?.textContent).trim();
-        const did = head(xpathFilter(doc, elem, "ancestor::c/did"));
+        const did = findParentNode(elem, "did");
+        if (!did) {
+            console.log("Pas de did pour créer le unitdate.");
+            return;
+        }
         console.log(elem, attributesMap, textContent);
         /**
          * Pour qu'on considère que 2 unitdates sont identiques, ils doivent avoir la même valeur texte, la même valeur normalisée
@@ -31,13 +46,8 @@ export default () => (doc: Document): Document => {
         console.log("existing = ", existingDidUnitdate);
         if (!existingDidUnitdate) {
             // ajouter le unitdate au did
-            if (!did) {
-                console.log("Pas de did pour créer le unitdate.");
-            } else {
-                const newElem = elem.cloneNode(true);
-                did.appendChild(newElem);
-                console.log("append dans did", newElem);
-            }
+            const newElem = elem.cloneNode(true);
+            did.appendChild(newElem);
         }
         // remplacer elem dans son parent par textContent
         const parent = elem.parentNode;
