@@ -412,4 +412,37 @@ describe("Recipe unit test", function () {
         expect(xpathFilter(doc, ficheC3, 'did/unitdate')[0].textContent).to.be.equal("Année 3000");
         expect(xpathFilter(doc, ficheC3, 'did/unittitle')[0].textContent).to.be.equal("test-unitdate-3 Année 3000");
     });
+    it("deplacer_dans_did", function () {
+        const archdesc = xpathFilter(doc, '//archdesc')[0];
+        expect(xpathFilter(doc, archdesc, 'did/physdesc').length).to.be.equal(0);
+        expect(xpathFilter(doc, archdesc, 'did/physdesc/extent').length).to.be.equal(0);
+        expect(xpathFilter(doc, archdesc, 'physdesc').length).to.be.equal(1);
+
+        const ficheC1 = xpathFilter(doc, '//c[@id="test-deplacer-dans-did-1"]')[0];
+        expect(xpathFilter(doc, ficheC1, 'did/physdesc').length).to.be.equal(0);
+        expect(xpathFilter(doc, ficheC1, 'did/physloc').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC1, 'physdesc').length).to.be.equal(1);
+
+        const ficheC2 = xpathFilter(doc, '//c[@id="test-deplacer-dans-did-2"]')[0];
+        expect(xpathFilter(doc, ficheC2, 'did').length).to.be.equal(0);
+        expect(xpathFilter(doc, ficheC2, 'physloc').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC2, 'physdesc').length).to.be.equal(1);
+
+        doc = recipes.deplacer_dans_did(IMap({balises: "physdesc|physloc"}))(doc);
+
+        expect(xpathFilter(doc, archdesc, 'did/physdesc').length).to.be.equal(1);
+        expect(xpathFilter(doc, archdesc, 'did/physdesc/extent').length).to.be.equal(1);
+        expect(xpathFilter(doc, archdesc, 'did/physdesc/extent')[0].textContent).to.be.equal("TEST");
+        expect(xpathFilter(doc, archdesc, 'physdesc').length).to.be.equal(0);
+
+        expect(xpathFilter(doc, ficheC1, 'did/physdesc').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC1, 'did/physloc').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC1, 'physdesc').length).to.be.equal(0);
+
+        expect(xpathFilter(doc, ficheC2, 'did').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC2, 'did/physdesc').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC2, 'did/physloc').length).to.be.equal(1);
+        expect(xpathFilter(doc, ficheC2, 'physloc').length).to.be.equal(0);
+        expect(xpathFilter(doc, ficheC2, 'physdesc').length).to.be.equal(0);
+    });
 });
