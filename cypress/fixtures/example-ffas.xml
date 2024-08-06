@@ -33,6 +33,10 @@
       </scopecontent> 
     </did>
 
+    <physdesc data-cy="should-move-to-did-archdesc">
+      <extent>TEST</extent>
+    </physdesc>
+
     <acqinfo>
       <p>Versement.</p>
     </acqinfo>
@@ -451,6 +455,23 @@
             <unitdate type="test" normal="3000">Année 3000</unitdate>
           </did>
         </c>
+      </c>
+      <c id="test-deplacer-dans-did-1">
+        <did>
+          <unittitle>test-deplacer-dans-did-1</unittitle>
+          <physloc>devrait rester</physloc>
+        </did>
+        <physdesc data-cy="should-move-to-did-c">
+          <extent>TEST</extent>
+        </physdesc>
+      </c>
+      <c id="test-deplacer-dans-did-2">
+        <physdesc data-cy="should-move-to-new-did-c">
+          TEST
+        </physdesc>
+        <physloc data-cy="should-move-to-new-did-c-2">
+          TEST2
+        </physloc>
       </c>
     </dsc>
   </archdesc>
