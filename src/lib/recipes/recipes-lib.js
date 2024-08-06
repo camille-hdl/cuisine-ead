@@ -548,6 +548,15 @@ const availables: Array<[string, RecipeInfo]> = [
             defaultArgs: { separator: "/" },
         },
     ],
+    [
+        "deplacer_dans_did",
+        {
+            label: "Déplacer des balises de <c>, <archdesc>, <archdescgrp> dans leur <did>",
+            category: "Corrections",
+            complement: "Séparateur pour indiquer plusieurs balises: |",
+            defaultArgs: { balises: "physdesc|physloc" },
+        },
+    ],
 ];
 
 /**
