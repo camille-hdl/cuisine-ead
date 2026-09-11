@@ -1,7 +1,6 @@
 //@flow
 import { xpathFilter } from "../../xml.js";
 import { each } from "../utils.js";
-import { head } from "ramda";
 
 export default (args: Map<string, any>) => (doc: Document): Document => {
     const remplacements = args.get("remplacements") ?? [];

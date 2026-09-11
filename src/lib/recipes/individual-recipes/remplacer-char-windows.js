@@ -14,7 +14,6 @@ export default () => (doc: Document): Document => {
     const elems = xpathFilter(doc, "//*");
     each(elems, (elem) => {
         if (elem.hasAttributes()) {
-            // eslint-disable-next-line no-unused-vars
             for (let attr of elem.attributes) {
                 elem.setAttribute(attr.name, replaceMSChars(attr.value));
             }

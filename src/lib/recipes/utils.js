@@ -45,7 +45,6 @@ export const unitidExistsInDoc = (doc: any, unitid: string): boolean => {
 export const getAttributesMap = (element: window.Element): { [key: string]: string } => {
     const attrs = {};
     if (element.hasAttributes()) {
-        // eslint-disable-next-line no-unused-vars
         for (let attr of element.attributes) {
             attrs[attr.name] = attr.value;
         }

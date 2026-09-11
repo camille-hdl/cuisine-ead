@@ -3,7 +3,7 @@
  * Redux action creators
  */
 
-import type { Map, List } from "immutable";
+import type { List } from "immutable";
 import type { AddXmlFileData } from "./types.js";
 export const ADD_XML_FILE = "ADD_XML_FILE";
 export const REMOVE_XML_FILE = "REMOVE_XML_FILE";
