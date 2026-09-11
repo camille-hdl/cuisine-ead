@@ -232,6 +232,9 @@ a:hover {
 }
 
 .steps-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
     color: inherit;
     text-decoration: none;
 }
