@@ -2,10 +2,10 @@ import babel from "rollup-plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import clear from "rollup-plugin-clear";
-import copy from "rollup-plugin-cpy";
+import copy from "rollup-plugin-copy";
 import json from "rollup-plugin-json";
 
 const outputDir = "./public/js/";
@@ -17,8 +17,12 @@ const getPluginsConfig = (prod, mini) => {
             watch: true,
         }),
         copy({
-            files: ["./node_modules/jschardet/dist/jschardet.min.js"],
-            dest: outputDir + "vendor",
+            targets: [
+                {
+                    src: "./node_modules/jschardet/dist/jschardet.min.js",
+                    dest: outputDir + "vendor",
+                },
+            ],
         }),
         nodeResolve({
             mainFields: ["module", "main", "browser"],
@@ -26,6 +30,7 @@ const getPluginsConfig = (prod, mini) => {
             preferBuiltins: false,
         }),
         replace({
+            preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify(prod ? "production" : "development"),
         }),
         commonjs({
@@ -48,7 +53,7 @@ const getPluginsConfig = (prod, mini) => {
                     unused: false,
                     collapse_vars: false,
                 },
-                output: {
+                format: {
                     comments: !prod,
                 },
                 ecma: 8,
