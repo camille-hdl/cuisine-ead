@@ -2,7 +2,7 @@
 import { head, last } from "ramda";
 import { xpathFilter } from "../xml.js";
 import { each } from "./utils.js";
-import { getEADID } from "../../components/material/select-file.jsx";
+import { getEADID } from "../../components/select-file.jsx";
 
 /**
  * Replaces `anchor` by the content of `subDocument` in `rootDocument` in the parent `c` element

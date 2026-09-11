@@ -1,24 +1,7 @@
 //@flow
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Fab from "@material-ui/core/Fab";
-import Icon from "@material-ui/core/Icon";
 import type { Props } from "../pages/app.jsx";
 import { downloadResultsZip, downloadControlAccesses } from "../pages/results.jsx";
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        position: "fixed",
-        bottom: theme.spacing(2),
-        right: theme.spacing(2),
-        "& > *": {
-            margin: theme.spacing(1),
-        },
-    },
-    extendedIcon: {
-        marginRight: theme.spacing(1),
-    },
-}));
 
 /**
  * Download is allowed if there is at least 1 input xml file
@@ -39,32 +22,32 @@ const canDownloadCAs = (props: Props) => {
 };
 
 export default function FloatingButtons(props: Props) {
-    const classes = useStyles();
     const downloadZip = canDownloadZip(props);
     const downloadCAs = canDownloadCAs(props);
     if (!downloadCAs && !downloadZip) return null;
     return (
-        <div className={classes.root}>
+        <div className="quick-actions">
             {downloadZip ? (
-                <Fab
-                    color="primary"
+                <button
+                    type="button"
+                    className="btn btn-primary"
                     title="Télécharger les fichiers modifiés"
                     onClick={() => downloadResultsZip(props)}
                     data-cy="download-results"
                 >
-                    <Icon>get_app</Icon>
-                </Fab>
+                    Télécharger les fichiers
+                </button>
             ) : null}
             {downloadCAs ? (
-                <Fab
-                    variant="extended"
+                <button
+                    type="button"
+                    className="btn"
                     title="Télécharger les controlaccess"
                     onClick={() => downloadControlAccesses(props)}
                     data-cy="download-ca"
                 >
-                    <Icon className={classes.extendedIcon}>get_app</Icon>
                     Controlaccess
-                </Fab>
+                </button>
             ) : null}
         </div>
     );

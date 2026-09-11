@@ -4,24 +4,13 @@
  * the files after having applied the pipeline of recipes
  */
 
-import React, { forwardRef } from "react";
-import Paper from "@material-ui/core/Paper";
-import PaperSheet from "../components/material/paper-sheet.jsx";
+import React from "react";
 import { Set } from "immutable";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import { Link as RouterLink } from "react-router-dom";
-import OutlinedButton from "../components/material/outlined-button.jsx";
-import AppStepper from "../components/material/stepper.jsx";
+import Steps from "../components/steps.jsx";
 import ErrorCatcher from "../components/error-catcher.jsx";
 import FileSaver from "file-saver";
 import { map } from "ramda";
-import IconButton from "@material-ui/core/IconButton";
-import Switch from "@material-ui/core/Switch";
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Icon from "@material-ui/core/Icon";
-import { withStyles } from "@material-ui/core/styles";
 import extractCA from "../lib/recipes/extract-ca.js";
 import { xpathFilter } from "../lib/xml.js";
 import { escapeCell, cleanOutputEncoding, genNewFilename } from "../lib/utils.js";
@@ -29,23 +18,9 @@ import { each } from "../lib/recipes/utils.js";
 import type { Props } from "./app.jsx";
 import type { XmlFileRecord } from "../types.js";
 import JSZip from "jszip";
-import SelectFile from "../components/material/select-file.jsx";
+import SelectFile from "../components/select-file.jsx";
 import insertIntoDocument from "../lib/recipes/insert-into-document.js";
 import { trackGoal } from "../lib/fathom.js";
-
-const PreviousStepLink = forwardRef(function PreviousStepLink(props, ref) {
-    return <RouterLink to="/recettes" {...props} data-cy="prev-step-link" ref={ref} />;
-});
-
-const styles = (theme) => ({
-    downloadBlock: {
-        ...theme.mixins.gutters(),
-        textAlign: "center",
-        height: "250px",
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
-    },
-});
 
 const isTuple = (input: mixed): boolean %checks => {
     return (
@@ -165,15 +140,15 @@ export const downloadControlAccesses = (props: Props) => {
  * If an archref[href] in `rootXmlFile` matches another file, the content of this file is inserted in its place in `rootXmlFile`.
  */
 const mergeIntoOneFile = (rootXmlFile: XmlFileRecord, removeArchref: boolean, props: Props) => {
-    const otherFiles = props.xmlFiles.filter(file => file !== rootXmlFile);
+    const otherFiles = props.xmlFiles.filter((file) => file !== rootXmlFile);
     const findOtherfileByFilename = (candidate: string): XmlFileRecord | null => {
-        return otherFiles.find(file => {
+        return otherFiles.find((file) => {
             return file.get("filename").toLocaleLowerCase() === candidate.toLocaleLowerCase();
         });
     };
     const rootDoc = props.pipelineFn(rootXmlFile).cloneNode(true);
     const archrefs = xpathFilter(rootDoc, "//archref[@href]");
-    each(archrefs, archref => {
+    each(archrefs, (archref) => {
         const href = archref.getAttribute("href");
         const targetFile = findOtherfileByFilename(href);
         if (targetFile) {
@@ -200,30 +175,23 @@ const mergeIntoOneFile = (rootXmlFile: XmlFileRecord, removeArchref: boolean, pr
     );
 };
 type State = {
-    removeArchrefWhenMerging: boolean
+    removeArchrefWhenMerging: boolean,
+    mergeRootHash: string,
 };
-class Results extends React.Component<Props & { classes: any }, State> {
-    constructor(props: Props & { classes: any }) {
+export default class Results extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             removeArchrefWhenMerging: false,
+            mergeRootHash: "",
         };
     }
     download = () => downloadResults(this.props);
     downloadZip = () => downloadResultsZip(this.props);
     downloadControlAccess = () => downloadControlAccesses(this.props);
     mergeXmlsIntoOneFile = (rootXmlFile: XmlFileRecord) => {
-        return mergeIntoOneFile(
-            rootXmlFile,
-            this.state.removeArchrefWhenMerging,
-            this.props
-        );
-    }
-    /**
-     * Returns a json representation of the pipeline + outputPipeline
-     * so that the user can re-use it as a preset
-     */
-
+        return mergeIntoOneFile(rootXmlFile, this.state.removeArchrefWhenMerging, this.props);
+    };
     /**
      * Exports the full recipe as JSON
      */
@@ -234,133 +202,101 @@ class Results extends React.Component<Props & { classes: any }, State> {
         );
     };
     render() {
-        const { classes, pipeline } = this.props;
+        const { pipeline } = this.props;
+        const selectedMergeFile = this.state.mergeRootHash
+            ? this.props.xmlFiles.find((file) => String(file.get("hash")) === this.state.mergeRootHash) || null
+            : null;
         return (
-            <div>
-                <Grid container>
-                    <PaperSheet xs={12}>
-                        <ErrorCatcher>
-                            <AppStepper activeStep={2}>
-                                <OutlinedButton linkComponent={PreviousStepLink}>{"← Recettes"}</OutlinedButton>
-                            </AppStepper>
-                        </ErrorCatcher>
-                    </PaperSheet>
-                    { pipeline.size <= 0 ? (
-                        <Grid item xs={12} md={12}>
-                            <Paper className={classes.downloadBlock}>
-                                <Typography variant="body1">
-                                    {
-                                        "⚠️ Vous n'avez sélectionné aucune recette, les fichiers seront donc téléchargés sans être modifiés."
-                                    }
-                                </Typography>
-                            </Paper>
-                        </Grid>
-                    ) : null}
-                    <Grid item xs={12} md={3}>
-                        <Paper className={classes.downloadBlock}>
-                            <Typography
-                                onClick={this.download}
-                                style={{ cursor: "pointer" }}
-                                variant="h5"
-                                data-cy="download-link"
-                            >
-                                {"Fichiers séparés 📄📄📄"}
-                            </Typography>
-                            <IconButton onClick={this.download}>
-                                <Icon>get_app</Icon>
-                            </IconButton>
-                            <Typography variant="body1">
-                                {
-                                    "Votre navigateur vous demandera peut-être la permission de télécharger plusieurs fichiers."
-                                }
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <Paper className={classes.downloadBlock}>
-                            <Typography
-                                onClick={this.downloadZip}
-                                style={{ cursor: "pointer" }}
-                                variant="h5"
-                                data-cy="download-zip-link"
-                            >
-                                {"Archive zip 🎁"}
-                            </Typography>
-                            <IconButton onClick={this.downloadZip}>
-                                <Icon>get_app</Icon>
-                            </IconButton>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <Paper className={classes.downloadBlock}>
-                            <Typography
-                                onClick={this.downloadControlAccess}
-                                style={{ cursor: "pointer" }}
-                                variant="h5"
-                                data-cy="download-csv-link"
-                            >
-                                {"Controlaccess en .csv 📊"}
-                            </Typography>
-                            <IconButton onClick={this.downloadControlAccess}>
-                                <Icon>get_app</Icon>
-                            </IconButton>
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <Paper className={classes.downloadBlock}>
-                            <Typography
-                                onClick={this.downloadFullRecipe}
-                                style={{ cursor: "pointer" }}
-                                variant="h5"
-                                data-cy="download-json-link"
-                            >
-                                {"Recette 💌"}
-                            </Typography>
-                            <IconButton onClick={this.downloadFullRecipe}>
-                                <Icon>get_app</Icon>
-                            </IconButton>
-                        </Paper>
-                    </Grid>
+            <div className="page">
+                <ErrorCatcher>
+                    <Steps activeStep={2} canNavigate={true}>
+                        <RouterLink to="/recettes" data-cy="prev-step-link" className="btn">
+                            {"← Recettes"}
+                        </RouterLink>
+                    </Steps>
+                </ErrorCatcher>
+                <h1>Récupérer les fichiers</h1>
+                <p className="lede">Téléchargez le résultat, une archive, ou seulement l’indexation.</p>
+                {pipeline.size <= 0 ? (
+                    <p className="notice notice-warning" role="status">
+                        {
+                            "Aucune recette n’est sélectionnée : les fichiers seront téléchargés sans être modifiés."
+                        }
+                    </p>
+                ) : null}
+                <div className="download-list">
+                    <article className="download-option">
+                        <h2 data-cy="download-link">{"Fichiers séparés"}</h2>
+                        <p>Un fichier XML par fichier d’origine. Le navigateur peut demander l’autorisation.</p>
+                        <button type="button" className="btn btn-primary" onClick={this.download}>
+                            Télécharger
+                        </button>
+                    </article>
+                    <article className="download-option">
+                        <h2 data-cy="download-zip-link">{"Archive zip"}</h2>
+                        <p>Tous les XML plus la recette JSON, dans une seule archive.</p>
+                        <button type="button" className="btn" onClick={this.downloadZip}>
+                            Télécharger le zip
+                        </button>
+                    </article>
+                    <article className="download-option">
+                        <h2 data-cy="download-csv-link">{"Controlaccess en CSV"}</h2>
+                        <p>Exporter l’indexation pour la relire ou la corriger ailleurs.</p>
+                        <button type="button" className="btn" onClick={this.downloadControlAccess}>
+                            Télécharger le CSV
+                        </button>
+                    </article>
+                    <article className="download-option">
+                        <h2 data-cy="download-json-link">{"Recette"}</h2>
+                        <p>Garder les recettes choisies pour les réutiliser plus tard (fichier JSON).</p>
+                        <button type="button" className="btn" onClick={this.downloadFullRecipe}>
+                            Télécharger la recette
+                        </button>
+                    </article>
                     {this.props.xmlFiles.size > 1 ? (
-                        <Grid item xs={12} md={3}>
-                            <Paper className={classes.downloadBlock}>
-                                <Typography
-                                    variant="h5"
-                                    data-cy="download-merged-file"
-                                >
-                                    {"Fusionner en un seul fichier 🌮"}
-                                </Typography>
-                                <SelectFile
-                                    title="Sélectionner le fichier principal, dans lequel les autres seront inclus"
-                                    emptyProposition={true}
-                                    xmlFiles={this.props.xmlFiles}
-                                    selectedFile={null}
-                                    onChange={file => {
-                                        if (file) {
-                                            this.mergeXmlsIntoOneFile(file);
-                                        }
+                        <article className="download-option">
+                            <h2 data-cy="download-merged-file">{"Fusionner en un seul fichier"}</h2>
+                            <p>
+                                Choisir le fichier principal : les autres y seront insérés lorsqu’un{" "}
+                                <code>archref</code> pointe vers leur nom.
+                            </p>
+                            <SelectFile
+                                title="Fichier principal"
+                                emptyProposition={true}
+                                xmlFiles={this.props.xmlFiles}
+                                selectedFile={selectedMergeFile}
+                                onChange={(file) => {
+                                    this.setState({
+                                        mergeRootHash: file && file.get("hash") ? String(file.get("hash")) : "",
+                                    });
+                                }}
+                            />
+                            <label className="preview-toggle">
+                                <input
+                                    type="checkbox"
+                                    onChange={(ev) => {
+                                        this.setState({ removeArchrefWhenMerging: ev.target.checked });
                                     }}
+                                    checked={this.state.removeArchrefWhenMerging}
                                 />
-                                <FormGroup>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            onChange={(ev) => {
-                                                this.setState({ removeArchrefWhenMerging: ev.target.checked });
-                                            }}
-                                            checked={this.state.removeArchrefWhenMerging}
-                                        />
+                                Supprimer les archrefs des IRs insérés
+                            </label>
+                            <button
+                                type="button"
+                                className="btn"
+                                disabled={!selectedMergeFile}
+                                onClick={() => {
+                                    if (selectedMergeFile) {
+                                        this.mergeXmlsIntoOneFile(selectedMergeFile);
                                     }
-                                    label="Supprimer les archrefs des IRs insérés"
-                                />
-                                </FormGroup>
-                            </Paper>
-                        </Grid>
+                                }}
+                            >
+                                Fusionner
+                            </button>
+                        </article>
                     ) : null}
-                </Grid>
+                </div>
             </div>
         );
     }
 }
-
-export default withStyles(styles, { withTheme: true })(Results);
