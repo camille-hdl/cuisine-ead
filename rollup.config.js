@@ -1,20 +1,19 @@
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import terser from "@rollup/plugin-terser";
 import nodePolyfills from 'rollup-plugin-polyfill-node';
-import clear from "rollup-plugin-clear";
+import del from "rollup-plugin-delete";
 import copy from "rollup-plugin-copy";
-import json from "rollup-plugin-json";
+import json from "@rollup/plugin-json";
 
 const outputDir = "./public/js/";
 
 const getPluginsConfig = (prod, mini) => {
     const sortie = [
-        clear({
+        del({
             targets: [outputDir + "esm"],
-            watch: true,
         }),
         copy({
             targets: [
@@ -36,7 +35,9 @@ const getPluginsConfig = (prod, mini) => {
         commonjs({
             include: "node_modules/**",
         }),
-        babel(),
+        babel({
+            babelHelpers: "bundled",
+        }),
         nodePolyfills({
             include: null,
         }),

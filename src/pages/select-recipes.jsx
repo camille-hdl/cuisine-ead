@@ -14,7 +14,7 @@ import RecipeList from "../components/material/recipe-list.jsx";
 import OutputRecipeList from "../components/material/output-recipe-list.jsx";
 import { Link as RouterLink } from "react-router-dom";
 import ResponsiveDrawer from "../components/material/resp-drawer.jsx";
-import ReactDiffViewer from "react-diff-viewer";
+import ReactDiffViewer from "react-diff-viewer-continued";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";

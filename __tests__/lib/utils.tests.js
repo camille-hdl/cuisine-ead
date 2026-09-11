@@ -6,6 +6,7 @@ import {
     getRange,
     replaceRange,
     getTagAndAttributes,
+    capitalize,
 } from "../../src/lib/utils.js";
 
 test("cleanOutputEncoding - windows-1252", () => {
@@ -73,4 +74,11 @@ test("getTagAndAttributes", () => {
         tag: "persname",
         attributes: [],
     });
+});
+
+test("capitalize matches the former capitalize package default", () => {
+    expect(capitalize("DUPONT")).toEqual("Dupont");
+    expect(capitalize("unicorns")).toEqual("Unicorns");
+    expect(capitalize("")).toEqual("");
+    expect(capitalize("émile")).toEqual("Émile");
 });
