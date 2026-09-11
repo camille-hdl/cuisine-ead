@@ -30,14 +30,22 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Prepare Code-Climate reporter
+        continue-on-error: true
         run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          curl -fsSL -o ./cc-test-reporter https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - run: npm ci
-      - name: Run tests and report coverage
+      - name: Run unit tests
+        run: npm run jest
+      - name: Production build
+        run: npm run build
+      - name: Report coverage to Code Climate
+        if: success()
+        continue-on-error: true
         env:
           CC_TEST_REPORTER_ID: 1ba79968e72f466436bec94526c2234b000886463638859d328819c94bfe3590
         run: |
-          npm test
-          ./cc-test-reporter after-build --exit-code $?
+          if [ -x ./cc-test-reporter ]; then
+            ./cc-test-reporter after-build --exit-code 0
+          fi
