@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { test, expect } = require("./support/test");
+const { test, expect, savePageCoverage } = require("./support/test");
 const { loadRecipeHooks, fixturePath } = require("./support/app");
 const fs = require("fs");
 
@@ -17,7 +17,10 @@ test.describe("Recipe unit test", () => {
     });
 
     test.afterAll(async () => {
-        if (page) await page.close();
+        if (page) {
+            await savePageCoverage(page, "recipes-shared");
+            await page.close();
+        }
     });
 
     /**

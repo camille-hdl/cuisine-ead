@@ -15,17 +15,20 @@ const test = base.extend({
             window.__E2E__ = true;
         });
         await use(page);
-        try {
-            const coverage = await page.evaluate(() => window.__coverage__ || null);
-            if (coverage) {
-                fs.mkdirSync(COVERAGE_DIR, { recursive: true });
-                const safeName = String(testInfo.testId).replace(/[^a-zA-Z0-9_-]/g, "_");
-                fs.writeFileSync(path.join(COVERAGE_DIR, `${safeName}.json`), JSON.stringify(coverage));
-            }
-        } catch (_err) {
-            // page may already be closed (shared-page serial suites)
-        }
+        await savePageCoverage(page, testInfo.testId);
     },
 });
 
-module.exports = { test, expect };
+async function savePageCoverage(page, suffix) {
+    try {
+        const coverage = await page.evaluate(() => window.__coverage__ || null);
+        if (!coverage) return;
+        fs.mkdirSync(COVERAGE_DIR, { recursive: true });
+        const safeName = String(suffix).replace(/[^a-zA-Z0-9_-]/g, "_");
+        fs.writeFileSync(path.join(COVERAGE_DIR, `${safeName}.json`), JSON.stringify(coverage));
+    } catch (_err) {
+        // page may already be closed
+    }
+}
+
+module.exports = { test, expect, savePageCoverage };

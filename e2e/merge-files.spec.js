@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { test, expect } = require("./support/test");
+const { test, expect, savePageCoverage } = require("./support/test");
 const { loadRecipeHooks, fixturePath } = require("./support/app");
 const fs = require("fs");
 
@@ -19,7 +19,10 @@ test.describe("Merging documents into one", () => {
     });
 
     test.afterAll(async () => {
-        if (page) await page.close();
+        if (page) {
+            await savePageCoverage(page, "merge-shared");
+            await page.close();
+        }
     });
 
     async function mergeDocs() {

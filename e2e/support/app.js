@@ -14,7 +14,7 @@ async function unregisterServiceWorkers(page) {
 async function gotoApp(page) {
     await page.goto("/");
     await unregisterServiceWorkers(page);
-    await expect(page.locator("h1")).toContainText("Cuisine EAD");
+    await expect(page.getByRole("heading", { name: /Cuisine EAD/ })).toBeVisible();
 }
 
 async function loadRecipeHooks(page) {
