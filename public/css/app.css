@@ -34,8 +34,7 @@
     --space-2xl: 4rem;
 
     --measure: 42rem;
-    --page-width: 56rem;
-    --wide-width: 72rem;
+    --page-width: 72rem;
     --radius: 6px;
     --focus: 3px solid var(--oxford);
 }
@@ -137,7 +136,7 @@ a:hover {
 }
 
 .site-header-inner {
-    max-width: var(--wide-width);
+    max-width: var(--page-width);
     margin: 0 auto;
     padding: var(--space-md) var(--space-lg);
     display: flex;
@@ -178,10 +177,6 @@ a:hover {
     max-width: var(--page-width);
     margin: 0 auto;
     padding: var(--space-xl) var(--space-lg) 7rem;
-}
-
-.page--wide {
-    max-width: var(--wide-width);
 }
 
 .page--preview {
