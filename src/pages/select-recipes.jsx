@@ -84,8 +84,8 @@ export default function SelectRecipes(props: Props) {
             {"résultats →"}
         </OutlinedButton>
     );
-    if (typeof window.Cypress !== "undefined") {
-        window.__CYPRESS_addAllRecipes = () => {
+    if (typeof window.__E2E__ !== "undefined") {
+        window.__E2E_addAllRecipes = () => {
             props.setPipeline(
                 props.pipeline.concat(
                     List(

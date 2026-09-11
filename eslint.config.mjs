@@ -20,9 +20,11 @@ export default [
         ignores: [
             "public/**",
             "node_modules/**",
-            "cypress/**",
+            "e2e/**",
             "jest-coverage/**",
-            "cypress-coverage/**",
+            "playwright-coverage/**",
+            "playwright-report/**",
+            "test-results/**",
             "coverage/**",
             "reports/**",
             ".nyc_output/**",
