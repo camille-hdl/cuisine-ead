@@ -4,8 +4,9 @@
   "description": "",
   "main": "public/index.html",
   "scripts": {
-    "test": "run-s jest build:dev testci",
-    "testci": "start-server-and-test serve http://localhost:5000 cypress:run",
+    "test": "run-s jest build:dev e2e",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
     "build": "run-s buildrollup workbox",
     "build:dev": "run-s buildrollup:dev workbox",
     "buildrollup": "rollup -c --configProd --configMini",
@@ -14,10 +15,6 @@
     "workbox:generate": "workbox generateSW workbox-config-esm.js",
     "watch": "rollup -c -w",
     "serve": "serve -l 5000",
-    "cypress:open": "npx cypress@5.1 open",
-    "cypress:run": "npx cypress@5.1 run",
-    "cypress:cachepath": "npx cypress@5.1 cache path",
-    "cypress:install": "npx cypress@5.1 install",
     "jest": "jest",
     "lint": "eslint .",
     "deploy": "npm run build",
@@ -27,7 +24,7 @@
     "posttest": "npm run report:combined",
     "mkdir:reports": "mkdir reports || true",
     "precopy:reports": "npm run mkdir:reports",
-    "copy:reports": "cp cypress-coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
+    "copy:reports": "cp jest-coverage/coverage-final.json reports/from-jest.json && (cp playwright-coverage/coverage-final.json reports/from-playwright.json || true)",
     "precombine:reports": "npm run copy:reports && mkdir .nyc_output || true",
     "combine:reports": "nyc merge reports && mv coverage.json .nyc_output/out.json",
     "prereport:combined": "npm run combine:reports",
@@ -45,9 +42,9 @@
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-flow": "^7.13.13",
     "@babel/preset-modules": "^0.1.4",
-    "@cypress/code-coverage": "^3.14.7",
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.55.0",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-json": "^6.1.0",
@@ -74,7 +71,6 @@
     "rollup-plugin-delete": "^3.0.2",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "serve": "^14.2.0",
-    "start-server-and-test": "^2.1.5",
     "workbox-cli": "^7.4.1"
   },
   "dependencies": {
@@ -116,7 +112,7 @@
   },
   "homepage": "https://github.com/camille-hdl/ead-tinker#readme",
   "nyc": {
-    "report-dir": "cypress-coverage"
+    "report-dir": "playwright-coverage"
   },
   "engines": {
     "node": ">=20"
