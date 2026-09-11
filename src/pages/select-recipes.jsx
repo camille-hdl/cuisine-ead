@@ -186,7 +186,7 @@ export default function SelectRecipes(props: Props) {
         );
     }
     return (
-        <div className="page page--wide">
+        <div className="page">
             <ErrorCatcher>
                 <Steps activeStep={1} canNavigate={true}>
                     {backLink}
