@@ -271,28 +271,30 @@ export default class Results extends React.Component<Props, State> {
                                     });
                                 }}
                             />
-                            <label className="preview-toggle">
-                                <input
-                                    type="checkbox"
-                                    onChange={(ev) => {
-                                        this.setState({ removeArchrefWhenMerging: ev.target.checked });
+                            <div className="merge-actions">
+                                <label className="merge-option">
+                                    <input
+                                        type="checkbox"
+                                        onChange={(ev) => {
+                                            this.setState({ removeArchrefWhenMerging: ev.target.checked });
+                                        }}
+                                        checked={this.state.removeArchrefWhenMerging}
+                                    />
+                                    Supprimer les archrefs des IRs insérés
+                                </label>
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    disabled={!selectedMergeFile}
+                                    onClick={() => {
+                                        if (selectedMergeFile) {
+                                            this.mergeXmlsIntoOneFile(selectedMergeFile);
+                                        }
                                     }}
-                                    checked={this.state.removeArchrefWhenMerging}
-                                />
-                                Supprimer les archrefs des IRs insérés
-                            </label>
-                            <button
-                                type="button"
-                                className="btn"
-                                disabled={!selectedMergeFile}
-                                onClick={() => {
-                                    if (selectedMergeFile) {
-                                        this.mergeXmlsIntoOneFile(selectedMergeFile);
-                                    }
-                                }}
-                            >
-                                Fusionner
-                            </button>
+                                >
+                                    Fusionner
+                                </button>
+                            </div>
                         </article>
                     ) : null}
                 </div>
