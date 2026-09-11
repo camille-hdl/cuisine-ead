@@ -162,3 +162,12 @@ export const trimWhitespaceAndNewlines = (str: string): string => {
     if (!str) return "";
     return str.trim().replace("\n", "").replace("\r\n", "")
 };
+
+/**
+ * First character uppercased, the rest lowercased.
+ * Replaces the unmaintained `capitalize` package (same default behavior).
+ */
+export const capitalize = (str: ?string): string => {
+    const s = str == null ? "" : String(str);
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};

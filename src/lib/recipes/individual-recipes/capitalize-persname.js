@@ -1,7 +1,7 @@
 //@flow
 import { xpathFilter } from "../../xml.js";
 import { each } from "../utils.js";
-import capitalize from "capitalize";
+import { capitalize } from "../../utils.js";
 
 const capitalizeRE = /( |^|.|;)([A-Z\-']+)( |,|;|.|$)/gm;
 export default () => (doc: Document): Document => {

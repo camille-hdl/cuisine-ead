@@ -2,7 +2,7 @@
 import { xpathFilter } from "../../xml.js";
 import { each } from "../utils.js";
 import { last, filter } from "ramda";
-import capitalize from "capitalize";
+import { capitalize } from "../../utils.js";
 /**
  * Set a controlaccess index from unittitle, NOT recursive
  * multi-values based on a separator
