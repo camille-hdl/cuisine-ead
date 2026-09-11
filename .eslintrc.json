@@ -1,5 +1,5 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "env": {
         "browser": true,
         "commonjs": true,
@@ -21,17 +21,21 @@
             "experimentalObjectRestSpread": true,
             "jsx": true
         },
-        "sourceType": "module"
+        "sourceType": "module",
+        "requireConfigFile": false,
+        "babelOptions": {
+            "presets": ["@babel/preset-react", "@babel/preset-flow"]
+        }
     },
     "plugins": [
-        "prettier", "react", "flowtype", "babel", "jsx-a11y"
+        "prettier", "react", "flowtype", "jsx-a11y"
     ],
     "rules": {
         "prettier/prettier": "error",
-        "babel/new-cap": 1,
-        "babel/no-invalid-this": 1,
-        "babel/quotes": 1,
-        "babel/semi": 1,
-        "babel/no-unused-expressions": 1
+        "new-cap": 1,
+        "no-invalid-this": 1,
+        "quotes": 1,
+        "semi": 1,
+        "no-unused-expressions": 1
     }
 }
