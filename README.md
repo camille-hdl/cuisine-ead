@@ -16,6 +16,10 @@ A tool for batch editing xml-ead files in the browser.
 * `npm run cypress:run` to run integration tests
 * `npm test` starts the dev server, waits for it to respond, then starts integration tests
 
+## Publier une version
+
+Voir [docs/RELEASE.md](docs/RELEASE.md) : land sur `master`, bumper `package.json` + `src/sw.js`, puis PR **master → netlify**.
+
 ## Notes
 
 Sample files used in integration tests are from https://francearchives.fr/fr/open_data and https://www.siv.archives-nationales.culture.gouv.fr/siv/.
