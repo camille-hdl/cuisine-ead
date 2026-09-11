@@ -2,7 +2,7 @@
 .*/public/.*
 .*/__tests__/.*
 .*/vendor/.*
-.*/cypress/.*
+.*/e2e/.*
 ; hermes-eslint ships .flow files that Flow 0.156 cannot check
 .*/node_modules/hermes-.*
 

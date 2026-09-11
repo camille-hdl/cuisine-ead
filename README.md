@@ -13,8 +13,9 @@ A tool for batch editing xml-ead files in the browser.
 * `npm run build` production build
 * `npm run watch` to start the development build loop
 * `npm run serve` to start a local server, then browse to [http://127.0.0.1:5000](http://127.0.0.1:5000)
-* `npm run cypress:run` to run integration tests
-* `npm test` starts the dev server, waits for it to respond, then starts integration tests
+* `npm run e2e` to run Playwright end-to-end tests (starts `serve` if needed; requires a prior `npm run build` or `npm run build:dev`)
+* `npm run e2e:ui` for the Playwright UI runner
+* `npm test` runs Jest, a dev build, then the Playwright suite
 
 ## Publier une version
 

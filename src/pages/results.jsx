@@ -115,14 +115,14 @@ export const downloadResultsZip = (props: Props) => {
     });
     if (promises.size > 0) {
         Promise.all(promises.toArray()).then((outputFiles) => {
-            if (typeof window.Cypress !== "undefined" && typeof window.__CYPRESS_OUTPUT === "undefined") {
-                window.__CYPRESS_OUTPUT = [];
+            if (typeof window.__E2E__ !== "undefined" && typeof window.__E2E_OUTPUT === "undefined") {
+                window.__E2E_OUTPUT = [];
             }
             outputFiles.forEach((outputFile) => {
-                if (typeof window.Cypress !== "undefined") {
-                    window.__CYPRESS_OUTPUT_READY = true;
-                    window.__CYPRESS_OUTPUT.push(outputFile);
-                    window.__CYPRESS_CORRECTIONS = props.corrections.toJS();
+                if (typeof window.__E2E__ !== "undefined") {
+                    window.__E2E_OUTPUT_READY = true;
+                    window.__E2E_OUTPUT.push(outputFile);
+                    window.__E2E_CORRECTIONS = props.corrections.toJS();
                 }
                 zip.file(outputFile.filename, outputFile.str);
             });
@@ -153,8 +153,8 @@ export const downloadControlAccesses = (props: Props) => {
                 return ["", "", ""].join(";");
             }, controlaccesses.toJS()),
         ].join("\n");
-    if (typeof window.Cypress !== "undefined") {
-        window.__CYPRESS_OUTPUT_CA = str;
+    if (typeof window.__E2E__ !== "undefined") {
+        window.__E2E_OUTPUT_CA = str;
     }
     FileSaver.saveAs(new Blob([str], { type: "text/plain;charset=utf-8+bom" }), "controlaccess.csv");
     trackGoal("DTHSLHSJ");

@@ -7,9 +7,9 @@ public/js/*.js
 jest-coverage
 .nyc_output
 coverage
-cypress-coverage/
-cypress/videos
-cypress/screenshots
+playwright-coverage/
+playwright-report/
+test-results/
 reports
 
 

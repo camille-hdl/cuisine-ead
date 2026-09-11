@@ -165,15 +165,15 @@ export const getRecipes = () => {
 
 /**
  * Used for testing purposes.
- * cypress is used for unit testing recipes,
- * as they depend on browser APIs
+ * Playwright recipe/merge specs load the app and call these hooks,
+ * because the recipes depend on browser APIs (DOMParser, XPath).
  */
-window.__cypress_xpathFilter = xpathFilter;
-window.__cypress_recipes = {};
-window.__cypress_immutable = { Map, List, fromJS };
-window.__cypress_insertIntoDocument = insertIntoDocument;
+window.__E2E_xpathFilter = xpathFilter;
+window.__E2E_recipes = {};
+window.__E2E_immutable = { Map, List, fromJS };
+window.__E2E_insertIntoDocument = insertIntoDocument;
 getRecipes().forEach((recipe) => {
-    window.__cypress_recipes[recipe.key] = recipe.fn;
+    window.__E2E_recipes[recipe.key] = recipe.fn;
 });
 
 /**
