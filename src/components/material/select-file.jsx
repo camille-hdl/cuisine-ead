@@ -42,7 +42,7 @@ function SelectFile(props: {
     emptyProposition?: boolean,
     onChange: (selectedXmlFile: XmlFileRecord | null) => void,
 }) {
-    const { classes, title, onChange, xmlFiles, selectedFile, emptyProposition } = props;
+    const { classes, title, onChange, selectedFile, emptyProposition } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     return (
         <div className={classes.root}>

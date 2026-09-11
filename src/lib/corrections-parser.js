@@ -1,7 +1,7 @@
 //@flow
 import { Map, List } from "immutable";
 type Line = [string, string, string];
-import { forEach, concat, filter, map, head, last } from "ramda";
+import { forEach, filter, map, head, last } from "ramda";
 const compact = filter((val) => !!val);
 const SEPARATOR = "/";
 const CA_SEPARATOR = "=>";

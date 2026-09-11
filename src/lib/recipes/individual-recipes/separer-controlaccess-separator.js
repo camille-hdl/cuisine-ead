@@ -1,8 +1,8 @@
 //@flow
-import { xpathFilter, getControlaccessElements, copyAttributes } from "../../xml.js";
+import { getControlaccessElements, copyAttributes } from "../../xml.js";
 import { each } from "../utils.js";
 import { trimWhitespaceAndNewlines } from "../../utils.js";
-import { filter, map } from "ramda";
+import { map } from "ramda";
 import type { Map } from "immutable";
 
 /**

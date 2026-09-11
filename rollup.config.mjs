@@ -3,7 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import terser from "@rollup/plugin-terser";
-import nodePolyfills from 'rollup-plugin-polyfill-node';
+import nodePolyfills from "rollup-plugin-polyfill-node";
 import del from "rollup-plugin-delete";
 import copy from "rollup-plugin-copy";
 import json from "@rollup/plugin-json";
@@ -25,6 +25,7 @@ const getPluginsConfig = (prod, mini) => {
         }),
         nodeResolve({
             mainFields: ["module", "main", "browser"],
+            browser: true,
             dedupe: ["react", "react-dom"],
             preferBuiltins: false,
         }),
@@ -33,13 +34,14 @@ const getPluginsConfig = (prod, mini) => {
             "process.env.NODE_ENV": JSON.stringify(prod ? "production" : "development"),
         }),
         commonjs({
-            include: "node_modules/**",
+            include: /node_modules/,
         }),
         babel({
             babelHelpers: "bundled",
+            extensions: [".js", ".jsx"],
         }),
         nodePolyfills({
-            include: null,
+            include: /node_modules/,
         }),
         json({
             preferConst: true,
@@ -65,9 +67,10 @@ const getPluginsConfig = (prod, mini) => {
     return sortie;
 };
 
-export default CLIArgs => {
-    const prod = !!CLIArgs.prod;
-    const mini = !!CLIArgs.mini;
+export default (CLIArgs) => {
+    // Rollup 3+ only forwards `--config*` CLI flags into the config function.
+    const prod = !!CLIArgs.configProd;
+    const mini = !!CLIArgs.configMini;
     const bundle = {
         input: ["./src/index.jsx"],
         output: {
@@ -79,5 +82,10 @@ export default CLIArgs => {
         },
     };
     bundle.plugins = getPluginsConfig(prod, mini);
+    bundle.onwarn = (warning, warn) => {
+        // react-router ships `"use client"`; harmless in a browser ESM bundle
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+        warn(warning);
+    };
     return bundle;
 };

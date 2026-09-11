@@ -13,6 +13,7 @@ on:
       - '**.json'
       - '**.js'
       - '**.jsx'
+      - '**.mjs'
   pull_request:
     branches: [ master ]
 
@@ -36,6 +37,8 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
       - run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Run unit tests
         run: npm run jest
       - name: Production build

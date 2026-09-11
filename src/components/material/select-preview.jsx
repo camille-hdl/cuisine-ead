@@ -11,7 +11,6 @@ export default function SelectPreviewFile(props: {
     previewXmlFile: XmlFileRecord | null,
     setPreviewHash: (hash: string | null) => void,
 }) {
-    const { classes } = props;
     const selectedFile = props.previewXmlFile ? props.previewXmlFile : props.xmlFiles.first();
     if (!selectedFile) {
         return null;

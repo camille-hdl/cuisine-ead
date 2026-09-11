@@ -105,8 +105,7 @@ export const replaceRange = (
                   ? padding + "/"
                   : padding + (addPadding ? "/" : "");
           }
-        : // eslint-disable-next-line no-unused-vars
-          (oldStr: string, _ignored?: any): string => {
+        : (oldStr: string, _ignored?: any): string => {
               return startsWith(" /", oldStr)
                   ? " /"
                   : startsWith("/", oldStr)

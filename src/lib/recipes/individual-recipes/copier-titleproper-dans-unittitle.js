@@ -1,7 +1,6 @@
 //@flow
 import { xpathFilter } from "../../xml.js";
-import { each, map } from "../utils.js";
-import { filter, head } from "ramda";
+import { head } from "ramda";
 
 /**
  * Si unititle n'existe pas, il sera créé
