@@ -2,7 +2,6 @@
 import React from "react";
 import type { Props } from "./recipe-args.jsx";
 import DelayedTestField from "./delayed-text-field.jsx";
-import { List, Map } from "immutable";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
 

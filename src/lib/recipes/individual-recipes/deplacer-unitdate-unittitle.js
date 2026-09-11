@@ -1,7 +1,6 @@
 //@flow
 import { xpathFilter } from "../../xml.js";
 import { each, getAttributesMap } from "../utils.js";
-import { last, head } from "ramda";
 
 function findParentNode(elem: Element, nodeName: string): ?Element {
     const parent = elem.parentNode;

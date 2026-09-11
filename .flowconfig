@@ -3,6 +3,8 @@
 .*/__tests__/.*
 .*/vendor/.*
 .*/cypress/.*
+; hermes-eslint ships .flow files that Flow 0.156 cannot check
+.*/node_modules/hermes-.*
 
 [include]
 
@@ -10,3 +12,7 @@
 flow-typed
 
 [options]
+; flow-bin stays on 0.156. Types-first export annotations became mandatory
+; after 0.142 (the types_first=false flag was removed). Bumping toward
+; current 0.331 first needs return types on every recipe/HOC export.
+; See the 1.7.0 PR for the viable path.

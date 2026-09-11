@@ -25,7 +25,6 @@ export default curry<ExecuteState, Document, Document>((state: ExecuteState, doc
                     // get the original attributes
                     const attrs = {};
                     if (occurrence.hasAttributes()) {
-                        // eslint-disable-next-line no-unused-vars
                         for (let attr of occurrence.attributes) {
                             attrs[attr.name] = attr.value;
                         }
