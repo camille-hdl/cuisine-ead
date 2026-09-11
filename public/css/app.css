@@ -184,6 +184,11 @@ a:hover {
     max-width: var(--wide-width);
 }
 
+.page--preview {
+    max-width: none;
+    padding: var(--space-md) var(--space-md) 7rem;
+}
+
 .lede {
     font-family: var(--font-body);
     font-size: 1.2rem;
@@ -504,9 +509,15 @@ a:hover {
 /* Preview / diff */
 .preview-layout {
     display: grid;
-    grid-template-columns: minmax(16rem, 22rem) 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: 18rem minmax(0, 1fr);
+    gap: var(--space-md);
     align-items: start;
+}
+
+@media (min-width: 1400px) {
+    .preview-layout {
+        grid-template-columns: 20rem minmax(0, 1fr);
+    }
 }
 
 .preview-aside {
@@ -530,6 +541,11 @@ a:hover {
 
 .preview-main {
     min-width: 0;
+}
+
+.page--preview .notice {
+    margin-bottom: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
 }
 
 .preview-toolbar {
@@ -621,6 +637,28 @@ a:hover {
 .download-option p {
     color: var(--ink-2);
     margin-bottom: var(--space-md);
+}
+
+.merge-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.merge-option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    min-height: 2.5rem;
+}
+
+.merge-option input {
+    accent-color: var(--oxford);
+    width: 1.1rem;
+    height: 1.1rem;
 }
 
 .notice {
@@ -773,8 +811,10 @@ a:hover {
     border: 1px solid var(--surface-2);
     border-radius: 10px;
     overflow: auto;
+    max-height: calc(100vh - 9rem);
 }
 
 .diff-chrome table {
-    font-size: 0.8rem;
+    width: 100%;
+    font-size: 0.82rem;
 }
