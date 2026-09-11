@@ -128,7 +128,7 @@ export default function SelectRecipes(props: Props) {
     }
     if (props.previewEnabled) {
         return (
-            <div className="page page--wide">
+            <div className="page page--preview">
                 <PreviewLayout
                     drawer={
                         <>
