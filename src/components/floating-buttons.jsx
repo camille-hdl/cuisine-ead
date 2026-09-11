@@ -1,5 +1,6 @@
 //@flow
 import React from "react";
+import { useLocation } from "react-router-dom";
 import type { Props } from "../pages/app.jsx";
 import { downloadResultsZip, downloadControlAccesses } from "../pages/results.jsx";
 
@@ -22,8 +23,10 @@ const canDownloadCAs = (props: Props) => {
 };
 
 export default function FloatingButtons(props: Props) {
+    const location = useLocation();
     const downloadZip = canDownloadZip(props);
     const downloadCAs = canDownloadCAs(props);
+    if (location.pathname === "/resultats") return null;
     if (!downloadCAs && !downloadZip) return null;
     return (
         <div className="quick-actions">

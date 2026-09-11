@@ -177,7 +177,7 @@ a:hover {
     width: 100%;
     max-width: var(--page-width);
     margin: 0 auto;
-    padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+    padding: var(--space-xl) var(--space-lg) 7rem;
 }
 
 .page--wide {
@@ -432,10 +432,10 @@ a:hover {
 }
 
 .recipe-group h2 {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     margin-bottom: var(--space-md);
     padding-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--surface-2);
+    border-bottom: 1px solid var(--rule);
 }
 
 .recipe-list {
@@ -480,12 +480,16 @@ a:hover {
 }
 
 .preview-toggle {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
     margin: 0 0 var(--space-lg);
+    padding: 0.55rem 0.85rem;
     font-weight: 600;
     cursor: pointer;
+    background: var(--paper-raised);
+    border: 1px solid var(--surface-2);
+    border-radius: var(--radius);
 }
 
 .preview-toggle input {
