@@ -4,21 +4,15 @@
  * Handles routing and views
  */
 import React, { Suspense, lazy } from "react";
-import MenuBar from "../components/material/menu-bar.jsx";
+import MenuBar from "../components/menu-bar.jsx";
 import { List } from "immutable";
 import { Route, Routes, Navigate } from "react-router-dom";
-import LoadingComponent from "../components/material/loading-component.jsx";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import Loading from "../components/loading.jsx";
 import type { AddXmlFileData, ComputedStateProps, RecipeInPipelineRecord } from "../types.js";
 import ErrorCatcher from "../components/error-catcher.jsx";
 import FloatingButtons from "../components/floating-buttons.jsx";
 import { Workbox } from "workbox-window";
 import UploadFiles from "./upload-files.jsx";
-
-const muiTheme = createMuiTheme({
-    typography: {},
-});
 
 /**
  * react-router Route
@@ -74,7 +68,7 @@ const SelectRecipes = lazy(() => import("./select-recipes.jsx"));
  */
 const AsyncSelectRecipes = (props) => {
     return (
-        <Suspense fallback={<LoadingComponent />}>
+        <Suspense fallback={<Loading />}>
             <ErrorCatcher>
                 <SelectRecipes {...props} />
             </ErrorCatcher>
@@ -87,7 +81,7 @@ const Results = lazy(() => import("./results.jsx"));
  */
 const AsyncResults = (props) => {
     return (
-        <Suspense fallback={<LoadingComponent />}>
+        <Suspense fallback={<Loading />}>
             <ErrorCatcher>
                 <Results {...props} />
             </ErrorCatcher>
@@ -117,25 +111,27 @@ export default class App extends React.PureComponent<Props> {
     render() {
         const hasXmlFiles = this.props.xmlFiles.size > 0;
         return (
-            <MuiThemeProvider theme={muiTheme}>
-                <CssBaseline />
+            <div className="app-shell">
+                <a className="skip-link" href="#main">
+                    Aller au contenu
+                </a>
                 <MenuBar version={this.props.version} newVersionAvailable={this.props.newVersionAvailable} />
-                <Routes>
-                    <Route path="/" element={<UploadFiles {...this.props} />}></Route>
-                    <Route path="/upload" element={<UploadFiles {...this.props} />}></Route>
-                    <Route
-                        path="/recettes"
-                        element={
-                            hasXmlFiles ? <AsyncSelectRecipes {...this.props} /> : <Navigate to="/" />
-                        }
-                    />
-                    <Route
-                        path="/resultats"
-                        element={hasXmlFiles ? <AsyncResults {...this.props} /> : <Navigate to="/" />}
-                    />
-                </Routes>
+                <main id="main">
+                    <Routes>
+                        <Route path="/" element={<UploadFiles {...this.props} />}></Route>
+                        <Route path="/upload" element={<UploadFiles {...this.props} />}></Route>
+                        <Route
+                            path="/recettes"
+                            element={hasXmlFiles ? <AsyncSelectRecipes {...this.props} /> : <Navigate to="/" />}
+                        />
+                        <Route
+                            path="/resultats"
+                            element={hasXmlFiles ? <AsyncResults {...this.props} /> : <Navigate to="/" />}
+                        />
+                    </Routes>
+                </main>
                 <FloatingButtons {...this.props} />
-            </MuiThemeProvider>
+            </div>
         );
     }
 }

@@ -2,6 +2,7 @@ module.exports = {
   "globDirectory": "public",
   "globPatterns": [
     "**/*.html",
+    "css/*.css",
     "js/esm/*.js",
     "js/vendor/*.js",
   ],
@@ -10,6 +11,7 @@ module.exports = {
   "maximumFileSizeToCacheInBytes": 5000000,
   "modifyURLPrefix": {
     "js/": "/js/",
+    "css/": "/css/",
     "index.": "/index."
   }
 };

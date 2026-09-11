@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import ErrorMessage from "./material/error-message.jsx";
+import ErrorMessage from "./error-message.jsx";
 
 type Props = {
     children?: any,
