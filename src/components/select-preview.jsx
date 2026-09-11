@@ -1,11 +1,10 @@
 //@flow
 import React from "react";
-import type { List as IList } from "immutable"
+import type { List as IList } from "immutable";
 import SelectFile from "./select-file.jsx";
-import type { XmlFileRecord } from "../../types.js";
+import type { XmlFileRecord } from "../types.js";
 
 export default function SelectPreviewFile(props: {
-    classes: any,
     xmlFiles: IList<XmlFileRecord>,
     previewHash: string | null,
     previewXmlFile: XmlFileRecord | null,
@@ -19,16 +18,18 @@ export default function SelectPreviewFile(props: {
     if (!(selectedDocument instanceof Document)) {
         return null;
     }
-    return <SelectFile
-        title="Fichier sélectionné"
-        emptyProposition={true}
-        xmlFiles={props.xmlFiles}
-        selectedFile={selectedFile}
-        onChange={xmlFile => {
-            if (xmlFile) {
-                const hash = xmlFile.get("hash") ? String(xmlFile.get("hash")) : String(Math.random());
-                props.setPreviewHash(hash);
-            }
-        }}
-    />;
+    return (
+        <SelectFile
+            title="Fichier à comparer"
+            emptyProposition={false}
+            xmlFiles={props.xmlFiles}
+            selectedFile={selectedFile}
+            onChange={(xmlFile) => {
+                if (xmlFile) {
+                    const hash = xmlFile.get("hash") ? String(xmlFile.get("hash")) : String(Math.random());
+                    props.setPreviewHash(hash);
+                }
+            }}
+        />
+    );
 }
