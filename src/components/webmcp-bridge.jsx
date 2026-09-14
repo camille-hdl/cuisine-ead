@@ -19,7 +19,10 @@ export default function WebMcpBridge() {
     }
 
     useLayoutEffect(() => {
-        trackerRef.current && trackerRef.current.syncFromLocation(location.pathname);
+        const tracker = trackerRef.current;
+        if (tracker) {
+            tracker.syncFromLocation(location.pathname);
+        }
     }, [location.pathname]);
 
     useEffect(() => {
