@@ -8,6 +8,7 @@ import App from "./reducers/reducer.js";
 import thunk from "redux-thunk";
 import { Record, List, Map } from "immutable";
 import { createStore, applyMiddleware, compose } from "redux";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 import { version } from "../package.json";
@@ -43,10 +44,13 @@ const stateCreator: RecordFactory<InitialStateProps> = Record({
 const containerElement = document.getElementById("app-container");
 if (containerElement) {
     const state: StateRecord = stateCreator(getInitialState());
+    const store = createStore<StateRecord>(App, state, composeEnhancers(applyMiddleware(thunk)));
     const root = createRoot(containerElement);
     root.render(
         <BrowserRouter>
-            <AppContainer store={createStore<StateRecord>(App, state, composeEnhancers(applyMiddleware(thunk)))} />
+            <Provider store={store}>
+                <AppContainer />
+            </Provider>
         </BrowserRouter>
     );
 }

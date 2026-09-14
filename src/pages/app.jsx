@@ -13,6 +13,7 @@ import ErrorCatcher from "../components/error-catcher.jsx";
 import FloatingButtons from "../components/floating-buttons.jsx";
 import { Workbox } from "workbox-window";
 import UploadFiles from "./upload-files.jsx";
+import WebMcpBridge from "../components/webmcp-bridge.jsx";
 
 /**
  * react-router Route
@@ -112,6 +113,7 @@ export default class App extends React.PureComponent<Props> {
         const hasXmlFiles = this.props.xmlFiles.size > 0;
         return (
             <div className="app-shell">
+                <WebMcpBridge />
                 <a className="skip-link" href="#main">
                     Aller au contenu
                 </a>

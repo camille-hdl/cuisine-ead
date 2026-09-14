@@ -22,6 +22,10 @@ A tool for batch editing xml-ead files in the browser.
 
 Voir [docs/RELEASE.md](docs/RELEASE.md) : land sur `master`, bumper `package.json` + `src/sw.js`, puis PR **master → netlify**.
 
+## WebMCP (agents)
+
+Des outils de page (`document.modelContext.registerTool`) permettent à un agent de déposer du XML-EAD **déjà en contexte**, de choisir des recettes et de télécharger le résultat, sans scraper le DOM. Voir [docs/WEBMCP.md](docs/WEBMCP.md). Si WebMCP n’est pas disponible dans le navigateur, l’app ignore simplement l’enregistrement.
+
 ## Notes
 
 Sample files used in integration tests are from https://francearchives.fr/fr/open_data and https://www.siv.archives-nationales.culture.gouv.fr/siv/.

@@ -8,6 +8,9 @@ export default function Changelog() {
                 <summary>Nouveautés</summary>
                 <ul>
                     <li>{"Nouveau traitement : déplacer des balises dans did"}</li>
+                    <li>
+                        {"WebMCP : un agent peut déposer du XML-EAD, choisir des recettes et télécharger le résultat"}
+                    </li>
                 </ul>
             </details>
             <details>
@@ -70,7 +73,9 @@ geogname,,toulon`}</pre>
                         <li>{"La première ligne est ignorée"}</li>
                         <li>{"Exemple simple : remplacement de valeur d'une balise"}</li>
                         <li>{"Remplacement d'une balise par une autre"}</li>
-                        <li>{"Remplacement d'une balise par une autre, modification de la valeur, ajout d'attributs"}</li>
+                        <li>
+                            {"Remplacement d'une balise par une autre, modification de la valeur, ajout d'attributs"}
+                        </li>
                         <li>
                             {
                                 "Remplacement d'une balise avec condition xpath, modification de la balise, ajout d'attributs, modification de la valeur"
