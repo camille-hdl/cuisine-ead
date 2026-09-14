@@ -17,6 +17,10 @@ L’agent a déjà le XML dans son contexte. **Aucun sélecteur de fichiers huma
 7. `get_diff_summary` — stats + court extrait
 8. `download_results` — même zip que le bouton de l’UI
 
+`add_ead_content` / `add_ead_contents` n’acceptent que des documents dont la racine est `<ead>`. Un HTML ou un XML quelconque est refusé et n’est **jamais** étiqueté `xml-ead`.
+
+Après `go_to_step`, `get_app_state` reflète tout de suite la nouvelle étape (le pathname WebMCP ne dépend pas du re-render React Router).
+
 ### Paramètres de recettes
 
 Quand une recette est cochée dans l’UI, un formulaire apparaît (publisher, source, remplacements, etc.). WebMCP expose les **mêmes champs** que Redux `pipeline[].args` :
@@ -48,6 +52,8 @@ Exemples :
     "params": { "remplacements": [{ "rechercher": "old/", "remplacer": "new/" }] }
 }
 ```
+
+`select_recipes` en `mode: "set"` **conserve** les `pipeline[].args` déjà renseignés pour les recettes qui restent sélectionnées. Seules les recettes retirées perdent leurs params ; les nouvelles reçoivent les valeurs par défaut, sauf si `params` est passé dans le même appel.
 
 Les champs `required: true` sont ceux dont la valeur vide rend la recette inopérante (l’UI laisse lancer quand même). `run_selected_recipes` les exige pour l’agent. `prefix` (transforme_daogrp_ligeo), `separator` (défaut `/`), `balises` (défaut `physdesc|physloc`) restent optionnels.
 

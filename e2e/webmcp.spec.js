@@ -165,4 +165,77 @@ test.describe("WebMCP autonomous XML path", () => {
         expect(run.ok).toBe(true);
         expect(run.selectedRecipeParams.geogname_set_source.source).toEqual("GEOTEST");
     });
+
+    test("get_app_state after go_to_step sees the new step in the same turn", async ({ page }) => {
+        await installFakeWebMcp(page);
+        await gotoApp(page);
+        await waitForTools(page);
+
+        const xml = fs.readFileSync(fixturePath("example-ead.xml"), "utf8");
+        const added = JSON.parse(
+            await executeTool(page, "add_ead_content", { name: "saint-exupery.xml", content: xml })
+        );
+        expect(added.ok).toBe(true);
+
+        const { go, state } = await page.evaluate(async () => {
+            const go = await window.__WEBMCP_TEST__.executeTool("go_to_step", { step: "recipes" });
+            const state = await window.__WEBMCP_TEST__.executeTool("get_app_state", {});
+            return { go, state };
+        });
+        const moved = JSON.parse(go);
+        const appState = JSON.parse(state);
+        expect(moved.ok).toBe(true);
+        expect(moved.step).toEqual("recipes");
+        expect(appState.ok).toBe(true);
+        expect(appState.step).toEqual("recipes");
+        expect(appState.path).toEqual("/recettes");
+    });
+
+    test("add_ead_content rejects HTML and does not label it xml-ead", async ({ page }) => {
+        await installFakeWebMcp(page);
+        await gotoApp(page);
+        await waitForTools(page);
+
+        const result = JSON.parse(
+            await executeTool(page, "add_ead_content", {
+                name: "page.html",
+                content: "<html><body>hello</body></html>",
+            })
+        );
+        expect(result.ok).toBe(false);
+        expect(JSON.stringify(result)).not.toMatch(/xml-ead/);
+        expect(result.failed[0].error).toMatch(/pas un XML-EAD/);
+        const listed = JSON.parse(await executeTool(page, "list_loaded_files", {}));
+        expect(listed.files).toHaveLength(0);
+    });
+
+    test("select_recipes mode set keeps params for recipes that stay selected", async ({ page }) => {
+        await installFakeWebMcp(page);
+        await gotoApp(page);
+        await waitForTools(page);
+
+        const xml = fs.readFileSync(fixturePath("example-ead.xml"), "utf8");
+        expect(
+            JSON.parse(await executeTool(page, "add_ead_content", { name: "saint-exupery.xml", content: xml })).ok
+        ).toBe(true);
+
+        const filled = JSON.parse(
+            await executeTool(page, "set_recipe_params", {
+                recipeId: "ecraser_publisher",
+                params: { publisher: "Archives du Test" },
+            })
+        );
+        expect(filled.ok).toBe(true);
+
+        const reset = JSON.parse(
+            await executeTool(page, "select_recipes", {
+                recipeIds: ["ecraser_publisher", "remplace_dao_href", "supprimer_lb"],
+                mode: "set",
+            })
+        );
+        expect(reset.ok).toBe(true);
+        expect(reset.selectedRecipeParams.ecraser_publisher.publisher).toEqual("Archives du Test");
+        expect(reset.selectedRecipeParams.remplace_dao_href.remplacements).toEqual([]);
+        expect(reset.selectedRecipeIds).toEqual(["ecraser_publisher", "remplace_dao_href", "supprimer_lb"]);
+    });
 });

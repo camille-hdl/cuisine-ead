@@ -28,7 +28,7 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
             name: "add_ead_content",
             title: "Ajouter un XML-EAD (texte)",
             description:
-                "Chemin principal, autonome : déposer UN fichier XML-EAD déjà présent dans le contexte de l'agent. Arguments : { name: nom de fichier (ex. inventaire.xml), content: chaîne XML complète }. N'utilise pas le sélecteur de fichiers. Pour plusieurs fichiers, préférez add_ead_contents. Plafond raisonnable par fichier ; au-delà, add_files_via_picker (humain).",
+                "Chemin principal, autonome : déposer UN fichier XML-EAD déjà présent dans le contexte de l'agent. Arguments : { name: nom de fichier (ex. inventaire.xml), content: chaîne XML complète }. L'élément racine doit être <ead> ; un HTML ou XML quelconque est refusé (jamais étiqueté xml-ead). N'utilise pas le sélecteur de fichiers. Pour plusieurs fichiers, préférez add_ead_contents. Plafond raisonnable par fichier ; au-delà, add_files_via_picker (humain).",
             inputSchema: {
                 type: "object",
                 properties: {
@@ -128,7 +128,7 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
             name: "select_recipes",
             title: "Sélectionner des recettes",
             description:
-                'Choisir les recettes à appliquer. { recipeIds: string[], mode: "set" | "add" | "remove", params?: { [recipeId]: { ... } } }. mode=set remplace la sélection. params (optionnel) renseigne d\'un coup les formulaires des recettes cochées, comme dans l\'UI. Sinon set_recipe_params après coup.',
+                'Choisir les recettes à appliquer. { recipeIds: string[], mode: "set" | "add" | "remove", params?: { [recipeId]: { ... } } }. mode=set remplace la sélection mais conserve pipeline[].args des recettes qui restent cochées ; les nouvelles recettes reçoivent les valeurs par défaut (sauf si params est passé dans le même appel). params (optionnel) renseigne d\'un coup les formulaires. Sinon set_recipe_params après coup.',
             inputSchema: {
                 type: "object",
                 properties: {
@@ -203,7 +203,7 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
             name: "go_to_step",
             title: "Aller à une étape",
             description:
-                'Naviguer uniquement si c\'est valide : { step: "upload" | "recipes" | "diff" | "results" }. recipes/diff/results exigent au moins un XML chargé. diff ouvre la comparaison.',
+                'Naviguer uniquement si c\'est valide : { step: "upload" | "recipes" | "diff" | "results" }. recipes/diff/results exigent au moins un XML chargé. diff ouvre la comparaison. Après succès, get_app_state reflète tout de suite la nouvelle étape (sans attendre le re-render React Router).',
             inputSchema: {
                 type: "object",
                 properties: {

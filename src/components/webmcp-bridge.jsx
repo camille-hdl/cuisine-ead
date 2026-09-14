@@ -1,8 +1,9 @@
 //@flow
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useStore } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { registerWebMcpTools } from "../lib/webmcp/index.js";
+import { createPathnameTracker } from "../lib/webmcp/pathname.js";
 
 /**
  * Registers WebMCP tools for the lifetime of the app shell.
@@ -12,15 +13,23 @@ export default function WebMcpBridge() {
     const store = useStore();
     const navigate = useNavigate();
     const location = useLocation();
-    const pathnameRef = useRef(location.pathname);
-    pathnameRef.current = location.pathname;
+    const trackerRef = useRef(null);
+    if (trackerRef.current === null) {
+        trackerRef.current = createPathnameTracker(location.pathname);
+    }
+
+    useLayoutEffect(() => {
+        trackerRef.current && trackerRef.current.syncFromLocation(location.pathname);
+    }, [location.pathname]);
 
     useEffect(() => {
         const controller = new AbortController();
+        const tracker = trackerRef.current;
+        if (!tracker) return undefined;
         registerWebMcpTools({
             store,
-            navigate,
-            getPathname: () => pathnameRef.current,
+            navigate: tracker.wrapNavigate(navigate),
+            getPathname: () => tracker.getPathname(),
             signal: controller.signal,
         });
         return () => {
