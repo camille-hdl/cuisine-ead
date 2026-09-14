@@ -34,6 +34,7 @@ import ErrorCatcher from "../components/error-catcher.jsx";
 import Changelog from "../components/changelog.jsx";
 import Steps from "../components/steps.jsx";
 import { makeInputJSONRecord, makeRecipeInPipelineRecord } from "../lib/record-factories.js";
+import { setWebmcpFilePicker } from "../lib/webmcp/file-picker.js";
 
 const makeInputJSONData = (input: InputJSONRaw): InputJSONData => {
     const output = {
@@ -126,6 +127,9 @@ export default class UploadFiles extends React.PureComponent<Props> {
             this.props.setOutputPipeline(this.props.outputPipeline.concat(usableRecipes));
         }
     };
+    componentWillUnmount() {
+        setWebmcpFilePicker(null);
+    }
     render() {
         const pipelineLength = this.props.pipeline.size + this.props.outputPipeline.size;
         const hasFiles = this.props.xmlFiles.size > 0;
@@ -194,9 +198,7 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                         Promise.all(promises).then((jsonStrings: Array<string>) => {
                                             const jsonObjects = map(JSON.parse, jsonStrings);
                                             const finalJson =
-                                                jsonObjects.length > 1
-                                                    ? mergeDeepAll(jsonObjects)
-                                                    : head(jsonObjects);
+                                                jsonObjects.length > 1 ? mergeDeepAll(jsonObjects) : head(jsonObjects);
                                             this.importJson(finalJson);
                                         });
                                     }
@@ -208,37 +210,40 @@ export default class UploadFiles extends React.PureComponent<Props> {
                                     }
                                 }}
                             >
-                                {({ getRootProps, getInputProps, isDragActive, open }) => (
-                                    <div
-                                        data-cy="dropzone"
-                                        {...getRootProps({
-                                            className: `dropzone${isDragActive ? " is-active" : ""}`,
-                                        })}
-                                    >
-                                        <input
-                                            {...getInputProps({
-                                                "aria-label": "Ajouter des fichiers XML-EAD, CSV ou JSON",
+                                {({ getRootProps, getInputProps, isDragActive, open }) => {
+                                    setWebmcpFilePicker(open);
+                                    return (
+                                        <div
+                                            data-cy="dropzone"
+                                            {...getRootProps({
+                                                className: `dropzone${isDragActive ? " is-active" : ""}`,
                                             })}
-                                        />
-                                        <p className="dropzone-title">
-                                            {isDragActive ? "Déposez maintenant" : "Déposez les fichiers ici"}
-                                        </p>
-                                        <p className="dropzone-hint">
-                                            XML-EAD à traiter, CSV de corrections, ou JSON de recettes. Vous pouvez
-                                            aussi parcourir vos dossiers.
-                                        </p>
-                                        <button
-                                            type="button"
-                                            className="btn"
-                                            onClick={(ev) => {
-                                                ev.stopPropagation();
-                                                open();
-                                            }}
                                         >
-                                            Parcourir les fichiers
-                                        </button>
-                                    </div>
-                                )}
+                                            <input
+                                                {...getInputProps({
+                                                    "aria-label": "Ajouter des fichiers XML-EAD, CSV ou JSON",
+                                                })}
+                                            />
+                                            <p className="dropzone-title">
+                                                {isDragActive ? "Déposez maintenant" : "Déposez les fichiers ici"}
+                                            </p>
+                                            <p className="dropzone-hint">
+                                                XML-EAD à traiter, CSV de corrections, ou JSON de recettes. Vous pouvez
+                                                aussi parcourir vos dossiers.
+                                            </p>
+                                            <button
+                                                type="button"
+                                                className="btn"
+                                                onClick={(ev) => {
+                                                    ev.stopPropagation();
+                                                    open();
+                                                }}
+                                            >
+                                                Parcourir les fichiers
+                                            </button>
+                                        </div>
+                                    );
+                                }}
                             </Dropzone>
                         </div>
                     </ErrorCatcher>
