@@ -9,6 +9,8 @@ import {
 import { createHandlers, MAX_XML_CHARS, stepFromPath } from "../../src/lib/webmcp/handlers.js";
 import { createToolDefinitions } from "../../src/lib/webmcp/tools.js";
 import { getModelContext, isWebMcpAvailable } from "../../src/lib/webmcp/detect.js";
+import { isEadXmlString, rootElementLocalNameFromXmlString } from "../../src/lib/webmcp/ead-document.js";
+import { createNavigationMirror, createPathnameTracker, pathnameFromTarget } from "../../src/lib/webmcp/pathname.js";
 import { openWebmcpFilePicker, setWebmcpFilePicker } from "../../src/lib/webmcp/file-picker.js";
 import { toolErr, toolOk, wrapExecute } from "../../src/lib/webmcp/result.js";
 
@@ -271,6 +273,35 @@ describe("add_ead_content — primary XML-in-context path", () => {
         expect(result.failed[0].name).toEqual("bad.xml");
         expect(parse(handlers.list_loaded_files()).files).toHaveLength(0);
     });
+
+    test("rejects non-EAD XML and does not label it xml-ead", async () => {
+        const { deps } = createTestDeps();
+        const handlers = createHandlers(deps);
+        const result = parse(
+            await handlers.add_ead_content({
+                name: "page.html",
+                content: "<html><body>hello</body></html>",
+            })
+        );
+        expect(result.ok).toBe(false);
+        expect(JSON.stringify(result)).not.toMatch(/xml-ead/);
+        expect(result.failed[0].error).toMatch(/pas un XML-EAD/);
+        expect(result.failed[0].error).toMatch(/html/i);
+        expect(parse(handlers.list_loaded_files()).files).toHaveLength(0);
+    });
+
+    test("accepts namespaced EAD root", async () => {
+        const { deps } = createTestDeps();
+        const handlers = createHandlers(deps);
+        const result = parse(
+            await handlers.add_ead_content({
+                name: "ns.xml",
+                content: `<ead:ead xmlns:ead="urn:isbn:1-931666-22-9"><ead:eadheader><ead:eadid>NS</ead:eadid></ead:eadheader></ead:ead>`,
+            })
+        );
+        expect(result.ok).toBe(true);
+        expect(result.added[0].type).toEqual("xml-ead");
+    });
 });
 
 describe("CSV, recipes, navigation, download", () => {
@@ -481,6 +512,59 @@ describe("CSV, recipes, navigation, download", () => {
         expect(ok.params[0].currentValue).toEqual([{ rechercher: "old/", remplacer: "new/" }]);
     });
 
+    test("select_recipes mode set preserves existing params for recipes that stay selected", async () => {
+        const { deps, getState } = createTestDeps();
+        const handlers = createHandlers(deps);
+        await handlers.add_ead_content({ name: "a.xml", content: MINIMAL_EAD });
+        parse(
+            await handlers.set_recipe_params({
+                recipeId: "ecraser_publisher",
+                params: { publisher: "Archives du Test" },
+            })
+        );
+
+        const reset = parse(
+            await handlers.select_recipes({
+                recipeIds: ["ecraser_publisher", "remplace_dao_href", "supprimer_lb"],
+                mode: "set",
+            })
+        );
+        expect(reset.ok).toBe(true);
+        expect(reset.selectedRecipeIds).toEqual(["ecraser_publisher", "remplace_dao_href", "supprimer_lb"]);
+        expect(reset.selectedRecipeParams.ecraser_publisher.publisher).toEqual("Archives du Test");
+        expect(reset.selectedRecipeParams.remplace_dao_href.remplacements).toEqual([]);
+
+        const pipeline = getState().get("pipeline");
+        expect(pipeline.get(0).get("args").get("publisher")).toEqual("Archives du Test");
+        expect(pipeline.get(1).get("args").get("remplacements")).toEqual([]);
+
+        parse(
+            await handlers.set_recipe_params({
+                recipeId: "remplace_dao_href",
+                params: { remplacements: [{ rechercher: "old/", remplacer: "new/" }] },
+            })
+        );
+        const again = parse(
+            await handlers.select_recipes({
+                recipeIds: ["ecraser_publisher", "remplace_dao_href", "supprimer_lb"],
+                mode: "set",
+            })
+        );
+        expect(again.selectedRecipeParams.ecraser_publisher.publisher).toEqual("Archives du Test");
+        expect(again.selectedRecipeParams.remplace_dao_href.remplacements).toEqual([
+            { rechercher: "old/", remplacer: "new/" },
+        ]);
+
+        const dropped = parse(
+            await handlers.select_recipes({
+                recipeIds: ["supprimer_lb"],
+                mode: "set",
+            })
+        );
+        expect(dropped.selectedRecipeParams.ecraser_publisher).toBeUndefined();
+        expect(dropped.selectedRecipeIds).toEqual(["supprimer_lb"]);
+    });
+
     test("go_to_step only when valid", async () => {
         const { deps, getPathname } = createTestDeps();
         const handlers = createHandlers(deps);
@@ -491,8 +575,41 @@ describe("CSV, recipes, navigation, download", () => {
         const moved = parse(await handlers.go_to_step({ step: "results" }));
         expect(moved.ok).toBe(true);
         expect(getPathname()).toEqual("/resultats");
+        const stateAfter = parse(handlers.get_app_state());
+        expect(stateAfter.step).toEqual("results");
+        expect(stateAfter.path).toEqual("/resultats");
         const bogus = parse(await handlers.go_to_step({ step: "cuisine" }));
         expect(bogus.ok).toBe(false);
+    });
+
+    test("get_app_state after go_to_step sees the new step even if the router pathname is still stale", async () => {
+        let routerPath = "/";
+        const { deps } = createTestDeps({
+            navigate: () => {
+                /* React Router has not re-rendered yet */
+            },
+            getPathname: () => routerPath,
+        });
+        const handlers = createHandlers(deps);
+        await handlers.add_ead_content({ name: "a.xml", content: MINIMAL_EAD });
+        expect(parse(handlers.get_app_state()).step).toEqual("upload");
+
+        const moved = parse(await handlers.go_to_step({ step: "recipes" }));
+        expect(moved.ok).toBe(true);
+        expect(moved.step).toEqual("recipes");
+        expect(moved.path).toEqual("/recettes");
+        expect(routerPath).toEqual("/");
+
+        const appState = parse(handlers.get_app_state());
+        expect(appState.step).toEqual("recipes");
+        expect(appState.path).toEqual("/recettes");
+
+        routerPath = "/recettes";
+        expect(parse(handlers.get_app_state()).step).toEqual("recipes");
+
+        routerPath = "/resultats";
+        expect(parse(handlers.get_app_state()).step).toEqual("results");
+        expect(parse(handlers.get_app_state()).path).toEqual("/resultats");
     });
 
     test("run_selected_recipes requires files and recipes", async () => {
@@ -515,6 +632,39 @@ describe("CSV, recipes, navigation, download", () => {
 });
 
 describe("helpers", () => {
+    test("isEadXmlString accepts EAD roots and rejects HTML", () => {
+        expect(isEadXmlString(MINIMAL_EAD)).toBe(true);
+        expect(isEadXmlString(`<?xml version="1.0"?><ead xmlns:xlink="http://www.w3.org/1999/xlink"></ead>`)).toBe(
+            true
+        );
+        expect(isEadXmlString(`<ead:ead xmlns:ead="urn:isbn:1-931666-22-9"></ead:ead>`)).toBe(true);
+        expect(isEadXmlString("<html><body>hello</body></html>")).toBe(false);
+        expect(isEadXmlString("<inventory><item>x</item></inventory>")).toBe(false);
+        expect(rootElementLocalNameFromXmlString("<html><body>hello</body></html>")).toEqual("html");
+    });
+
+    test("pathname tracker and navigation mirror", () => {
+        expect(pathnameFromTarget("/recettes?x=1#y")).toEqual("/recettes");
+        const tracker = createPathnameTracker("/");
+        const wrapped = tracker.wrapNavigate(() => {});
+        wrapped("/recettes");
+        expect(tracker.getPathname()).toEqual("/recettes");
+        tracker.syncFromLocation("/resultats");
+        expect(tracker.getPathname()).toEqual("/resultats");
+
+        let live = "/";
+        const mirror = createNavigationMirror(
+            () => live,
+            () => {}
+        );
+        mirror.navigate("/recettes");
+        expect(mirror.getPathname()).toEqual("/recettes");
+        live = "/recettes";
+        expect(mirror.getPathname()).toEqual("/recettes");
+        live = "/resultats";
+        expect(mirror.getPathname()).toEqual("/resultats");
+    });
+
     test("stepFromPath maps preview to diff", () => {
         expect(stepFromPath("/", false)).toEqual("upload");
         expect(stepFromPath("/upload", false)).toEqual("upload");

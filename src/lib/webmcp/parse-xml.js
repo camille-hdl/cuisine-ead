@@ -1,6 +1,7 @@
 //@flow
 import type { AddXmlFileData } from "../../types.js";
 import { readXmlFromString, countC } from "../xml.js";
+import { isEadDocument, nonEadError } from "./ead-document.js";
 
 const countCSafe = (doc: Document): number => {
     try {
@@ -15,6 +16,9 @@ const countCSafe = (doc: Document): number => {
  */
 export const xmlStringToFileData = async (filename: string, content: string): Promise<AddXmlFileData> => {
     const parsed = await readXmlFromString(content);
+    if (!isEadDocument(parsed.doc)) {
+        throw new Error(nonEadError(parsed.doc));
+    }
     return {
         filename,
         encoding: parsed.encoding,

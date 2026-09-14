@@ -18,6 +18,8 @@ import {
     mergeRecipeParams,
     recipeHasParams,
 } from "./recipe-params.js";
+import { isEadXmlString, nonEadErrorFromRoot, rootElementLocalNameFromXmlString } from "./ead-document.js";
+import { createNavigationMirror } from "./pathname.js";
 import { toolErr, toolOk } from "./result.js";
 import type { FilePickerResult } from "./file-picker.js";
 
@@ -161,7 +163,12 @@ const addEadFileList = async (deps: WebmcpDeps, files: Array<{ name: mixed, cont
         const file = files[index];
         const filename = normalizeFilename(file.name, `document-${index + 1}.xml`);
         try {
-            const data = await deps.parseXml(filename, String(file.content));
+            const content = String(file.content);
+            if (!isEadXmlString(content)) {
+                const root = rootElementLocalNameFromXmlString(content) || "(aucun)";
+                throw new Error(nonEadErrorFromRoot(root));
+            }
+            const data = await deps.parseXml(filename, content);
             if (existingHashes.includes(data.hash) || added.some((item) => item.id === data.hash)) {
                 skipped.push({ name: filename, id: data.hash, reason: "doublon (même contenu déjà chargé)" });
                 continue;
@@ -212,6 +219,23 @@ const makeOutputRecipe = (recipeId: string) =>
         args: Map(),
     });
 
+const recipesByKey = (pipeline: any): { [string]: any } => {
+    const byKey = {};
+    pipeline.forEach((recipe) => {
+        byKey[String(recipe.get("key"))] = recipe;
+    });
+    return byKey;
+};
+
+/**
+ * Rebuild the pipeline in `wantedIds` order. Recipes that stay selected keep
+ * their current args; newly added recipes get defaults.
+ */
+const setPipelinePreservingArgs = (current: any, wantedIds: Array<string>, makeDefault: (string) => any) => {
+    const existing = recipesByKey(current);
+    return List(wantedIds.map((id) => existing[id] || makeDefault(id)));
+};
+
 const applyParamsToPipeline = (
     pipeline: any,
     recipeId: string,
@@ -258,11 +282,13 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
     catalog.forEach((recipe) => {
         catalogById[recipe.id] = recipe;
     });
+    const navigation = createNavigationMirror(deps.getPathname, deps.navigate);
 
     return {
         get_app_state: () => {
             const state = deps.getState();
-            const step = stepFromPath(deps.getPathname(), !!state.get("previewEnabled"));
+            const pathname = navigation.getPathname();
+            const step = stepFromPath(pathname, !!state.get("previewEnabled"));
             const xmlFiles = state.get("xmlFiles") || List();
             const recipeIds = selectedRecipeIds(state);
             const corrections = state.get("corrections");
@@ -272,7 +298,7 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
             const missingRequiredParams = findMissingRequiredParams(state.get("pipeline") || List());
             return toolOk({
                 step,
-                path: deps.getPathname(),
+                path: pathname,
                 fileCount: xmlFiles.size,
                 selectedRecipeIds: recipeIds,
                 selectedRecipeCount: recipeIds.length,
@@ -480,8 +506,8 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
             let outputPipeline = state.get("outputPipeline") || List();
 
             if (mode === "set") {
-                pipeline = List(documentIds.map(makeDocumentRecipe));
-                outputPipeline = List(outputIds.map(makeOutputRecipe));
+                pipeline = setPipelinePreservingArgs(pipeline, documentIds, makeDocumentRecipe);
+                outputPipeline = setPipelinePreservingArgs(outputPipeline, outputIds, makeOutputRecipe);
             } else if (mode === "add") {
                 const existingDoc = pipeline.map((recipe) => recipe.get("key"));
                 documentIds.forEach((id) => {
@@ -621,7 +647,7 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
                     }
                 );
             }
-            deps.navigate("/recettes");
+            navigation.navigate("/recettes");
             if (!state.get("previewEnabled")) {
                 deps.dispatch(togglePreview(true));
             }
@@ -648,7 +674,7 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
                     "Impossible d'aller à « " + step + " » sans fichier XML. Utilisez add_ead_content d'abord."
                 );
             }
-            deps.navigate(pathForStep(step));
+            navigation.navigate(pathForStep(step));
             if (step === "diff") {
                 if (!state.get("previewEnabled")) {
                     deps.dispatch(togglePreview(true));
@@ -660,7 +686,7 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
             }
             return toolOk({
                 step,
-                path: pathForStep(step),
+                path: navigation.getPathname(),
                 message: "Navigation vers l'étape " + step + ".",
             });
         },
