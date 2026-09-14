@@ -4,6 +4,8 @@ Cuisine EAD expose des **outils de page** pour qu’un agent (Chrome / WebMCP) d
 
 L’API `document.modelContext` est expérimentale. Si elle est absente, l’application se comporte comme avant (aucun outil, pas d’erreur).
 
+En production (`https://cuisine-ead.camillehdl.dev/`), WebMCP est activé via l’en-tête HTTP `Origin-Trial` défini dans `public/_headers`.
+
 ## Chemin autonome (à privilégier)
 
 L’agent a déjà le XML dans son contexte. **Aucun sélecteur de fichiers humain.**
