@@ -1,9 +1,13 @@
 //@flow
 import xxhash from "xxhash-wasm";
-const jschardet = window && window.jschardet ? window.jschardet : null;
-if (!jschardet) throw "jschardet missing";
 import type { EncodingString } from "../types.js";
 import { each } from "./recipes/utils.js";
+
+const getJschardet = () => {
+    const jschardet = window && window.jschardet ? window.jschardet : null;
+    if (!jschardet) throw "jschardet missing";
+    return jschardet;
+};
 type Hasher = {
     h64: (input: string) => string,
     h32: (input: string) => string,
@@ -73,7 +77,7 @@ export const readXml = (file: File, loadCallback: (doc: DocData) => void) => {
             str += String.fromCharCode(buffer[i]);
         }
         //FIXME: jschardet is very slow
-        const info = jschardet.detect(str);
+        const info = getJschardet().detect(str);
         const decoder = getDecoder(info.encoding);
         const xmlString = normalizeXmlString(decoder.decode(buffer));
         getWASMInstance((hasher) => {
@@ -91,6 +95,59 @@ export const readXml = (file: File, loadCallback: (doc: DocData) => void) => {
         });
     };
     reader.readAsArrayBuffer(file);
+};
+
+const fallbackHash = (xmlString: string): string => {
+    let hash = 0;
+    for (let i = 0; i < xmlString.length; i++) {
+        hash = (Math.imul(31, hash) + xmlString.charCodeAt(i)) | 0;
+    }
+    return (hash >>> 0).toString(16);
+};
+
+/**
+ * Hash used for duplicate detection. Prefers xxhash (same as `readXml`) and
+ * falls back to a simple hash if WASM is unavailable.
+ */
+export const hashXmlString = (xmlString: string): Promise<string> => {
+    return new Promise((resolve) => {
+        getWASMInstance((hasher) => {
+            resolve(hasher.h64(xmlString));
+        });
+    }).catch(() => fallbackHash(xmlString));
+};
+
+const getParserErrorMessage = (doc: Document): string | null => {
+    const parseError = doc.getElementsByTagName("parsererror")[0];
+    if (parseError) {
+        const text = parseError.textContent ? String(parseError.textContent).replace(/\s+/g, " ").trim() : "";
+        return text ? text.slice(0, 300) : "erreur de parse";
+    }
+    if (!doc.documentElement) {
+        return "document vide";
+    }
+    return null;
+};
+
+/**
+ * Parse an XML string already in memory (UTF-8). Used by WebMCP so an agent
+ * can deposit EAD without the file picker.
+ */
+export const readXmlFromString = (xmlString: string): Promise<DocData> => {
+    const parser = new DOMParser();
+    const normalized = normalizeXmlString(xmlString);
+    const doc = parser.parseFromString(normalized, "application/xml");
+    const parseError = getParserErrorMessage(doc);
+    if (parseError) {
+        return Promise.reject(new Error("XML invalide : " + parseError));
+    }
+    return hashXmlString(normalized).then((hash) => ({
+        //$FlowFixMe
+        doc,
+        encoding: "utf-8",
+        string: normalized,
+        hash,
+    }));
 };
 
 type XpathFilterArgs = { query: string, contextNode: ?Element | Document };
@@ -160,8 +217,19 @@ export const countC = (doc: Document): number => {
 };
 
 export const getControlaccessTagNames = (): Array<string> => {
-    return ["genreform", "geogname", "name", "occupation", "subject", "title", "function", "corpname", "famname", "persname"];
-}
+    return [
+        "genreform",
+        "geogname",
+        "name",
+        "occupation",
+        "subject",
+        "title",
+        "function",
+        "corpname",
+        "famname",
+        "persname",
+    ];
+};
 
 export const getControlaccessElements = (doc: Document, contextNode: ?Element): Array<Element> => {
     const tagNames = getControlaccessTagNames();
@@ -172,11 +240,11 @@ export const getControlaccessElements = (doc: Document, contextNode: ?Element): 
     } else {
         return xpathFilter(doc, xpathQuery);
     }
-}
+};
 
 export const copyAttributes = (source: Element, target: Element) => {
     if (typeof source.attributes === "undefined") return;
     each([...source.attributes], (attr) => {
         target.setAttribute(attr.name, attr.value);
     });
-}
+};

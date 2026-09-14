@@ -559,6 +559,27 @@ const availables: Array<[string, RecipeInfo]> = [
     ],
 ];
 
+export type RecipeCatalogEntry = {|
+    key: string,
+    label: string,
+    complement: string | null,
+    category: string,
+    defaultArgs: { [argName: string]: any },
+|};
+
+/**
+ * All document recipes known to the UI (including stateful ones).
+ */
+export const listRecipeCatalog = (): Array<RecipeCatalogEntry> => {
+    return availables.map(([key, info]) => ({
+        key,
+        label: info.label,
+        complement: info.complement || null,
+        category: info.category,
+        defaultArgs: info.defaultArgs ? info.defaultArgs : {},
+    }));
+};
+
 /**
  * Get information about a recipe
  */
