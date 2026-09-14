@@ -328,7 +328,7 @@ describe("CSV, recipes, navigation, download", () => {
         expect(diff.excerptProcessed).toMatch(/Fiche-traitee/);
         expect(diff.recipesApplied).toEqual(["supprimer_lb", "pretty_print"]);
 
-        const download = parse(handlers.download_results());
+        const download = parse(await handlers.download_results());
         expect(download.ok).toBe(true);
         expect(downloads).toHaveLength(1);
         expect(pickerCalls).toHaveLength(0);
