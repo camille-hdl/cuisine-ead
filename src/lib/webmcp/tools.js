@@ -92,10 +92,28 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
             name: "list_recipes",
             title: "Lister les recettes",
             description:
-                "Lecture : recettes disponibles (id, titre, description, kind document|stateful|output) et si elles sont sélectionnées. Utiliser ces ids avec select_recipes.",
+                "Lecture : recettes disponibles (id, titre, description, kind, selected). Si hasParams est true, params décrit le formulaire de l'UI (nom, type, required, label, defaultValue, currentValue). Ensuite select_recipes + set_recipe_params (ou params dans select_recipes).",
             inputSchema: emptySchema,
             annotations: { readOnlyHint: true },
             execute: exec("list_recipes"),
+        },
+        {
+            name: "get_recipe_params",
+            title: "Paramètres d'une recette",
+            description:
+                "Lecture : schéma des paramètres d'une recette (mêmes champs que le formulaire affiché quand on la coche). { recipeId } pour une recette, ou sans argument pour toutes les recettes paramétrables. Voir currentValue si déjà sélectionnée.",
+            inputSchema: {
+                type: "object",
+                properties: {
+                    recipeId: {
+                        type: "string",
+                        description:
+                            "Clé de recette (list_recipes). Optionnel : omis = toutes les recettes avec paramètres.",
+                    },
+                },
+            },
+            annotations: { readOnlyHint: true },
+            execute: exec("get_recipe_params"),
         },
         {
             name: "list_loaded_files",
@@ -110,7 +128,7 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
             name: "select_recipes",
             title: "Sélectionner des recettes",
             description:
-                'Choisir les recettes à appliquer. { recipeIds: string[], mode: "set" | "add" | "remove" }. mode=set remplace la sélection ; add ajoute ; remove retire. Les ids viennent de list_recipes (ex. supprimer_lb, pretty_print).',
+                'Choisir les recettes à appliquer. { recipeIds: string[], mode: "set" | "add" | "remove", params?: { [recipeId]: { ... } } }. mode=set remplace la sélection. params (optionnel) renseigne d\'un coup les formulaires des recettes cochées, comme dans l\'UI. Sinon set_recipe_params après coup.',
             inputSchema: {
                 type: "object",
                 properties: {
@@ -124,6 +142,11 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
                         enum: ["set", "add", "remove"],
                         description: "set = remplacer, add = ajouter, remove = retirer",
                     },
+                    params: {
+                        type: "object",
+                        description:
+                            "Optionnel. Objet { recipeId: { nomParam: valeur } } pour les recettes de recipeIds qui ont un formulaire.",
+                    },
                 },
                 required: ["recipeIds", "mode"],
             },
@@ -131,10 +154,30 @@ export const createToolDefinitions = (handlers: { [string]: (input: any) => mixe
             execute: exec("select_recipes"),
         },
         {
+            name: "set_recipe_params",
+            title: "Définir les paramètres d'une recette",
+            description:
+                'Renseigne le formulaire d\'une recette (mêmes args Redux que l\'UI). { recipeId, params }. Sélectionne la recette si elle ne l\'est pas encore. Schéma via get_recipe_params / list_recipes. Ex. { recipeId: "ecraser_publisher", params: { publisher: "Archives départementales" } }. Pour remplace_dao_href : { remplacements: [{ rechercher, remplacer }] }.',
+            inputSchema: {
+                type: "object",
+                properties: {
+                    recipeId: { type: "string", description: "Clé de recette" },
+                    params: {
+                        type: "object",
+                        description:
+                            'Valeurs des champs du formulaire, ex. { source: "W" } ou { remplacements: [...] }',
+                    },
+                },
+                required: ["recipeId", "params"],
+            },
+            annotations: { readOnlyHint: false },
+            execute: exec("set_recipe_params"),
+        },
+        {
             name: "run_selected_recipes",
             title: "Lancer les recettes",
             description:
-                "Après add_ead_content(s) et select_recipes : active la comparaison avant/après (étape diff), comme le bouton de l'UI. Le traitement est calculé à la volée. Ensuite get_diff_summary puis download_results.",
+                "Après add_ead_content(s) et select_recipes : vérifie les paramètres requis (champs du formulaire UI), puis ouvre la comparaison. Si des params requis sont vides, erreur avec missingRequiredParams — utiliser set_recipe_params. Ensuite get_diff_summary puis download_results.",
             inputSchema: emptySchema,
             annotations: { readOnlyHint: false },
             execute: exec("run_selected_recipes"),

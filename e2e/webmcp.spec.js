@@ -123,4 +123,46 @@ test.describe("WebMCP autonomous XML path", () => {
         expect(output.length).toBeGreaterThanOrEqual(1);
         expect(output[0].str).toContain("ead");
     });
+
+    test("agent can discover and set recipe parameters like the UI form", async ({ page }) => {
+        await installFakeWebMcp(page);
+        await gotoApp(page);
+        await waitForTools(page);
+
+        const xml = fs.readFileSync(fixturePath("example-ead.xml"), "utf8");
+        const added = JSON.parse(
+            await executeTool(page, "add_ead_content", { name: "saint-exupery.xml", content: xml })
+        );
+        expect(added.ok).toBe(true);
+
+        const listed = JSON.parse(await executeTool(page, "list_recipes", {}));
+        const geog = listed.recipes.find((recipe) => recipe.id === "geogname_set_source");
+        expect(geog.hasParams).toBe(true);
+        expect(geog.params.map((param) => param.name)).toEqual(["source"]);
+
+        const schema = JSON.parse(await executeTool(page, "get_recipe_params", { recipeId: "geogname_set_source" }));
+        expect(schema.params[0].label).toMatch(/attribut/i);
+
+        const selected = JSON.parse(
+            await executeTool(page, "select_recipes", {
+                recipeIds: ["geogname_set_source"],
+                mode: "set",
+                params: { geogname_set_source: { source: "GEOTEST" } },
+            })
+        );
+        expect(selected.ok).toBe(true);
+        expect(selected.selectedRecipeParams.geogname_set_source.source).toEqual("GEOTEST");
+
+        await executeTool(page, "go_to_step", { step: "recipes" });
+        await expect(page).toHaveURL(/\/recettes/);
+        await expect(page.locator("#recipe-geogname_set_source")).toBeChecked();
+        await expect(page.getByText("Valeur de l'attribut")).toBeVisible();
+        await expect(
+            page.locator("#recipe-geogname_set_source").locator("xpath=ancestor::li[1]").locator("input[type=text]")
+        ).toHaveValue("GEOTEST");
+
+        const run = JSON.parse(await executeTool(page, "run_selected_recipes", {}));
+        expect(run.ok).toBe(true);
+        expect(run.selectedRecipeParams.geogname_set_source.source).toEqual("GEOTEST");
+    });
 });

@@ -11,6 +11,13 @@ import { tail } from "ramda";
 import { addXmlFile, setPipeline, setOutputPipeline, togglePreview, updateCorrections } from "../../actions.js";
 import { getRecipes as getOutputRecipes } from "../output-recipes.js";
 import { getDefaultArgs, listRecipeCatalog } from "../recipes/recipes-lib.js";
+import {
+    argsToPlain,
+    describeParamsForAgent,
+    findMissingRequiredParams,
+    mergeRecipeParams,
+    recipeHasParams,
+} from "./recipe-params.js";
 import { toolErr, toolOk } from "./result.js";
 import type { FilePickerResult } from "./file-picker.js";
 
@@ -205,6 +212,46 @@ const makeOutputRecipe = (recipeId: string) =>
         args: Map(),
     });
 
+const applyParamsToPipeline = (
+    pipeline: any,
+    recipeId: string,
+    incoming: mixed
+): { ok: true, pipeline: any } | { ok: false, error: string, extra?: { [string]: mixed } } => {
+    const index = pipeline.findIndex((recipe) => recipe.get("key") === recipeId);
+    const current = index >= 0 ? pipeline.get(index).get("args") : Map(getDefaultArgs(recipeId));
+    const merged = mergeRecipeParams(recipeId, current, incoming);
+    if (!merged.ok) {
+        return merged;
+    }
+    if (index < 0) {
+        return {
+            ok: true,
+            pipeline: pipeline.push(
+                Map({
+                    key: recipeId,
+                    args: merged.args,
+                })
+            ),
+        };
+    }
+    return {
+        ok: true,
+        pipeline: pipeline.update(index, (recipe) => recipe.set("args", merged.args)),
+    };
+};
+
+const selectedRecipesWithParams = (state: any): { [string]: mixed } => {
+    const pipeline = state.get("pipeline") || List();
+    const out = {};
+    pipeline.forEach((recipe) => {
+        const id = String(recipe.get("key") || "");
+        if (recipeHasParams(id)) {
+            out[id] = argsToPlain(recipe.get("args"));
+        }
+    });
+    return out;
+};
+
 export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => Promise<string> | string }) => {
     const catalog = buildRecipeCatalog();
     const catalogById: { [string]: RecipeInfoForAgent } = {};
@@ -222,12 +269,15 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
             const correctionsCount = corrections
                 ? corrections.reduce((sum, terms) => sum + (terms && terms.size ? terms.size : 0), 0)
                 : 0;
+            const missingRequiredParams = findMissingRequiredParams(state.get("pipeline") || List());
             return toolOk({
                 step,
                 path: deps.getPathname(),
                 fileCount: xmlFiles.size,
                 selectedRecipeIds: recipeIds,
                 selectedRecipeCount: recipeIds.length,
+                selectedRecipeParams: selectedRecipesWithParams(state),
+                missingRequiredParams,
                 correctionsCount,
                 previewEnabled: !!state.get("previewEnabled"),
                 blockingErrors: blockingErrors(state, step),
@@ -237,14 +287,77 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
         list_recipes: () => {
             const state = deps.getState();
             const selected = new Set(selectedRecipeIds(state));
+            const pipeline = state.get("pipeline") || List();
             return toolOk({
-                recipes: catalog.map((recipe) => ({
-                    id: recipe.id,
-                    title: recipe.title,
-                    description: recipe.description,
-                    kind: recipe.kind,
-                    selected: selected.has(recipe.id),
-                })),
+                recipes: catalog.map((recipe) => {
+                    const hasParams = recipeHasParams(recipe.id);
+                    const selectedRecipe = pipeline.find((item) => item.get("key") === recipe.id);
+                    const params = hasParams
+                        ? describeParamsForAgent(
+                              recipe.id,
+                              selectedRecipe ? selectedRecipe.get("args") : Map(getDefaultArgs(recipe.id))
+                          )
+                        : undefined;
+                    return {
+                        id: recipe.id,
+                        title: recipe.title,
+                        description: recipe.description,
+                        kind: recipe.kind,
+                        selected: selected.has(recipe.id),
+                        hasParams,
+                        params,
+                    };
+                }),
+                hint: "Si hasParams est true, renseignez les champs via set_recipe_params (ou params dans select_recipes) avant run_selected_recipes.",
+            });
+        },
+
+        get_recipe_params: (input: any) => {
+            const recipeId = input && typeof input.recipeId === "string" ? input.recipeId : "";
+            const state = deps.getState();
+            const pipeline = state.get("pipeline") || List();
+            if (recipeId) {
+                if (!catalogById[recipeId]) {
+                    return toolErr("Recette inconnue : " + recipeId);
+                }
+                if (!recipeHasParams(recipeId)) {
+                    return toolOk({
+                        recipeId,
+                        hasParams: false,
+                        params: [],
+                        selected: selectedRecipeIds(state).indexOf(recipeId) !== -1,
+                        message: "Cette recette n'a pas de formulaire de paramètres dans l'UI.",
+                    });
+                }
+                const selectedRecipe = pipeline.find((item) => item.get("key") === recipeId);
+                return toolOk({
+                    recipeId,
+                    hasParams: true,
+                    selected: !!selectedRecipe,
+                    params: describeParamsForAgent(
+                        recipeId,
+                        selectedRecipe ? selectedRecipe.get("args") : Map(getDefaultArgs(recipeId))
+                    ),
+                    hint: "Utilisez set_recipe_params { recipeId, params } pour renseigner les valeurs (sélectionne la recette si besoin).",
+                });
+            }
+            const recipes = catalog
+                .filter((recipe) => recipeHasParams(recipe.id))
+                .map((recipe) => {
+                    const selectedRecipe = pipeline.find((item) => item.get("key") === recipe.id);
+                    return {
+                        id: recipe.id,
+                        title: recipe.title,
+                        selected: !!selectedRecipe,
+                        params: describeParamsForAgent(
+                            recipe.id,
+                            selectedRecipe ? selectedRecipe.get("args") : Map(getDefaultArgs(recipe.id))
+                        ),
+                    };
+                });
+            return toolOk({
+                recipes,
+                hint: "Liste des recettes qui ont un formulaire dans l'UI. Passez recipeId pour n'en voir qu'une.",
             });
         },
 
@@ -388,9 +501,6 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
                 outputPipeline = outputPipeline.filter((recipe) => !toRemove.has(recipe.get("key")));
             }
 
-            deps.dispatch(setPipeline(pipeline));
-            deps.dispatch(setOutputPipeline(outputPipeline));
-
             if (unknown.length > 0 && documentIds.length === 0 && outputIds.length === 0 && mode !== "remove") {
                 return toolErr("Aucune recette reconnue.", {
                     unknownRecipeIds: unknown,
@@ -398,14 +508,92 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
                 });
             }
 
+            const incomingParams = input.params;
+            if (
+                incomingParams &&
+                typeof incomingParams === "object" &&
+                !Array.isArray(incomingParams) &&
+                mode !== "remove"
+            ) {
+                const paramIds = Object.keys(incomingParams);
+                const notSelected = paramIds.filter((id) => recipeIds.indexOf(id) === -1);
+                if (notSelected.length > 0) {
+                    return toolErr(
+                        "params contient des recettes absentes de recipeIds : " + notSelected.join(", ") + ".",
+                        { unmatchedRecipeIds: notSelected }
+                    );
+                }
+                for (let i = 0; i < paramIds.length; i++) {
+                    const id = paramIds[i];
+                    if (catalogById[id] && catalogById[id].kind === "output") {
+                        return toolErr("Les assaisonnements (" + id + ") n'ont pas de paramètres.");
+                    }
+                    const applied = applyParamsToPipeline(pipeline, id, incomingParams[id]);
+                    if (!applied.ok) {
+                        return toolErr(applied.error, applied.extra);
+                    }
+                    pipeline = applied.pipeline;
+                }
+            }
+
+            deps.dispatch(setPipeline(pipeline));
+            deps.dispatch(setOutputPipeline(outputPipeline));
+
+            const missingRequiredParams = findMissingRequiredParams(deps.getState().get("pipeline") || List());
+            const recipesNeedingParams = recipeIds.filter((id) => recipeHasParams(id));
+
             return toolOk({
                 mode,
                 selectedRecipeIds: selectedRecipeIds(deps.getState()),
+                selectedRecipeParams: selectedRecipesWithParams(deps.getState()),
+                missingRequiredParams: missingRequiredParams.length > 0 ? missingRequiredParams : undefined,
                 unknownRecipeIds: unknown.length > 0 ? unknown : undefined,
                 message:
                     unknown.length > 0
                         ? "Recettes mises à jour. Certaines clés sont inconnues (voir unknownRecipeIds)."
+                        : recipesNeedingParams.length > 0 && missingRequiredParams.length > 0
+                        ? "Recettes mises à jour. Certaines ont des paramètres requis vides : set_recipe_params avant run_selected_recipes."
                         : "Recettes mises à jour.",
+            });
+        },
+
+        set_recipe_params: (input: any) => {
+            const recipeId = input && typeof input.recipeId === "string" ? input.recipeId : "";
+            if (!recipeId) {
+                return toolErr("recipeId manquant.");
+            }
+            if (!catalogById[recipeId]) {
+                return toolErr("Recette inconnue : " + recipeId);
+            }
+            if (catalogById[recipeId].kind === "output") {
+                return toolErr("Les assaisonnements n'ont pas de paramètres.");
+            }
+            if (!recipeHasParams(recipeId)) {
+                return toolErr("La recette " + recipeId + " n'a pas de formulaire de paramètres dans l'UI.");
+            }
+            const state = deps.getState();
+            let pipeline = state.get("pipeline") || List();
+            const applied = applyParamsToPipeline(pipeline, recipeId, input.params);
+            if (!applied.ok) {
+                return toolErr(applied.error, applied.extra);
+            }
+            deps.dispatch(setPipeline(applied.pipeline));
+            const missingRequiredParams = findMissingRequiredParams(deps.getState().get("pipeline") || List()).filter(
+                (item) => item.recipeId === recipeId
+            );
+            const selectedRecipe = deps
+                .getState()
+                .get("pipeline")
+                .find((recipe) => recipe.get("key") === recipeId);
+            return toolOk({
+                recipeId,
+                selected: true,
+                params: describeParamsForAgent(recipeId, selectedRecipe ? selectedRecipe.get("args") : Map()),
+                missingRequiredParams: missingRequiredParams.length > 0 ? missingRequiredParams : undefined,
+                message:
+                    missingRequiredParams.length > 0
+                        ? "Paramètres enregistrés, mais des champs requis sont encore vides."
+                        : "Paramètres enregistrés (mêmes args Redux que le formulaire de l'UI). La recette est sélectionnée.",
             });
         },
 
@@ -423,6 +611,16 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
                     "Aucune recette sélectionnée. Appelez list_recipes puis select_recipes avant run_selected_recipes."
                 );
             }
+            const missingRequiredParams = findMissingRequiredParams(state.get("pipeline") || List());
+            if (missingRequiredParams.length > 0) {
+                return toolErr(
+                    "Paramètres requis manquants. Dans l'UI ce sont les champs du formulaire qui s'ouvre quand la recette est cochée.",
+                    {
+                        missingRequiredParams,
+                        hint: "Appelez get_recipe_params puis set_recipe_params { recipeId, params }, ou passez params dans select_recipes.",
+                    }
+                );
+            }
             deps.navigate("/recettes");
             if (!state.get("previewEnabled")) {
                 deps.dispatch(togglePreview(true));
@@ -433,6 +631,7 @@ export const createHandlers = (deps: WebmcpDeps): ({ [string]: (input: any) => P
                 step: "diff",
                 fileCount: xmlFiles.size,
                 selectedRecipeIds: recipeIds,
+                selectedRecipeParams: selectedRecipesWithParams(state),
                 next: ["get_diff_summary", "download_results"],
             });
         },

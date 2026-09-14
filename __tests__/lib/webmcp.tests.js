@@ -158,6 +158,8 @@ describe("WebMCP tool surface", () => {
                 "list_recipes",
                 "list_loaded_files",
                 "select_recipes",
+                "set_recipe_params",
+                "get_recipe_params",
                 "run_selected_recipes",
                 "get_diff_summary",
                 "go_to_step",
@@ -347,6 +349,136 @@ describe("CSV, recipes, navigation, download", () => {
         const unknown = parse(await handlers.select_recipes({ recipeIds: ["not_a_recipe"], mode: "set" }));
         expect(unknown.ok).toBe(false);
         expect(unknown.unknownRecipeIds).toEqual(["not_a_recipe"]);
+    });
+
+    test("list_recipes and get_recipe_params expose the UI form schema", async () => {
+        const { deps } = createTestDeps();
+        const handlers = createHandlers(deps);
+        const listed = parse(handlers.list_recipes());
+        const publisher = listed.recipes.find((recipe) => recipe.id === "ecraser_publisher");
+        const plain = listed.recipes.find((recipe) => recipe.id === "supprimer_lb");
+        expect(publisher.hasParams).toBe(true);
+        expect(publisher.params).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    name: "publisher",
+                    type: "string",
+                    required: true,
+                    label: "Publisher",
+                    currentValue: "",
+                }),
+            ])
+        );
+        expect(plain.hasParams).toBe(false);
+
+        const one = parse(handlers.get_recipe_params({ recipeId: "ajouter_persname_source" }));
+        expect(one.ok).toBe(true);
+        expect(one.params.map((param) => param.name)).toEqual(["role", "source"]);
+        expect(one.params.find((param) => param.name === "source").required).toBe(true);
+        expect(one.params.find((param) => param.name === "role").required).toBe(false);
+
+        const dao = parse(handlers.get_recipe_params({ recipeId: "remplace_dao_href" }));
+        expect(dao.params[0].type).toEqual("array");
+        expect(dao.params[0].items.properties.rechercher).toBeTruthy();
+
+        const all = parse(handlers.get_recipe_params({}));
+        expect(all.recipes.length).toBeGreaterThan(5);
+        expect(all.recipes.every((recipe) => recipe.params.length > 0)).toBe(true);
+    });
+
+    test("set_recipe_params writes the same pipeline args as the UI form", async () => {
+        const { deps, getState } = createTestDeps();
+        const handlers = createHandlers(deps);
+        const noId = parse(await handlers.set_recipe_params({ params: { publisher: "AD" } }));
+        expect(noId.ok).toBe(false);
+
+        const noForm = parse(await handlers.set_recipe_params({ recipeId: "supprimer_lb", params: { foo: "x" } }));
+        expect(noForm.ok).toBe(false);
+
+        const emptyStillMissing = parse(
+            await handlers.set_recipe_params({ recipeId: "ecraser_publisher", params: {} })
+        );
+        expect(emptyStillMissing.ok).toBe(true);
+        expect(emptyStillMissing.missingRequiredParams[0].param).toEqual("publisher");
+
+        const unknownKey = parse(
+            await handlers.set_recipe_params({
+                recipeId: "ecraser_publisher",
+                params: { publisher: "AD", extra: "nope" },
+            })
+        );
+        expect(unknownKey.ok).toBe(false);
+        expect(unknownKey.unknownParams).toEqual(["extra"]);
+
+        const wrongType = parse(
+            await handlers.set_recipe_params({
+                recipeId: "geogname_set_source",
+                params: { source: 12 },
+            })
+        );
+        expect(wrongType.ok).toBe(false);
+
+        const set = parse(
+            await handlers.set_recipe_params({
+                recipeId: "ecraser_publisher",
+                params: { publisher: "Archives départementales" },
+            })
+        );
+        expect(set.ok).toBe(true);
+        expect(set.selected).toBe(true);
+        expect(set.params.find((param) => param.name === "publisher").currentValue).toEqual("Archives départementales");
+        const stored = getState().get("pipeline").first();
+        expect(stored.get("key")).toEqual("ecraser_publisher");
+        expect(stored.get("args").get("publisher")).toEqual("Archives départementales");
+    });
+
+    test("select_recipes params + run_selected_recipes require filled form fields", async () => {
+        const { deps } = createTestDeps();
+        const handlers = createHandlers(deps);
+        await handlers.add_ead_content({ name: "a.xml", content: MINIMAL_EAD });
+
+        const selectedEmpty = parse(await handlers.select_recipes({ recipeIds: ["ecraser_publisher"], mode: "set" }));
+        expect(selectedEmpty.ok).toBe(true);
+        expect(selectedEmpty.missingRequiredParams[0].param).toEqual("publisher");
+
+        const blocked = parse(await handlers.run_selected_recipes());
+        expect(blocked.ok).toBe(false);
+        expect(blocked.missingRequiredParams[0].recipeId).toEqual("ecraser_publisher");
+
+        const withParams = parse(
+            await handlers.select_recipes({
+                recipeIds: ["geogname_set_source", "transforme_daogrp_ligeo"],
+                mode: "set",
+                params: { geogname_set_source: { source: "GEO" } },
+            })
+        );
+        expect(withParams.ok).toBe(true);
+        expect(withParams.selectedRecipeParams.geogname_set_source.source).toEqual("GEO");
+        expect(withParams.missingRequiredParams).toBeUndefined();
+
+        const run = parse(await handlers.run_selected_recipes());
+        expect(run.ok).toBe(true);
+        expect(run.selectedRecipeParams.geogname_set_source.source).toEqual("GEO");
+    });
+
+    test("remplace_dao_href accepts search/replace pairs like the UI", async () => {
+        const { deps } = createTestDeps();
+        const handlers = createHandlers(deps);
+        const bad = parse(
+            await handlers.set_recipe_params({
+                recipeId: "remplace_dao_href",
+                params: { remplacements: "not-an-array" },
+            })
+        );
+        expect(bad.ok).toBe(false);
+        const ok = parse(
+            await handlers.set_recipe_params({
+                recipeId: "remplace_dao_href",
+                params: { remplacements: [{ rechercher: "old/", remplacer: "new/" }] },
+            })
+        );
+        expect(ok.ok).toBe(true);
+        expect(ok.params[0].currentValue).toEqual([{ rechercher: "old/", remplacer: "new/" }]);
     });
 
     test("go_to_step only when valid", async () => {
